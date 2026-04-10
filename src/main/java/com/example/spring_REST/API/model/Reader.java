@@ -19,7 +19,5 @@ public class Reader {
         this.status = status;
 
 
-
-
     }
 }
