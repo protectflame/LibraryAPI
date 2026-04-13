@@ -1,9 +1,30 @@
 services:
-  postgres:
-    image: 'postgres:latest'
+  backend:
+    image: library_backend
+    build:
+      context: .
+    depends_on:
+      postgres:
+        condition: service_healthy
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+
+  postgres:
+    image: 'postgres:17-alpine'
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # Должно совпадать с .env
+      POSTGRES_USER: ${POSTGRES_USER}         # Должно совпадать с .env
+      POSTGRES_DB: ${POSTGRES_DB}             # Должно совпадать с .env
+    healthcheck:
+      test: ("CMD-SHELL", "pg_isready" -U ${POSTGRES_USER} -d ${POSTGRES_DB})
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db-data:/var/lib/postgresql/data
     ports:
-      - '5432'
+      - '5432:5432'
+volumes:
+  db-data:
