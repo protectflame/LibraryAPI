@@ -22,7 +22,4 @@ public class Loan {
     private LocalDateTime dueDate;
     private LocalDateTime returnDate;
 
-
-    
-
 }
