@@ -1,4 +1,4 @@
-package com.example.spring_REST.API.model;
+package com.example.spring_REST.API.model.entity;
 
 import java.util.List;
 
