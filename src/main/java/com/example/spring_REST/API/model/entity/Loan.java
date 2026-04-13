@@ -23,6 +23,6 @@ public class Loan {
     private LocalDateTime returnDate;
 
 
-    
-
+    public Loan() {
+    }
 }
