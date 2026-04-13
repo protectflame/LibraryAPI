@@ -1,9 +1,22 @@
 package com.example.spring_REST.API.model.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
+
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Reader {
-    int id;
+    @Id
+    private Long id;
     String name;
     String email;
     int phone;
@@ -11,13 +24,4 @@ public class Reader {
     String status;
 
 
-    public Reader(String name, String email, int phone, List registeredAt, String status) {
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.registeredAt = registeredAt;
-        this.status = status;
-
-
-    }
 }

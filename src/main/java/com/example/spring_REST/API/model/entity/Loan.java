@@ -1,4 +1,28 @@
 package com.example.spring_REST.API.model.entity;
 
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Loan {
+    @Id
+    private Long id;
+    private int bookId;
+    private int readerId;
+    private LocalDateTime issueDate;
+    private LocalDateTime dueDate;
+    private LocalDateTime returnDate;
+
+
+    public Loan() {
+    }
 }
