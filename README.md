@@ -46,17 +46,43 @@ RESTful веб-сервис для управления библиотечной
 
 ```text
 LibraryAPI/
-├── src/main/java/com/example/libraryapi/
-│   ├── config/           # Конфигурация приложения (Web, Security, Swagger)
-│   ├── controller/       # REST контроллеры
-│   ├── dto/              # DTO классы (Request/Response)
-│   ├── entity/           # JPA сущности
-│   ├── exception/        # Кастомные исключения и GlobalExceptionHandler
-│   ├── repository/       # Репозитории данных
-│   ├── service/          # Бизнес-логика
-│   └── LibraryApiApplication.java
-├── src/main/resources/
-│   ├── application.yml   # Конфигурация Spring
-│   └── db/migration/     # Flyway миграции (если используется)
-├── docker-compose.yml    # Запуск БД в Docker
-└── pom.xml / build.gradle
+├── src/
+│   └── main/java/com/example/spring_REST/API/
+│       ├── config/           # Конфигурация приложения
+│       ├── controller/       # REST контроллеры
+│       │   ├── LoanController.java
+│       │   └── ReaderController.java
+│       ├── exception/        # Глобальная обработка ошибок
+│       │   ├── BookNotAvailableException.java
+│       │   ├── GlobalExceptionHandler.java
+│       │   ├── LoanAlreadyReturnedException.java
+│       │   └── ReaderNotFoundException.java
+│       ├── model/
+│       │   ├── dto/          # Data Transfer Objects
+│       │   │   ├── AuthorDTO.java
+│       │   │   ├── BookDTO.java
+│       │   │   ├── LoanDTO.java
+│       │   │   └── ReaderDTO.java
+│       │   └── entity/       # JPA сущности
+│       │       ├── Author.java
+│       │       ├── Book.java
+│       │       ├── Loan.java
+│       │       └── Reader.java
+│       ├── repository/       # Репозитории доступа к данным
+│       │   ├── AuthorRepository.java
+│       │   ├── BookRepository.java
+│       │   ├── LoanRepository.java
+│       │   └── ReaderRepository.java
+│       ├── service/          # Бизнес-логика
+│       │   ├── LoanService.java
+│       │   ├── LoanServiceImpl.java
+│       │   ├── ReaderService.java
+│       │   └── ReaderServiceImpl.java
+│       └── Application.java
+│
+├── src/main/resources/       # Конфигурационные файлы (application.yml и др.)
+├── .env                      # Переменные окружения
+├── compose.yaml              # Docker Compose конфигурация
+├── Dockerfile                # Образ приложения
+├── pom.xml                   # Maven зависимости
+└── README.md                 # Этот файл
