@@ -2,7 +2,7 @@
 
 RESTful веб-сервис для управления библиотечной системой. Приложение позволяет вести учет книг, авторов, читателей, а также оформлять выдачу и возврат книг с соблюдением бизнес-логики.
 
-Разработано в рамках учебного командного проекта на **Spring Boot 3**.
+Разработано в рамках учебного командного проекта на **Spring Boot 4**.
 
 ---
 
@@ -32,12 +32,14 @@ RESTful веб-сервис для управления библиотечной
 | Технология | Описание |
 | :--- | :--- |
 | **Java** | 17 / 21 |
-| **Framework** | Spring Boot 3.x |
-| **Database** | PostgreSQL 14+ |
+| **Framework** | Spring Boot 4.05 |
+| **Database** | PostgreSQL 17+ |
 | **ORM** | Spring Data JPA / Hibernate |
 | **Build Tool** | Maven / Gradle |
 | **Docs** | springdoc-openapi-ui |
-| **Utils** | Lombok, MapStruct (опционально) |
+| **Utils** | Lombok, MapStruct |
+| **Security** | Spring security |
+| **Docker** | Docker compose, Dockerfile |
 | **Testing** | JUnit 5, Mockito, Testcontainers |
 
 ---
