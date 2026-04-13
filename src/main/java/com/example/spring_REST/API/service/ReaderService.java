@@ -1,4 +1,11 @@
 package com.example.spring_REST.API.service;
 
-public class ReaderService {
+public interface ReaderService {
+    void createReader();
+
+    void reverseReader();
+
+    void updateReader();
+
+    void deleteReader();
 }
