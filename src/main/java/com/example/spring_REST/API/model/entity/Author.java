@@ -1,9 +1,11 @@
 package com.example.spring_REST.API.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
@@ -15,15 +17,19 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
+    @NotBlank(message = "Имя обязательно")
     @Size(max = 100)
     private String firstName;
 
+    @NotBlank(message = "Фамилия обязательна")
     @Size(max = 100)
     private String lastName;
 
@@ -33,15 +39,4 @@ public class Author {
     @ManyToMany(mappedBy = "authors",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Set<Book> book = new HashSet<>();
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Author author = (Author) o;
-        return Objects.equals(id, author.id) && Objects.equals(birthDate, author.birthDate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, birthDate);
-    }
 }
