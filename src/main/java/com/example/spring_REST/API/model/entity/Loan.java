@@ -19,6 +19,8 @@ public class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
     private int bookId;
     private int readerId;
     private LocalDateTime issueDate;
