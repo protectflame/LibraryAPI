@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,11 +17,22 @@ public class Reader {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "email")
     private String email;
+
     private int phone;
-    private List registeredAt;
+
+    private LocalDate registeredAt = LocalDate.now();
+
     private String status;
+
+    @OneToMany(mappedBy = "reader", fetch = FetchType.LAZY)
+    private List<Loan> loans = new ArrayList<>();
+
 
 
 }
