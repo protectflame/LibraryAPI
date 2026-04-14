@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
@@ -19,24 +20,24 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @NotBlank
-    @Size(min = 3,max = 255)
+    @Size(min = 3,max = 255,message = "Количество символов не должно быть меньше 3 и больше 255")
     private String title;
 
     private String isbn;
 
-    @NotBlank
-    @Size(min = 3,max = 1000)
+    @NotBlank(message = "Описание обязательно")
+    @Size(min = 3,max = 1000,message = "Количество символов не должно быть меньше 3 и больше 1000")
     private String descrition;
 
-
-    @Min(1400)
     private LocalDate publishYear;
 
     @Size(min = 3,max = 50)
@@ -56,15 +57,4 @@ public class Book {
     )
     private Set<Author> authors = new HashSet<>();
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Book book = (Book) o;
-        return Objects.equals(id, book.id) && Objects.equals(publishYear, book.publishYear);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, publishYear);
-    }
 }
