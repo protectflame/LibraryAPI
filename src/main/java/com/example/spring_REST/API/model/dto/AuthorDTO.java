@@ -1,10 +1,17 @@
 package com.example.spring_REST.API.model.dto;
 
 
-import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public class authorDTO {
+import java.time.LocalDate;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class AuthorDTO {
+    private Long id;
     private String firstName;
     private String lastName;
-    private LocalDate birthDate;
+
 }
