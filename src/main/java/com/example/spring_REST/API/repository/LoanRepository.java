@@ -24,5 +24,4 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
     """)
     List<Loan> findOverdueLoans();
 
-
 }
