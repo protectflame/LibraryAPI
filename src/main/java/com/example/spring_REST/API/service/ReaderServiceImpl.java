@@ -26,7 +26,7 @@ public class ReaderServiceImpl implements ReaderService {
     }
 
     @Override
-    public ReaderDTO getReaderById(Long id) {
+    public ReaderDTO getById(Long id) {
         return null;
     }
 
