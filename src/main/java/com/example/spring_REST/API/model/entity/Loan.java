@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Loan {
 
     @Id
@@ -33,6 +31,19 @@ public class Loan {
     private LocalDateTime returnDate;
 
     private String status;
+
+    public Loan(Long id, Book book, Reader reader, LocalDateTime issueDate, LocalDateTime dueDate, LocalDateTime returnDate, String status) {
+        this.id = id;
+        this.book = book;
+        this.reader = reader;
+        this.issueDate = issueDate;
+        this.dueDate = dueDate;
+        this.returnDate = returnDate;
+        this.status = status;
+    }
+
+    public Loan() {
+    }
 
     public Long getId() {
         return id;
