@@ -6,7 +6,6 @@ import com.example.spring_REST.API.model.entity.Loan;
 import com.example.spring_REST.API.repository.BookRepository;
 import com.example.spring_REST.API.repository.LoanRepository;
 import com.example.spring_REST.API.repository.ReaderRepository;
-import com.example.spring_REST.API.service.LoanService;
 import org.springframework.stereotype.Service;
 import com.example.spring_REST.API.model.entity.Reader;
 
