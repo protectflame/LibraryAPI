@@ -14,25 +14,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Reader {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String name;
-
-    @Column
+    private String fullName;
     private String email;
-
-    private int phone;
-
+    private String phone;
     private LocalDate registeredAt = LocalDate.now();
-
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private LoanStatus status;
 
     @OneToMany(mappedBy = "reader", fetch = FetchType.LAZY)
     private List<Loan> loans = new ArrayList<>();
-
-
-
 }

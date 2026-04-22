@@ -18,12 +18,4 @@ public class LoanDTO {
     private LocalDateTime returnDate;
 
 
-    public LoanDTO(Long id, Long bookId, Long readerId, LocalDateTime issueDate, LocalDateTime dueDate, LocalDateTime returnDate) {
-        this.id = id;
-        this.bookId = bookId;
-        this.readerId = readerId;
-        this.issueDate = issueDate;
-        this.dueDate = dueDate;
-        this.returnDate = returnDate;
-    }
 }

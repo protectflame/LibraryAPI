@@ -44,7 +44,7 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public LoanDTO createLoan(LoanDTO loanDTO) {
-        Book book = bookRepository.findById(loanDTO.getId())
+        Book book = bookRepository.findById(loanDTO.getBookId())
                 .orElseThrow(() -> new RuntimeException("Book not found"));
 
         Reader reader = readerRepository.findById(loanDTO.getReaderId())
