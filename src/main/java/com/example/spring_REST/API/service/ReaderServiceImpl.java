@@ -1,5 +1,6 @@
 package com.example.spring_REST.API.service;
 
+import com.example.spring_REST.API.exception.ReaderNotFoundException;
 import com.example.spring_REST.API.mapper.ReaderMapper;
 import com.example.spring_REST.API.model.dto.ReaderDTO;
 import com.example.spring_REST.API.model.entity.Reader;
@@ -30,7 +31,7 @@ public class ReaderServiceImpl implements ReaderService {
     @Override
     public ReaderDTO getById(Long id) {
         Reader reader = readerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reader not found"));
+                .orElseThrow(() -> new ReaderNotFoundException("Reader not found"));
         return readerMapper.toDto(reader);
     }
 
@@ -44,7 +45,7 @@ public class ReaderServiceImpl implements ReaderService {
     @Override
     public ReaderDTO updateReader(Long id, ReaderDTO readerDTO) {
         Reader existingReader = readerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reader not found"));
+                .orElseThrow(() -> new ReaderNotFoundException("Reader not found"));
 
         existingReader.setName(readerDTO.getName());
         existingReader.setEmail(readerDTO.getEmail());
@@ -59,7 +60,7 @@ public class ReaderServiceImpl implements ReaderService {
     @Override
     public void deleteReader(Long id) {
         if (!readerRepository.existsById(id)) {
-            throw new RuntimeException("Reader not found");
+            throw new ReaderNotFoundException("Reader not found");
         }
         readerRepository.deleteById(id);
     }
