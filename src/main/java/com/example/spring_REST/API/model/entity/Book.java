@@ -45,7 +45,7 @@ public class Book {
 
     private Long totalCopies;
 
-    private boolean availableCopies;
+    private int availableCopies;
 
     private LocalDateTime createdAt;
 
