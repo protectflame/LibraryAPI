@@ -19,7 +19,7 @@ public class Reader {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String fullName;
+    private String name;
     private String email;
     private String phone;
     private LocalDate registeredAt = LocalDate.now();
