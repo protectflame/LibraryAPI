@@ -1,10 +1,7 @@
 package com.example.spring_REST.API.model.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,15 +13,23 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Loan {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(optional = false)
+    @JoinColumn
+    private Book book;
 
-    private int bookId;
-    private int readerId;
+    @ManyToOne(optional = false)
+    @JoinColumn
+    private Reader reader;
+
     private LocalDateTime issueDate;
     private LocalDateTime dueDate;
     private LocalDateTime returnDate;
 
+    @Enumerated(EnumType.STRING)
+    private LoanStatus status;
 }
