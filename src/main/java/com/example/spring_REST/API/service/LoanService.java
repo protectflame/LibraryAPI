@@ -17,4 +17,10 @@ public interface LoanService {
 
     LoanDTO returnLoan(Long id);
 
+    List<LoanDTO> getActiveLoans();
+
+    List<LoanDTO> getOverdueLoans();
+
+    List<LoanDTO> getReaderHistory(Long readerId);
+
 }
