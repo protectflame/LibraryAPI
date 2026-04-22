@@ -2,8 +2,6 @@ package com.example.spring_REST.API.controller;
 
 
 import com.example.spring_REST.API.model.dto.ReaderDTO;
-import com.example.spring_REST.API.model.entity.Reader;
-import lombok.Locked;
 import org.springframework.web.bind.annotation.*;
 import com.example.spring_REST.API.service.ReaderService;
 

@@ -2,7 +2,6 @@ package com.example.spring_REST.API.controller;
 
 import com.example.spring_REST.API.model.dto.LoanDTO;
 import com.example.spring_REST.API.service.LoanService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
