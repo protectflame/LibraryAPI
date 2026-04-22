@@ -9,32 +9,23 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Reader {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "email")
     private String email;
-
-    private int phone;
-
+    private String phone;
     private LocalDate registeredAt = LocalDate.now();
-
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private LoanStatus status;
 
     @OneToMany(mappedBy = "reader", fetch = FetchType.LAZY)
     private List<Loan> loans = new ArrayList<>();
-
-
-
 }
