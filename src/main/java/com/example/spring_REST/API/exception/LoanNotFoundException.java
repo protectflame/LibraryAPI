@@ -1,5 +1,4 @@
 package com.example.spring_REST.API.exception;
 
-public class GlobalExceptionHandler {
-
+public class LoanNotFoundException {
 }
