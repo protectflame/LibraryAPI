@@ -114,6 +114,21 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
+    public List<LoanDTO> getActiveLoans() {
+        return List.of();
+    }
+
+    @Override
+    public List<LoanDTO> getOverdueLoans() {
+        return List.of();
+    }
+
+    @Override
+    public List<LoanDTO> getReaderHistory(Long readerId) {
+        return List.of();
+    }
+
+    @Override
     public void deleteLoan(Long id) {
         Loan loan = loanRepository.findById(id)
                 .orElseThrow(() -> new LoanNotFoundException("Loan not found"));

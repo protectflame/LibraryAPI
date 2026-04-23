@@ -19,7 +19,7 @@ public class BookMapper {
         dto.setPublishYear(book.getPublishYear());
         dto.setGenre(book.getGenre());
         dto.setTotalCopies(book.getTotalCopies());
-        dto.setAvailableCopies(book.isAvailableCopies());
+        //dto.setAvailableCopies(book.isAvailableCopies());
         dto.setCreatedAt(book.getCreatedAt());
 
         if (book.getAuthors() != null) {
