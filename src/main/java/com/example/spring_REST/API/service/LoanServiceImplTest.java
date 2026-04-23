@@ -52,7 +52,7 @@ class LoanServiceImplTest {
     void setUp() {
         book = new Book();
         book.setId(1L);
-        book.setAvailableCopies(2);
+        book.setAvailableCopies(2L);
 
         reader = new Reader();
         reader.setId(1L);
