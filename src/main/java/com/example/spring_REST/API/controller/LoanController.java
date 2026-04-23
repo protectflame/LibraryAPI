@@ -45,4 +45,18 @@ public class LoanController {
     public LoanDTO returnLoan(@PathVariable Long id) {
         return loanService.returnLoan(id);
     }
+    @GetMapping("/active")
+    public List<LoanDTO> getActiveLoans() {
+        return loanService.getActiveLoans();
+    }
+
+    @GetMapping("/overdue")
+    public List<LoanDTO> getOverdueLoans() {
+        return loanService.getOverdueLoans();
+    }
+
+    @GetMapping("/reader/{readerId}")
+    public List<LoanDTO> getReaderHistory(@PathVariable Long readerId) {
+        return loanService.getReaderHistory(readerId);
+    }
 }
