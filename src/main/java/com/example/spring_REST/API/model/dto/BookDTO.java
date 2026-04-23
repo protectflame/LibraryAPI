@@ -11,31 +11,27 @@ import java.util.List;
 
 @Data
 public class BookDTO {
+    private Long id;
+    private Long availableCopies;
+    private LocalDateTime createdAt;
+    private List<AuthorDTO> authors;
 
-        private Long id;
+    @NotBlank(message = "Название обязательно")
+    @Size(min = 3, max = 255, message = "Длина от 3 до 255 символов")
+    private String title;
 
-        @NotBlank(message = "Название обязательно")
-        @Size(min = 3, max = 255, message = "Длина названия от 3 до 255 символов")
-        private String title;
+    @NotBlank(message = "ISBN обязателен")
+    private String isbn;
 
-        // ISBN - это уникальный номер каждой книги
-        private String isbn;
+    @Size(max = 1000, message = "Описание до 1000 символов")
+    private String description;
 
-        @NotBlank(message = "Описание обязательно")
-        @Size(min = 3, max = 1000, message = "Длина описания от 3 до 1000 символов")
-        private String description;
+    @Min(value = 1400, message = "Год не раньше 1400")
+    private LocalDate publishYear;
 
-        @Min(value = 1400, message = "Год издания не может быть раньше 1400")
-        private LocalDate publishYear;
+    @Size(max = 50)
+    private String genre;
 
-        @Size(max = 50)
-        private String genre;
-
-        private Long totalCopies;
-
-        private boolean availableCopies;
-
-        private LocalDateTime createdAt;
-
-        private List<AuthorDTO> authors;
+    @Min(value = 1, message = "Количество экземпляров должно быть > 0")
+    private Long totalCopies;
 }
