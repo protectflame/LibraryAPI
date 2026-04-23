@@ -1,9 +1,13 @@
 package com.example.spring_REST.API.service;
 
 import com.example.spring_REST.API.model.dto.BookDTO;
-import com.example.spring_REST.API.model.entity.Book;
-import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 public interface BookService {
-    public Book createBook(Book book);
+    public BookDTO createBook(BookDTO bookDto);
+    public BookDTO getBookById(Long id);
+    public List<BookDTO> getAllBook();
+    public BookDTO removeBook(Long id);
+    public BookDTO update(Long id);
 }
