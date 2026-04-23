@@ -37,7 +37,7 @@ RESTful веб-сервис для управления библиотечной
 | **ORM** | Spring Data JPA / Hibernate |
 | **Build Tool** | Maven / Gradle |
 | **Docs** | springdoc-openapi-ui |
-| **Utils** | Lombok, MapStruct |
+| **Utils** | Lombok |
 | **Security** | Spring security |
 | **Docker** | Docker compose, Dockerfile |
 | **Testing** | JUnit 5, Mockito, Testcontainers |
