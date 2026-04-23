@@ -36,7 +36,7 @@ public class Book {
 
     @NotBlank(message = "Описание обязательно")
     @Size(min = 3,max = 1000,message = "Количество символов не должно быть меньше 3 и больше 1000")
-    private String descrition;
+    private String description;
 
     private LocalDate publishYear;
 
@@ -45,7 +45,7 @@ public class Book {
 
     private Long totalCopies;
 
-    private int availableCopies;
+    private Long availableCopies;
 
     private LocalDateTime createdAt;
 
