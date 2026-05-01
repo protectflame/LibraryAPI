@@ -40,7 +40,7 @@ RESTful веб-сервис для управления библиотечной
 | **Framework** | Spring Boot 4.05 |
 | **Database** | PostgreSQL 17+ |
 | **ORM** | Spring Data JPA / Hibernate |
-| **Build Tool** | Maven / Gradle |
+| **Build Tool** | Maven |
 | **Docs** | springdoc-openapi-ui |
 | **Utils** | Lombok |
 | **Security** | Spring security |
