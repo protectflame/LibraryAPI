@@ -55,6 +55,6 @@ public class Book {
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "a_id")
     )
-    private Set<Author> authors = new HashSet<>();
+    private Set<Author> authors;
 
 }
