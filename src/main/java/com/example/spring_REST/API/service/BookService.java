@@ -7,7 +7,7 @@ import java.util.List;
 public interface BookService {
     public BookDTO createBook(BookDTO bookDto);
     public BookDTO getBookById(Long id);
-    public List<BookDTO> getAllBook();
+    public List<BookDTO> getAllBooks();
     public BookDTO removeBook(Long id);
-    public BookDTO update(Long id);
+    public BookDTO update(BookDTO dto);
 }
