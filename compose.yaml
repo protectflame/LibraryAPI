@@ -1,6 +1,6 @@
 services:
   backend:
-    image: library_backend
+    image: library_backend  
     build:
       context: .
     depends_on:

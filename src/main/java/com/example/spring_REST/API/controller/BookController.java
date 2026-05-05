@@ -23,6 +23,7 @@ public class BookController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> getBook(@PathVariable Long id) {
+        System.out.println();
         return ResponseEntity.ok(bookService.getBookById(id));
     }
 }
