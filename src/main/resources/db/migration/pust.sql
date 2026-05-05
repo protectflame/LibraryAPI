@@ -1,0 +1,40 @@
+CREATE TABLE books(
+ id SERIAL PRIMARY KEY,
+ title VARCHAR(256) NOT NULL,
+ genre VARCHAR(50) NOT NULL,
+ isbn VARCHAR(20) UNIQUE NOT NULL,
+ description TEXT,
+ publish_year YEAR,
+ total_copies INTEGER DEFAULT 0,
+ available_copies INTEGER DEFAULT 0,
+ createAt TIMESTAMP CURRENT_TIMESTAMP
+)
+CREATE TABLE authors(
+id SERIAL PRIMARY KEY,
+first_name VARCHAR(50) NOT NULL,
+last_name VARCHAR(50) NOT NULL,
+birth_date DATE
+);
+
+CREATE TABLE author_book_references (
+id SERIAL PRIMARY KEY,
+author_id INTEGER NOT NULL REFERENCES authors(id),
+book_id INTEGER NOT NULL REFERENCES books(id)
+);
+
+CREATE TABLE readers(
+id SERIAL PRIMARY KEY,
+name VARCHAR(50) NOT NULL,
+email VARCHAR(50)  UNIQUE NOT NULL,
+phone VARCHAR(50) UNIQUE,
+registered_at TIMESTAMP NOT NULL
+);
+
+CREATE TABLE loans(
+id SERIAL PRIMARY KEY,
+reader_id INTEGER NOT NULL REFERENCES readers(id),
+book_id INTEGER NOT NULL REFERENCES books(id),
+issue_date DATE DEFAULT CURRENT_DATE,
+due_date DATE DEFAULT CURRENT_DATE,
+return_date DATE
+);
