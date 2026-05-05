@@ -1,4 +1,9 @@
 # 📚 Book Library API
+[![Java](https://img.shields.io/badge/Java-17-orange)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0-green)](https://spring.io/projects/spring-boot)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-blue)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-Compose-blue?logo=docker)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
 RESTful веб-сервис для управления библиотечной системой. Приложение позволяет вести учет книг, авторов, читателей, а также оформлять выдачу и возврат книг с соблюдением бизнес-логики.
 
@@ -35,7 +40,7 @@ RESTful веб-сервис для управления библиотечной
 | **Framework** | Spring Boot 4.05 |
 | **Database** | PostgreSQL 17+ |
 | **ORM** | Spring Data JPA / Hibernate |
-| **Build Tool** | Maven / Gradle |
+| **Build Tool** | Maven |
 | **Docs** | springdoc-openapi-ui |
 | **Utils** | Lombok |
 | **Security** | Spring security |
