@@ -9,63 +9,39 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ReaderNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleReaderNotFound(ReaderNotFoundException ex,
-                                                              HttpServletRequest request) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    @ExceptionHandler({
+            ReaderNotFoundException.class,
+            LoanNotFoundException.class,
+            BookNotFoundException.class,
+            AuthorNotFoundException.class
+    })
+    public ResponseEntity<ErrorResponse> handleNotFoundExceptions(ReaderNotFoundException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.NOT_FOUND,ex,request);
     }
 
-    @ExceptionHandler(LoanNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleLoanNotFound(LoanNotFoundException ex,
-                                                            HttpServletRequest request) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
 
     @ExceptionHandler(BookNotAvailableException.class)
-    public ResponseEntity<ErrorResponse> handleBookNotAvailable(BookNotAvailableException ex,
-                                                                HttpServletRequest request) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    public ResponseEntity<ErrorResponse> handleBookNotAvailable(BookNotAvailableException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST,ex,request);
     }
 
+
     @ExceptionHandler(LoanAlreadyReturnedException.class)
-    public ResponseEntity<ErrorResponse> handleLoanAlreadyReturned(LoanAlreadyReturnedException ex,
-                                                                   HttpServletRequest request) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    public ResponseEntity<ErrorResponse> handleLoanAlreadyReturned(LoanAlreadyReturnedException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST,ex,request);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex,
-                                                                HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex, HttpServletRequest request)
+    {return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR,ex,request);}
+
+    private ResponseEntity<ErrorResponse> buildResponse(HttpStatus status, Exception ex, HttpServletRequest request) {
         ErrorResponse error = new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                status.value(),
+                status.getReasonPhrase(),
                 ex.getMessage(),
                 request.getRequestURI()
         );
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        return ResponseEntity.status(status).body(error);
     }
 }
