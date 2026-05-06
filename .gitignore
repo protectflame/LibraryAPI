@@ -6,6 +6,13 @@
 .idea/
 # BlueJ files
 *.ctxt
+.env
+.gitattributes
+HELP.md
+mvnw.cmd
+mvnw
+
+.env
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
