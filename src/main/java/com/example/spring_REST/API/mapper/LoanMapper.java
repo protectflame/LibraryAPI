@@ -10,12 +10,10 @@ import org.springframework.stereotype.Component;
 public class LoanMapper {
 
     public LoanDTO toDto(Loan loan) {
-        if (loan == null) return null;
-
         return new LoanDTO(
                 loan.getId(),
-                loan.getBook() != null ? loan.getBook().getId() : null,
-                loan.getReader() != null ? loan.getReader().getId() : null,
+                loan.getBook().getId(),
+                loan.getReader().getId(),
                 loan.getIssueDate(),
                 loan.getDueDate(),
                 loan.getReturnDate(),
