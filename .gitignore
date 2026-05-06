@@ -6,6 +6,11 @@
 .idea/
 # BlueJ files
 *.ctxt
+.env
+.gitattributes
+HELP.md
+mvnw.cmd
+mvnw
 
 .env
 
