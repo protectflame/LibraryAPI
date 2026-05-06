@@ -15,6 +15,7 @@ import com.example.spring_REST.API.repository.LoanRepository;
 import com.example.spring_REST.API.repository.ReaderRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -95,6 +96,13 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
+    public void deleteLoan(Long id) {
+        Loan loan = loanRepository.findById(id)
+                .orElseThrow(() -> new LoanNotFoundException("Loan not found"));
+        loanRepository.delete(loan);
+    }
+
+    @Override
     public LoanDTO returnLoan(Long id) {
         Loan loan = loanRepository.findById(id)
                 .orElseThrow(() -> new LoanNotFoundException("Loan not found"));
@@ -113,26 +121,28 @@ public class LoanServiceImpl implements LoanService {
         return loanMapper.toDto(loanRepository.save(loan));
     }
 
-    //Мага бомбовый конешн метод возвращаешь пустой список сау
     @Override
     public List<LoanDTO> getActiveLoans() {
-        return List.of();
+        return loanRepository.findAll().stream()
+                .filter(loan -> loan.getStatus() == LoanStatus.ACTIVE)
+                .map(loanMapper::toDto)
+                .toList();
     }
 
     @Override
     public List<LoanDTO> getOverdueLoans() {
-        return List.of();
+        return loanRepository.findAll().stream()
+                .filter(loan -> loan.getStatus() == LoanStatus.ACTIVE)
+                .filter(loan -> loan.getDueDate() != null && loan.getDueDate().isBefore(LocalDateTime.now()))
+                .map(loanMapper::toDto)
+                .toList();
     }
 
     @Override
     public List<LoanDTO> getReaderHistory(Long readerId) {
-        return List.of();
-    }
-
-    @Override
-    public void deleteLoan(Long id) {
-        Loan loan = loanRepository.findById(id)
-                .orElseThrow(() -> new LoanNotFoundException("Loan not found"));
-        loanRepository.delete(loan);
+        return loanRepository.findAll().stream()
+                .filter(loan -> loan.getReader() != null && loan.getReader().getId().equals(readerId))
+                .map(loanMapper::toDto)
+                .toList();
     }
 }
