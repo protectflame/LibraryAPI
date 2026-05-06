@@ -113,6 +113,7 @@ public class LoanServiceImpl implements LoanService {
         return loanMapper.toDto(loanRepository.save(loan));
     }
 
+    //Мага бомбовый конешн метод возвращаешь пустой список сау
     @Override
     public List<LoanDTO> getActiveLoans() {
         return List.of();
