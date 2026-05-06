@@ -2,6 +2,7 @@ package com.example.spring_REST.API.controller;
 
 
 import com.example.spring_REST.API.model.dto.ReaderDTO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 import com.example.spring_REST.API.service.ReaderService;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/readers")
+@Tag(name = "Readers", description = "Управление читателями: создание, поиск, обновление")
 public class ReaderController {
 
     private final ReaderService readerService;
