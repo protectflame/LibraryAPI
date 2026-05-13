@@ -4,10 +4,10 @@ CREATE TABLE books(
  genre VARCHAR(50) NOT NULL,
  isbn VARCHAR(20) UNIQUE NOT NULL,
  description TEXT,
- publish_year YEAR,
+ publish_year DATE,
  total_copies INTEGER DEFAULT 0,
  available_copies INTEGER DEFAULT 0,
- createAt TIMESTAMP CURRENT_TIMESTAMP
+ createAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
 CREATE TABLE authors(
 id SERIAL PRIMARY KEY,

@@ -28,7 +28,7 @@ public class BookServiceImpl implements BookService {
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
 
-
+    @Transactional(readOnly = true)
     private Set<Author> loadAndValidateAuthors(Set<Long> authorIds) {
         if (authorIds == null || authorIds.isEmpty()) {
             return Collections.emptySet();
@@ -69,9 +69,6 @@ public class BookServiceImpl implements BookService {
         return bookMapper.toDTO(book);
     }
 
-
-
-
     @Transactional(readOnly = true)
     @Override
     public BookDTO getBookById(Long id) {
@@ -97,7 +94,6 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public List<AuthorDTO> getAuthorsByBookId(Long bookId) {
-        // 1. Находим книгу
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookNotFoundException("Книга не найдена"));
 
