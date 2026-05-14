@@ -2,6 +2,7 @@ package com.example.spring_REST.API.service;
 
 import com.example.spring_REST.API.exception.AuthorNotFoundException;
 import com.example.spring_REST.API.mapper.AuthorMapper;
+import com.example.spring_REST.API.mapper.BookMapper;
 import com.example.spring_REST.API.model.dto.AuthorDTO;
 import com.example.spring_REST.API.model.dto.BookDTO;
 import com.example.spring_REST.API.model.entity.Author;
@@ -22,6 +23,7 @@ public class AuthorServiceImpl implements AuthorService{
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
     private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
     @Override
     public AuthorDTO createAuthor(AuthorDTO dto) {
@@ -70,6 +72,9 @@ public class AuthorServiceImpl implements AuthorService{
 
     @Override
     public List<BookDTO> getBooksByAuthorId(Long authorId) {
-        return List.of();
+        Author author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new AuthorNotFoundException("Автор с ID " + authorId + " не найден"));
+
+        return author.getBooks().stream().map(bookMapper::toDTO).toList();
     }
 }

@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({
-            ReaderNotFoundException.class,
-            LoanNotFoundException.class,
-            BookNotFoundException.class,
-            AuthorNotFoundException.class
+            ResourceNotFoundException.class
     })
     public ResponseEntity<ErrorResponse> handleNotFoundExceptions(ReaderNotFoundException ex, HttpServletRequest request) {
         return buildResponse(HttpStatus.NOT_FOUND,ex,request);
