@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibraryAPI — Админ Панель</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', system-ui, sans-serif; }
+        .card { transition: all 0.3s; }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+        pre { max-height: 400px; overflow-y: auto; }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen">
+<div class="max-w-7xl mx-auto p-6">
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-4xl font-bold flex items-center gap-3">
+                <i class="fas fa-book text-emerald-500"></i>
+                LibraryAPI
+            </h1>
+            <p class="text-gray-400">Тестирование бэкенда • localhost:8080</p>
+        </div>
+        <div class="flex gap-3">
+            <button onclick="window.location.reload()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl flex items-center gap-2">
+                <i class="fas fa-sync"></i> Обновить
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex border-b border-gray-700 mb-6">
+        <button onclick="switchTab(0)" class="tab-btn active px-6 py-3 font-medium">Книги</button>
+        <button onclick="switchTab(1)" class="tab-btn px-6 py-3 font-medium">Читатели</button>
+        <button onclick="switchTab(2)" class="tab-btn px-6 py-3 font-medium">Выдачи</button>
+        <button onclick="switchTab(3)" class="tab-btn px-6 py-3 font-medium">Raw JSON</button>
+    </div>
+
+    <!-- Книги -->
+    <div id="tab-0" class="tab-content">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Создать книгу -->
+            <div class="card bg-gray-900 rounded-3xl p-6">
+                <h2 class="text-xl font-semibold mb-4">Создать книгу</h2>
+                <form id="bookForm">
+                    <input type="text" id="title" placeholder="Название" class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl" required>
+                    <input type="text" id="isbn" placeholder="ISBN" class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl" required>
+                    <input type="text" id="description" placeholder="Описание" class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl">
+                    <input type="number" id="totalCopies" placeholder="Количество экземпляров" value="5" class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl">
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 py-3 rounded-2xl font-medium">Создать книгу</button>
+                </form>
+            </div>
+
+            <!-- Список книг -->
+            <div class="card bg-gray-900 rounded-3xl p-6">
+                <div class="flex justify-between mb-4">
+                    <h2 class="text-xl font-semibold">Все книги</h2>
+                    <button onclick="loadBooks()" class="text-emerald-400 hover:text-emerald-300"><i class="fas fa-refresh"></i></button>
+                </div>
+                <div id="booksList" class="space-y-3 max-h-[500px] overflow-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Читатели -->
+    <div id="tab-1" class="tab-content hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="card bg-gray-900 rounded-3xl p-6">
+                <h2 class="text-xl font-semibold mb-4">Новый читатель</h2>
+                <form id="readerForm">
+                    <input type="text" id="readerName" placeholder="ФИО" class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl" required>
+                    <input type="email" id="readerEmail" placeholder="Email" class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl">
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-2xl font-medium">Добавить читателя</button>
+                </form>
+            </div>
+
+            <div class="card bg-gray-900 rounded-3xl p-6">
+                <h2 class="text-xl font-semibold mb-4">Список читателей</h2>
+                <div id="readersList" class="space-y-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Выдачи -->
+    <div id="tab-2" class="tab-content hidden">
+        <div class="grid grid-cols-1 gap-6">
+            <div class="card bg-gray-900 rounded-3xl p-6">
+                <div class="flex gap-4 mb-6">
+                    <button onclick="loadActiveLoans()" class="flex-1 py-3 bg-purple-600 rounded-2xl">Активные выдачи</button>
+                    <button onclick="loadOverdueLoans()" class="flex-1 py-3 bg-red-600 rounded-2xl">Просроченные</button>
+                </div>
+                <div id="loansList" class="space-y-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Raw JSON (для отладки) -->
+    <div id="tab-3" class="tab-content hidden">
+        <div class="bg-gray-900 rounded-3xl p-6">
+            <textarea id="rawJson" class="w-full h-96 bg-gray-950 p-4 rounded-2xl font-mono text-sm" placeholder="Здесь появится ответ..."></textarea>
+        </div>
+    </div>
+</div>
+
+<script>
+    const BASE_URL = "http://localhost:8080/api/v1";
+
+    function switchTab(n) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`tab-${n}`).classList.remove('hidden');
+        document.querySelectorAll('.tab-btn').forEach((el, i) => {
+            el.classList.toggle('active', i === n);
+            el.classList.toggle('border-b-2', i === n);
+            el.classList.toggle('border-emerald-500', i === n);
+        });
+    }
+
+    // Книги
+    async function loadBooks() {
+        const res = await fetch(`${BASE_URL}/books`);
+        const data = await res.json();
+        const html = data.content ? data.content.map(book => `
+        <div class="bg-gray-800 p-4 rounded-2xl">
+          <div class="flex justify-between">
+            <strong>${book.title}</strong>
+            <span class="text-emerald-400">${book.availableCopies || 0}/${book.totalCopies}</span>
+          </div>
+          <div class="text-sm text-gray-400">${book.isbn} • ${book.genre || ''}</div>
+        </div>
+      `).join('') : '<p>Нет книг</p>';
+        document.getElementById('booksList').innerHTML = html;
+    }
+
+    document.getElementById('bookForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const book = {
+            title: document.getElementById('title').value,
+            isbn: document.getElementById('isbn').value,
+            description: document.getElementById('description').value,
+            totalCopies: parseInt(document.getElementById('totalCopies').value),
+            authors: [] // можно расширить позже
+        };
+        const res = await fetch(`${BASE_URL}/books`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(book)
+        });
+        const json = await res.json();
+        document.getElementById('rawJson').value = JSON.stringify(json, null, 2);
+        loadBooks();
+        alert('Книга создана!');
+    });
+
+    // Читатели
+    document.getElementById('readerForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const reader = {
+            name: document.getElementById('readerName').value,
+            email: document.getElementById('readerEmail').value
+        };
+        const res = await fetch(`${BASE_URL}/readers`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(reader)
+        });
+        const json = await res.json();
+        document.getElementById('rawJson').value = JSON.stringify(json, null, 2);
+        loadReaders();
+    });
+
+    async function loadReaders() {
+        const res = await fetch(`${BASE_URL}/readers`);
+        const data = await res.json();
+        const html = data.map(r => `
+        <div class="bg-gray-800 p-4 rounded-2xl flex justify-between">
+          <div>
+            <strong>${r.name || r.fullName || '—'}</strong><br>
+            <span class="text-sm text-gray-400">${r.email || ''}</span>
+          </div>
+          <span class="text-gray-500">ID: ${r.id}</span>
+        </div>
+      `).join('');
+        document.getElementById('readersList').innerHTML = html || '<p>Нет читателей</p>';
+    }
+
+    // Выдачи
+    async function loadActiveLoans() {
+        const res = await fetch(`${BASE_URL}/loans/active`);
+        const data = await res.json();
+        renderLoans(data);
+    }
+
+    async function loadOverdueLoans() {
+        const res = await fetch(`${BASE_URL}/loans/overdue`);
+        const data = await res.json();
+        renderLoans(data);
+    }
+
+    function renderLoans(loans) {
+        const html = loans.map(l => `
+        <div class="bg-gray-800 p-4 rounded-2xl">
+          <div>Книга: <strong>${l.bookTitle || l.book?.title || '—'}</strong></div>
+          <div>Читатель: ${l.readerName || l.reader?.name || '—'}</div>
+          <div class="text-sm text-gray-400">Выдано: ${l.loanDate || ''} • Возврат: ${l.returnDate || '—'}</div>
+        </div>
+      `).join('');
+        document.getElementById('loansList').innerHTML = html || '<p>Нет выдач</p>';
+    }
+
+    // Инициализация
+    window.onload = () => {
+        switchTab(0);
+        loadBooks();
+        loadReaders();
+    };
+</script>
+</body>
+</html>
