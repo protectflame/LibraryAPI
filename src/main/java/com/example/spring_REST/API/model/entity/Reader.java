@@ -28,4 +28,7 @@ public class Reader {
 
     @OneToMany(mappedBy = "reader", fetch = FetchType.LAZY)
     private List<Loan> loans = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true)
+    private User user;
 }

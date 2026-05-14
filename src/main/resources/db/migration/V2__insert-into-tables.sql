@@ -13,10 +13,9 @@ VALUES
     (1, 1),
     (2, 2);
 
-INSERT INTO readers (name, email, phone, registered_at)
-VALUES
-    ('Иван Иванов', 'ivan@example.com', '89990000001', CURRENT_TIMESTAMP),
-    ('Пётр Петров', 'petr@example.com', '89990000002', CURRENT_TIMESTAMP);
+INSERT INTO readers (name, email, phone, registered_at, user_id) VALUES
+('Иван Иванов', 'ivan@example.com', '89990000001', CURRENT_TIMESTAMP, 2),
+('Пётр Петров', 'petr@example.com', '89990000002', CURRENT_TIMESTAMP, NULL);
 
 INSERT INTO loans (reader_id, book_id, issue_date, due_date, return_date)
 VALUES
