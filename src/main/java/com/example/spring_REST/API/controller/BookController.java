@@ -1,20 +1,16 @@
 package com.example.spring_REST.API.controller;
 
 import com.example.spring_REST.API.model.dto.BookDTO;
-import com.example.spring_REST.API.model.dto.AuthorDTO;
 import com.example.spring_REST.API.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 //Версионирование нужно чтоб при изменении api все пользователи api могли спокойно пользоваться прошлой версией
 // и плавно переходить на новый api
@@ -56,5 +52,12 @@ public class BookController {
     )
     public ResponseEntity<BookDTO> updateBook(@PathVariable Long id){
         return ResponseEntity.ok(bookService.update(bookService.getBookById(id)));
+    }
+    @DeleteMapping
+    @Operation(
+            summary = "Удаление по ID"
+    )
+    public BookDTO removeBook(Long id){
+        return bookService.removeBook(id);
     }
 }

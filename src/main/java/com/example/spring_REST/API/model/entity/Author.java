@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -37,6 +36,9 @@ public class Author {
 
 
     @ManyToMany(mappedBy = "authors",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private Set<Book> book = new HashSet<>();
+    private Set<Book> books = new HashSet<>();
 
+    public Set<Book> getBook() {
+        return Set.copyOf(books);
+    }
 }

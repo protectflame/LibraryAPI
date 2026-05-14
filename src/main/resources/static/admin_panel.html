@@ -34,6 +34,7 @@
     <div class="flex border-b border-gray-700 mb-6">
         <button onclick="switchTab(0)" class="tab-btn active px-6 py-3 font-medium">Книги</button>
         <button onclick="switchTab(1)" class="tab-btn px-6 py-3 font-medium">Читатели</button>
+        <button onclick="switchTab(2)" class="tab-btn px-6 py-3 font-medium">Авторы</button>
         <button onclick="switchTab(2)" class="tab-btn px-6 py-3 font-medium">Выдачи</button>
         <button onclick="switchTab(3)" class="tab-btn px-6 py-3 font-medium">Raw JSON</button>
     </div>
@@ -41,11 +42,18 @@
     <!-- Книги -->
     <div id="tab-0" class="tab-content">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="card bg-gray-900 rounded-3xl p-6">
+                <h2 class="text-xl font-semibold mb-4">Удаление книги</h2>
+                <form id="bookDeleteForm">
+                    <input type="text", id="id" placeholder="ID для удаление" class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl" required>
+                </form>
+            </div>
             <!-- Создать книгу -->
             <div class="card bg-gray-900 rounded-3xl p-6">
                 <h2 class="text-xl font-semibold mb-4">Создать книгу</h2>
                 <form id="bookForm">
                     <input type="text" id="title" placeholder="Название" class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl" required>
+                    <input type="text" id="genre" placeholder="Жанр" class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl" required>
                     <input type="text" id="isbn" placeholder="ISBN" class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl" required>
                     <input type="text" id="description" placeholder="Описание" class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl">
                     <input type="number" id="totalCopies" placeholder="Количество экземпляров" value="5" class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl">
@@ -137,6 +145,7 @@
         e.preventDefault();
         const book = {
             title: document.getElementById('title').value,
+            genre: document.getElementById('genre').value,
             isbn: document.getElementById('isbn').value,
             description: document.getElementById('description').value,
             totalCopies: parseInt(document.getElementById('totalCopies').value),
