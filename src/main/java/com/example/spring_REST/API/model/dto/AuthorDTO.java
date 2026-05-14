@@ -17,7 +17,9 @@ public class AuthorDTO {
     @Size(max = 50)
     private String firstName;
 
-    @NotBlank
     @Size(max = 50)
     private String lastName;
+
+    private LocalDate birthDate;
+
 }
