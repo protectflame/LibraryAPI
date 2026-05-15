@@ -14,7 +14,7 @@ public interface BookService {
     public List<AuthorDTO> getAuthorsByBookId(Long bookId);
     public Page<BookDTO> getAllBooks(Pageable pageable);
     public BookDTO removeBook(Long id);
-    public BookDTO update(BookDTO dto);
+    public BookDTO update(Long id,BookDTO dto);
 
     List<BookDTO> findBooksByGenre(String genre);
 }
