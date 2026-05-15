@@ -1,9 +1,9 @@
 package com.example.spring_REST.API.service;
 
-import com.example.spring_REST.API.exception.BookNotAvailableException;
-import com.example.spring_REST.API.exception.LoanAlreadyReturnedException;
-import com.example.spring_REST.API.exception.LoanNotFoundException;
-import com.example.spring_REST.API.exception.ReaderNotFoundException;
+import com.example.spring_REST.API.exception.notFound.BookNotAvailableException;
+import com.example.spring_REST.API.exception.business.LoanAlreadyReturnedException;
+import com.example.spring_REST.API.exception.business.LoanNotFoundException;
+import com.example.spring_REST.API.exception.notFound.ReaderNotFoundException;
 import com.example.spring_REST.API.mapper.LoanMapper;
 import com.example.spring_REST.API.model.dto.LoanDTO;
 import com.example.spring_REST.API.model.entity.Book;
@@ -15,7 +15,6 @@ import com.example.spring_REST.API.repository.LoanRepository;
 import com.example.spring_REST.API.repository.ReaderRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
