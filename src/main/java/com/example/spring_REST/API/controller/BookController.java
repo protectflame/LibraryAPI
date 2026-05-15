@@ -4,11 +4,14 @@ import com.example.spring_REST.API.model.dto.BookDTO;
 import com.example.spring_REST.API.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/books")
 @RequiredArgsConstructor
+@Validated
 @Tag(name = "Books", description = "Управление книгами: создание, поиск, обновление") // Группировка в Swagger
 public class BookController {
 
@@ -30,7 +34,7 @@ public class BookController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Получение книги по id")
-    public BookDTO getById(@PathVariable Long id){
+    public BookDTO getById(@PathVariable @Min(1) Long id){
         return bookService.getBookById(id);
     }
 
@@ -50,8 +54,11 @@ public class BookController {
             summary = "Обновление книги",
             description = "ID книги должен существовать иначе она не будет обновлена"
     )
-    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id){
-        return ResponseEntity.ok(bookService.update(bookService.getBookById(id)));
+    public ResponseEntity<BookDTO> updateBook(
+            @PathVariable Long id,
+            @Valid @RequestBody BookDTO dto)
+    {
+        return ResponseEntity.ok(bookService.update(id,dto));
     }
     @DeleteMapping
     @Operation(

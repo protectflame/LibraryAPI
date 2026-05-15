@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoanDTO {
+public class LoanDTO implements HasId {
     private Long id;
     private Long bookId;
     private Long readerId;
