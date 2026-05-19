@@ -3,7 +3,6 @@ package com.example.spring_REST.API.repository;
 import com.example.spring_REST.API.model.entity.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book,Long> {
-    List<Book> findAllByGenre(String genre);
+    List<Book> findByGenre(String genre);
     /**
      * Поиск с фильтрами.
      * :param - это параметр запроса. Если он null, условие игнорируется (благодаря OR ... IS NULL)
@@ -27,10 +26,4 @@ public interface BookRepository extends JpaRepository<Book,Long> {
                                @Param("authorName") String authorName,
                                @Param("available") Boolean available,
                                Pageable pageable);
-
-    @Query("select b.id from Book b")
-    Page<Long> findBookIds(Pageable pageable);
-
-    @Query("select distinct b from Book b left join fetch b.authors where b.id in :ids")
-    List<Book> findAllByIdInWithAuthors(@Param("ids") List<Long> ids);
 }

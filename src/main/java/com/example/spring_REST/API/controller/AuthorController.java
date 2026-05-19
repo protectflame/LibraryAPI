@@ -4,7 +4,6 @@ import com.example.spring_REST.API.model.dto.AuthorDTO;
 import com.example.spring_REST.API.service.AuthorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,13 +29,5 @@ public class AuthorController {
     public ResponseEntity<AuthorDTO> createAuthor(@RequestBody AuthorDTO authorDTO){
         AuthorDTO createAuthor = authorService.createAuthor(authorDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createAuthor);
-    }
-    @PutMapping
-    @Operation(
-            summary = "Обновление автора",
-            description = "Передавайте валидный ID"
-    )
-    public  ResponseEntity<AuthorDTO> updateAuthor(@PathVariable Long id, @Valid @RequestBody AuthorDTO dto){
-        return ResponseEntity.ok(authorService.updateAuthor(id, dto));
     }
 }

@@ -1,6 +1,6 @@
 package com.example.spring_REST.API.service;
 
-import com.example.spring_REST.API.exception.notFound.ReaderNotFoundException;
+import com.example.spring_REST.API.exception.ReaderNotFoundException;
 import com.example.spring_REST.API.mapper.ReaderMapper;
 import com.example.spring_REST.API.model.dto.ReaderDTO;
 import com.example.spring_REST.API.model.entity.Reader;

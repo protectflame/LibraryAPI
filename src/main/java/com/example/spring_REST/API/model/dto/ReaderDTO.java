@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReaderDTO implements HasId{
+public class ReaderDTO {
     private Long id;
     private String name;
     private String email;

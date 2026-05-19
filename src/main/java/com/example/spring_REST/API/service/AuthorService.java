@@ -10,9 +10,8 @@ import java.util.List;
 public interface AuthorService {
     AuthorDTO createAuthor(AuthorDTO dto);
     AuthorDTO getAuthorById(Long id);
-    Page<AuthorDTO> getAllAuthors(Pageable pageable);
-    AuthorDTO updateAuthor(Long id,AuthorDTO dto);
+    Page<AuthorDTO> getAllAuthors(Pageable pageable); // Пагинация обязательна!
+    AuthorDTO updateAuthor(AuthorDTO dto);
     void removeAuthor(Long id);
-    public Page<AuthorDTO>searchByName(String query, Pageable pageable);
     List<BookDTO> getBooksByAuthorId(Long authorId);
 }

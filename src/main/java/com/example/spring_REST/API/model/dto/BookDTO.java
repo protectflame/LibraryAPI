@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class BookDTO implements HasId{
+public class BookDTO {
     private Long id;
     private Long availableCopies;
     private LocalDateTime createdAt;

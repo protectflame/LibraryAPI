@@ -1,8 +1,6 @@
 package com.example.spring_REST.API.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,19 +8,24 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler({
             ResourceNotFoundException.class
     })
-    public ResponseEntity<ErrorResponse> handleNotFoundExceptions(ResourceNotFoundException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleNotFoundExceptions(ReaderNotFoundException ex, HttpServletRequest request) {
         return buildResponse(HttpStatus.NOT_FOUND,ex,request);
     }
-    @ExceptionHandler(DomainConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleDomainViolation(DomainConstraintViolationException ex,
-                                                               HttpServletRequest request) {
-        log.warn("Бизнес-ошибка: {}", ex.getMessage());
-        return buildResponse(HttpStatus.BAD_REQUEST, ex, request);
+
+
+    @ExceptionHandler(BookNotAvailableException.class)
+    public ResponseEntity<ErrorResponse> handleBookNotAvailable(BookNotAvailableException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST,ex,request);
+    }
+
+
+    @ExceptionHandler(LoanAlreadyReturnedException.class)
+    public ResponseEntity<ErrorResponse> handleLoanAlreadyReturned(LoanAlreadyReturnedException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST,ex,request);
     }
 
     @ExceptionHandler(Exception.class)

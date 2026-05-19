@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthorDTO implements HasId {
+public class AuthorDTO {
     private Long id;
     @NotBlank
     @Size(max = 50)

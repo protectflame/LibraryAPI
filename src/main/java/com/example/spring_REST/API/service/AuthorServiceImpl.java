@@ -1,12 +1,13 @@
 package com.example.spring_REST.API.service;
 
-import com.example.spring_REST.API.exception.notFound.AuthorNotFoundException;
+import com.example.spring_REST.API.exception.AuthorNotFoundException;
 import com.example.spring_REST.API.mapper.AuthorMapper;
 import com.example.spring_REST.API.mapper.BookMapper;
 import com.example.spring_REST.API.model.dto.AuthorDTO;
 import com.example.spring_REST.API.model.dto.BookDTO;
 import com.example.spring_REST.API.model.entity.Author;
 import com.example.spring_REST.API.repository.AuthorRepository;
+import com.example.spring_REST.API.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,16 +18,19 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class AuthorServiceImpl implements AuthorService {
+public class AuthorServiceImpl implements AuthorService{
 
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
+    private final BookRepository bookRepository;
     private final BookMapper bookMapper;
 
     @Override
     public AuthorDTO createAuthor(AuthorDTO dto) {
         Author author = authorMapper.toEntity(dto);
+
         Author savedAuthor = authorRepository.save(author);
+
         return authorMapper.toDTO(savedAuthor);
     }
 
@@ -37,40 +41,30 @@ public class AuthorServiceImpl implements AuthorService {
         return authorMapper.toDTO(author);
     }
 
-    @Override
     @Transactional(readOnly = true)
+    @Override
     public Page<AuthorDTO> getAllAuthors(Pageable pageable) {
         return authorRepository.findAll(pageable)
                 .map(authorMapper::toDTO);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Page<AuthorDTO> searchByName(String query, Pageable pageable) {
-        Page<Author> page = authorRepository
-                .findByFirstNameContainingOrLastNameContaining(query, pageable);
-
-        return page.map(authorMapper::toDTO);
-    }
-
-
-
-    @Override
-    public AuthorDTO updateAuthor(Long id, AuthorDTO dto) {
-        Author author = authorRepository.findById(id)
-                .orElseThrow(() -> new AuthorNotFoundException("Автор с ID " + id + " не найден"));
+    public AuthorDTO updateAuthor(AuthorDTO dto) {
+        Author author = authorRepository.findById(dto.getId())
+                     .orElseThrow(() -> new AuthorNotFoundException("Автор с ID " + dto.getId() + " не найден"));
         author.setFirstName(dto.getFirstName());
         author.setLastName(dto.getLastName());
         author.setBirthDate(dto.getBirthDate());
         authorRepository.save(author);
-        return authorMapper.toDTO(author);
+        return dto;
     }
 
     @Override
     public void removeAuthor(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException("Автор с ID " + id + " не найден"));
-        if (authorRepository.existsById(id)) {
+
+        if (!author.getBooks().isEmpty()) {
             throw new IllegalStateException("Нельзя удалить автора, у которого есть книги");
         }
         authorRepository.deleteById(id);
