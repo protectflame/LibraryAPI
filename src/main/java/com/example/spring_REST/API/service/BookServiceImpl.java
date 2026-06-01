@@ -29,7 +29,7 @@ public class BookServiceImpl implements BookService {
     private final AuthorMapper authorMapper;
 
     @Transactional(readOnly = true)
-    private Set<Author> loadAndValidateAuthors(Set<Long> authorIds) {
+    protected Set<Author> loadAndValidateAuthors(Set<Long> authorIds) {
         if (authorIds == null || authorIds.isEmpty()) {
             return Collections.emptySet();
         }
@@ -57,16 +57,19 @@ public class BookServiceImpl implements BookService {
         book.setId(null);
         book.setAvailableCopies(dto.getTotalCopies());
         book.setCreatedAt(LocalDateTime.now());
+
         if (dto.getAuthors() != null) {
             Set<Long> authorsIds = dto.getAuthors()
                     .stream()
                     .map(AuthorDTO::getId)
                     .filter(Objects::nonNull)
-                    .collect(Collectors.toSet());;
+                    .collect(Collectors.toSet());
+
             book.setAuthors(new HashSet<>(loadAndValidateAuthors(authorsIds)));
         }
-        bookRepository.save(book);
-        return bookMapper.toDTO(book);
+
+        Book savedBook = bookRepository.save(book);
+        return bookMapper.toDTO(savedBook);
     }
 
     @Transactional(readOnly = true)
@@ -117,7 +120,7 @@ public class BookServiceImpl implements BookService {
 
 
     @Override
-    public BookDTO update(BookDTO dto) {
+    public BookDTO update(Long id, BookDTO dto) {
         Book book = bookRepository.findById(dto.getId())
                 .orElseThrow(() -> new BookNotFoundException("Книга с ID " + dto.getId() + " не найдена"));
 
