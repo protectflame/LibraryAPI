@@ -1,7 +1,7 @@
 package com.example.spring_REST.API.service;
 
-import com.example.spring_REST.API.exception.LoanAlreadyReturnedException;
-import com.example.spring_REST.API.exception.LoanNotFoundException;
+import com.example.spring_REST.API.exception.business.LoanAlreadyReturnedException;
+import com.example.spring_REST.API.exception.business.LoanNotFoundException;
 import com.example.spring_REST.API.mapper.LoanMapper;
 import com.example.spring_REST.API.model.dto.LoanDTO;
 import com.example.spring_REST.API.model.entity.Book;

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component; // Рекомендуется �
 public class AuthorMapper {
 
     public AuthorDTO toDTO(Author author) {
-        // ИСПРАВЛЕНИЕ: проверяем на null правильно
         if (author == null) {
             return null;
         }
@@ -17,7 +16,7 @@ public class AuthorMapper {
         dto.setId(author.getId());
         dto.setFirstName(author.getFirstName());
         dto.setLastName(author.getLastName());
-        // birthDate тоже можно мапить, если нужно
+        dto.setBirthDate(author.getBirthDate());
         return dto;
     }
 
@@ -29,6 +28,8 @@ public class AuthorMapper {
         Author author = new Author();
         author.setFirstName(dto.getFirstName());
         author.setLastName(dto.getLastName());
+        author.setBirthDate(dto.getBirthDate());
+
         // Если есть ID, устанавливаем его (для обновлений)
         if (dto.getId() != null) {
             author.setId(dto.getId());
