@@ -16,8 +16,9 @@ public class GlobalExceptionHandler {
             ResourceNotFoundException.class
     })
     public ResponseEntity<ErrorResponse> handleNotFoundExceptions(ResourceNotFoundException ex, HttpServletRequest request) {
-        return buildResponse(HttpStatus.NOT_FOUND,ex,request);
+        return buildResponse(HttpStatus.NOT_FOUND, ex, request);
     }
+
     @ExceptionHandler(DomainConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleDomainViolation(DomainConstraintViolationException ex,
                                                                HttpServletRequest request) {
@@ -26,8 +27,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex, HttpServletRequest request)
-    {return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR,ex,request);}
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex, request);
+    }
 
     private ResponseEntity<ErrorResponse> buildResponse(HttpStatus status, Exception ex, HttpServletRequest request) {
         ErrorResponse error = new ErrorResponse(

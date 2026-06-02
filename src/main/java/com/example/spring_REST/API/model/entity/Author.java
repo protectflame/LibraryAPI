@@ -35,7 +35,7 @@ public class Author {
     private LocalDate birthDate;
 
 
-    @ManyToMany(mappedBy = "authors",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "authors", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Book> books = new HashSet<>();
 
     public Set<Book> getBook() {

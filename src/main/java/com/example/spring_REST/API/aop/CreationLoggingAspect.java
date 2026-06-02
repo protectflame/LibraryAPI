@@ -15,11 +15,10 @@ public class CreationLoggingAspect {
             pointcut = "execution(* com.example.spring_REST.API.service..*.create*(..))",
             returning = "result"
     )
-    public void logCreated(Object result){
-        if(result instanceof HasId hasId){
+    public void logCreated(Object result) {
+        if (result instanceof HasId hasId) {
             log.info("Объект {} создан - id= {}", result.getClass().getSimpleName(), hasId.getId());
-        }
-        else{
+        } else {
             log.info("Объект создан");
         }
     }

@@ -12,16 +12,18 @@ import java.util.Optional;
 
 public interface AuthorRepository extends JpaRepository<Author, Long> {
     public Optional<Author> findByFirstName(String name);
+
     @Query("""
-        select a
-        from Author a
-        where lower(a.firstName) like lower(concat('%', :query, '%'))
-           or lower(a.lastName) like lower(concat('%', :query, '%'))
-        """)
+            select a
+            from Author a
+            where lower(a.firstName) like lower(concat('%', :query, '%'))
+               or lower(a.lastName) like lower(concat('%', :query, '%'))
+            """)
     Page<Author> findByFirstNameContainingOrLastNameContaining(
             @Param("query") String query,
             Pageable pageable
     );
+
     boolean existsById(Long id);
 
 }

@@ -1,286 +1,1223 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="dark">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LibraryAPI — Админ Панель</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap"
+          rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', system-ui, sans-serif; }
-        .card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .card:hover { transform: translateY(-6px); box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4); }
-        .tab-btn.active { border-bottom: 3px solid rgb(16 185 129); color: rgb(16 185 129); }
-        .author-tag { background-color: rgb(245 158 11); color: black; font-size: 0.8rem; }
+        :root {
+            --bg: #0a0c0f;
+            --surface: #111318;
+            --surface2: #1a1d24;
+            --border: #252830;
+            --accent: #00e5a0;
+            --accent2: #0066ff;
+            --accent3: #ff4466;
+            --text: #e8eaf0;
+            --muted: #5a6072;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Syne', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        code, .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--surface);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        /* Layout */
+        .sidebar {
+            width: 220px;
+            min-height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 0;
+            z-index: 10;
+        }
+
+        .main {
+            margin-left: 220px;
+            padding: 32px;
+        }
+
+        /* Nav */
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            transition: all 0.15s;
+            border-left: 2px solid transparent;
+            text-transform: uppercase;
+        }
+
+        .nav-item:hover {
+            color: var(--text);
+            background: var(--surface2);
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            background: rgba(0, 229, 160, 0.05);
+        }
+
+        .nav-item i {
+            width: 16px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 18px;
+        }
+
+        /* Form elements */
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Syne', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.15s;
+            margin-bottom: 10px;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: var(--muted);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-family: 'Syne', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            border: none;
+            transition: all 0.15s;
+            text-transform: uppercase;
+        }
+
+        .btn-green {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .btn-green:hover {
+            background: #00ffb3;
+        }
+
+        .btn-blue {
+            background: var(--accent2);
+            color: #fff;
+        }
+
+        .btn-blue:hover {
+            background: #3385ff;
+        }
+
+        .btn-red {
+            background: var(--accent3);
+            color: #fff;
+        }
+
+        .btn-red:hover {
+            background: #ff6680;
+        }
+
+        .btn-ghost {
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Toast */
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.2s ease;
+            max-width: 320px;
+        }
+
+        .toast.success {
+            background: rgba(0, 229, 160, 0.15);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .toast.error {
+            background: rgba(255, 68, 102, 0.15);
+            border: 1px solid var(--accent3);
+            color: var(--accent3);
+        }
+
+        .toast.info {
+            background: rgba(0, 102, 255, 0.15);
+            border: 1px solid var(--accent2);
+            color: var(--accent2);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Status badge */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .badge-green {
+            background: rgba(0, 229, 160, 0.12);
+            color: var(--accent);
+        }
+
+        .badge-red {
+            background: rgba(255, 68, 102, 0.12);
+            color: var(--accent3);
+        }
+
+        .badge-blue {
+            background: rgba(0, 102, 255, 0.12);
+            color: var(--accent2);
+        }
+
+        .badge-gray {
+            background: var(--surface2);
+            color: var(--muted);
+        }
+
+        /* Table-like items */
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: border-color 0.15s;
+        }
+
+        .list-item:hover {
+            border-color: var(--muted);
+        }
+
+        .list-item-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .list-item-sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        /* Auth bar */
+        .auth-bar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            margin-left: 220px;
+        }
+
+        /* Grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1100px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Raw JSON */
+        #rawJson {
+            width: 100%;
+            height: 400px;
+            background: #0d0f12;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #a8d8a8;
+            resize: vertical;
+            margin-bottom: 0;
+        }
+
+        /* Loader */
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Tabs */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Auth status dot */
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-dot.online {
+            background: var(--accent);
+            box-shadow: 0 0 6px var(--accent);
+        }
+
+        .status-dot.offline {
+            background: var(--muted);
+        }
+
+        /* Collapsible return form */
+        .return-btn {
+            font-size: 11px;
+            padding: 4px 10px;
+        }
+
+        /* Section header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
     </style>
 </head>
-<body class="bg-gray-950 text-gray-100 min-h-screen">
-<div class="max-w-7xl mx-auto p-6">
+<body>
 
-    <div class="flex justify-between items-center mb-8">
-        <div>
-            <h1 class="text-4xl font-bold flex items-center gap-3">
-                <i class="fas fa-book text-emerald-500"></i> LibraryAPI
-            </h1>
-            <p class="text-gray-400">Админ-панель • localhost:8080</p>
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <div style="padding: 0 20px 24px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <i class="fas fa-book" style="color:var(--accent);font-size:16px;"></i>
+            <span style="font-size:16px;font-weight:800;letter-spacing:-0.01em;">LibraryAPI</span>
         </div>
-        <button onclick="window.location.reload()" class="px-5 py-2.5 bg-gray-800 hover:bg-gray-700 rounded-2xl flex items-center gap-2">
-            <i class="fas fa-sync"></i> Обновить
+        <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;">localhost:63342</div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:12px;"></div>
+
+    <nav>
+        <div class="nav-item active" onclick="showTab('books')" id="nav-books">
+            <i class="fas fa-book"></i> Книги
+        </div>
+        <div class="nav-item" onclick="showTab('readers')" id="nav-readers">
+            <i class="fas fa-users"></i> Читатели
+        </div>
+        <div class="nav-item" onclick="showTab('authors')" id="nav-authors">
+            <i class="fas fa-feather"></i> Авторы
+        </div>
+        <div class="nav-item" onclick="showTab('loans')" id="nav-loans">
+            <i class="fas fa-hand-holding-open"></i> Выдачи
+        </div>
+        <div class="nav-item" onclick="showTab('raw')" id="nav-raw">
+            <i class="fas fa-code"></i> Raw JSON
+        </div>
+    </nav>
+
+    <div style="margin-top:auto;padding:20px;border-top:1px solid var(--border);">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">
+            Статус
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;">
+            <span class="status-dot offline" id="statusDot"></span>
+            <span id="authStatusText" style="color:var(--muted);">Не авторизован</span>
+        </div>
+        <button class="btn btn-ghost btn-full" style="margin-top:10px;font-size:11px;padding:7px;" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Выйти
         </button>
     </div>
+</div>
 
-    <!-- Tabs -->
-    <div class="flex border-b border-gray-700 mb-8 overflow-x-auto">
-        <button onclick="switchTab(0)" class="tab-btn active px-8 py-4 font-medium text-lg">Книги</button>
-        <button onclick="switchTab(1)" class="tab-btn px-8 py-4 font-medium text-lg">Авторы</button>
-        <button onclick="switchTab(2)" class="tab-btn px-8 py-4 font-medium text-lg">Читатели</button>
-        <button onclick="switchTab(3)" class="tab-btn px-8 py-4 font-medium text-lg">Выдачи</button>
-        <button onclick="switchTab(4)" class="tab-btn px-8 py-4 font-medium text-lg">Raw JSON</button>
-    </div>
+<!-- Auth bar (top) -->
+<div class="auth-bar">
+    <input id="loginUsername" type="text" placeholder="Username"
+           style="width:150px;margin:0;padding:7px 12px;font-size:13px;">
+    <input id="loginPassword" type="password" placeholder="Password"
+           style="width:150px;margin:0;padding:7px 12px;font-size:13px;">
+    <button class="btn btn-green" onclick="login()" id="loginBtn" style="padding:7px 14px;font-size:12px;">
+        <i class="fas fa-sign-in-alt"></i> Войти
+    </button>
+    <div style="width:1px;height:24px;background:var(--border);"></div>
+    <input id="tokenInput" type="text" placeholder="Или вставь JWT токен вручную"
+           style="flex:1;margin:0;padding:7px 12px;font-size:12px;font-family:'JetBrains Mono',monospace;">
+    <button class="btn btn-blue" onclick="saveToken()" style="padding:7px 14px;font-size:12px;">Сохранить</button>
+</div>
 
-    <!-- ===================== КНИГИ ===================== -->
-    <div id="tab-0" class="tab-content">
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            <!-- Создать книгу -->
-            <div class="card bg-gray-900 rounded-3xl p-6">
-                <h2 class="text-xl font-semibold mb-5">Создать книгу</h2>
-                <form id="bookForm">
-                    <input type="text" id="title" placeholder="Название" required class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl">
-                    <input type="text" id="genre" placeholder="Жанр" required class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl">
-                    <input type="text" id="isbn" placeholder="ISBN" required class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl">
-                    <input type="text" id="description" placeholder="Описание" class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl">
-                    <input type="number" id="totalCopies" value="5" min="1" class="w-full mb-4 px-4 py-3 bg-gray-800 rounded-2xl">
+<!-- Main content -->
+<div class="main" style="padding-top:24px;">
 
-                    <label class="block text-sm text-gray-400 mb-2">Авторы</label>
-                    <select id="authorsSelect" multiple class="w-full bg-gray-800 rounded-2xl p-3 h-40 mb-4"></select>
-
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 py-3.5 rounded-2xl font-medium">Создать</button>
+    <!-- BOOKS TAB -->
+    <div id="tab-books" class="tab-content active">
+        <div class="section-header">
+            <div class="section-title">📚 Книги</div>
+            <button class="btn btn-ghost" onclick="loadBooks()"><span class="spinner" id="booksSpinner"
+                                                                      style="display:none;"></span> <i
+                    class="fas fa-sync-alt"></i> Обновить
+            </button>
+        </div>
+        <div class="grid-2" style="margin-bottom:20px;">
+            <!-- Create book -->
+            <div class="card">
+                <div class="card-title"><i class="fas fa-plus"></i> Создать книгу</div>
+                <form id="bookForm" onsubmit="submitBook(event)">
+                    <input type="text" id="title" placeholder="Название *" required>
+                    <input type="text" id="isbn" placeholder="ISBN *" required>
+                    <input type="text" id="genre" placeholder="Жанр">
+                    <input type="text" id="description" placeholder="Описание">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                        <input type="number" id="publishYear" placeholder="Год издания" min="1000" max="2099">
+                        <input type="number" id="totalCopies" placeholder="Кол-во экз." value="1" min="1">
+                    </div>
+                    <input type="text" id="bookAuthorIds" placeholder="IDs авторов через запятую: 1,2">
+                    <button type="submit" class="btn btn-green btn-full" id="createBookBtn">
+                        <i class="fas fa-plus"></i> Создать книгу
+                    </button>
                 </form>
             </div>
-
-            <!-- Удалить книгу -->
-            <div class="card bg-gray-900 rounded-3xl p-6">
-                <h2 class="text-xl font-semibold mb-5 text-red-400">Удалить книгу</h2>
-                <form id="bookDeleteForm">
-                    <input type="number" id="deleteBookId" placeholder="ID книги" required class="w-full mb-4 px-4 py-3 bg-gray-800 rounded-2xl">
-                    <button type="submit" class="w-full bg-red-600 hover:bg-red-500 py-3.5 rounded-2xl font-medium">Удалить</button>
+            <!-- Delete book -->
+            <div class="card">
+                <div class="card-title"><i class="fas fa-trash"></i> Удалить книгу</div>
+                <form id="bookDeleteForm" onsubmit="deleteBook(event)">
+                    <input type="number" id="deleteBookId" placeholder="ID книги *" required>
+                    <button type="submit" class="btn btn-red btn-full">
+                        <i class="fas fa-trash"></i> Удалить
+                    </button>
                 </form>
-            </div>
-
-            <!-- Список книг -->
-            <div class="card bg-gray-900 rounded-3xl p-6 xl:col-span-3">
-                <div class="flex justify-between mb-5">
-                    <h2 class="text-xl font-semibold">Все книги</h2>
-                    <button onclick="loadBooks()" class="text-emerald-400 hover:text-emerald-300"><i class="fas fa-refresh"></i></button>
+                <div style="height:1px;background:var(--border);margin:16px 0;"></div>
+                <div class="card-title"><i class="fas fa-search"></i> Найти по ID</div>
+                <div style="display:flex;gap:8px;">
+                    <input type="number" id="findBookId" placeholder="ID книги" style="margin:0;">
+                    <button class="btn btn-ghost" onclick="findBook()" style="white-space:nowrap;">Найти</button>
                 </div>
-                <div id="booksList" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[620px] overflow-auto"></div>
             </div>
+        </div>
+        <!-- Books list -->
+        <div class="card">
+            <div class="section-header" style="margin-bottom:14px;">
+                <div class="card-title" style="margin:0;">Все книги</div>
+                <span id="booksCount" style="font-size:12px;color:var(--muted);"></span>
+            </div>
+            <div id="booksList"></div>
         </div>
     </div>
 
-    <!-- ===================== АВТОРЫ ===================== -->
-    <div id="tab-1" class="tab-content hidden">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="card bg-gray-900 rounded-3xl p-6">
-                <h2 class="text-xl font-semibold mb-5">Новый автор</h2>
-                <form id="authorForm">
-                    <input type="text" id="authorName" placeholder="ФИО автора" required class="w-full mb-4 px-4 py-3 bg-gray-800 rounded-2xl">
-                    <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 py-3.5 rounded-2xl font-medium">Добавить автора</button>
+    <!-- READERS TAB -->
+    <div id="tab-readers" class="tab-content">
+        <div class="section-header">
+            <div class="section-title">👥 Читатели</div>
+            <button class="btn btn-ghost" onclick="loadReaders()"><i class="fas fa-sync-alt"></i> Обновить</button>
+        </div>
+        <div class="grid-2" style="margin-bottom:20px;">
+            <div class="card">
+                <div class="card-title"><i class="fas fa-user-plus"></i> Новый читатель</div>
+                <form id="readerForm" onsubmit="submitReader(event)">
+                    <input type="text" id="readerName" placeholder="ФИО *" required>
+                    <input type="email" id="readerEmail" placeholder="Email">
+                    <input type="text" id="readerPhone" placeholder="Телефон">
+                    <button type="submit" class="btn btn-blue btn-full">
+                        <i class="fas fa-plus"></i> Добавить читателя
+                    </button>
                 </form>
             </div>
-
-            <div class="card bg-gray-900 rounded-3xl p-6">
-                <h2 class="text-xl font-semibold mb-5">Список авторов</h2>
-                <div id="authorsList" class="space-y-3 max-h-[620px] overflow-auto"></div>
+            <div class="card">
+                <div class="card-title"><i class="fas fa-search"></i> Найти читателя</div>
+                <div style="display:flex;gap:8px;margin-bottom:10px;">
+                    <input type="number" id="findReaderId" placeholder="ID читателя" style="margin:0;">
+                    <button class="btn btn-ghost" onclick="findReader()" style="white-space:nowrap;">Найти</button>
+                </div>
+                <div id="readerFindResult"></div>
             </div>
+        </div>
+        <div class="card">
+            <div class="section-header" style="margin-bottom:14px;">
+                <div class="card-title" style="margin:0;">Все читатели</div>
+                <span id="readersCount" style="font-size:12px;color:var(--muted);"></span>
+            </div>
+            <div id="readersList"></div>
         </div>
     </div>
 
-    <!-- ===================== ЧИТАТЕЛИ ===================== -->
-    <div id="tab-2" class="tab-content hidden">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="card bg-gray-900 rounded-3xl p-6">
-                <h2 class="text-xl font-semibold mb-5">Новый читатель</h2>
-                <form id="readerForm">
-                    <input type="text" id="readerName" placeholder="ФИО" required class="w-full mb-3 px-4 py-3 bg-gray-800 rounded-2xl">
-                    <input type="email" id="readerEmail" placeholder="Email" class="w-full mb-4 px-4 py-3 bg-gray-800 rounded-2xl">
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 py-3.5 rounded-2xl font-medium">Добавить</button>
+    <!-- AUTHORS TAB -->
+    <div id="tab-authors" class="tab-content">
+        <div class="section-header">
+            <div class="section-title">✍️ Авторы</div>
+            <button class="btn btn-ghost" onclick="loadAuthors()"><i class="fas fa-sync-alt"></i> Обновить</button>
+        </div>
+        <div class="grid-2" style="margin-bottom:20px;">
+            <div class="card">
+                <div class="card-title"><i class="fas fa-feather"></i> Новый автор</div>
+                <form id="authorForm" onsubmit="submitAuthor(event)">
+                    <input type="text" id="authorFirstName" placeholder="Имя *" required>
+                    <input type="text" id="authorLastName" placeholder="Фамилия">
+                    <input type="date" id="authorBirthDate">
+                    <button type="submit" class="btn btn-full" style="background:#7c3aed;color:#fff;">
+                        <i class="fas fa-plus"></i> Добавить автора
+                    </button>
                 </form>
             </div>
-
-            <div class="card bg-gray-900 rounded-3xl p-6">
-                <h2 class="text-xl font-semibold mb-5">Список читателей</h2>
-                <div id="readersList" class="space-y-3 max-h-[620px] overflow-auto"></div>
+            <div class="card">
+                <div class="card-title"><i class="fas fa-info-circle"></i> Подсказка</div>
+                <p style="font-size:13px;color:var(--muted);line-height:1.6;">
+                    Сначала создай автора, запомни его <strong style="color:var(--text);">ID</strong>,
+                    затем при создании книги введи этот ID в поле «IDs авторов».
+                </p>
+                <div style="margin-top:14px;" id="authorsList-mini"></div>
             </div>
+        </div>
+        <div class="card">
+            <div class="section-header" style="margin-bottom:14px;">
+                <div class="card-title" style="margin:0;">Все авторы</div>
+                <span id="authorsCount" style="font-size:12px;color:var(--muted);"></span>
+            </div>
+            <div id="authorsList"></div>
         </div>
     </div>
 
-    <!-- ===================== RAW JSON ===================== -->
-    <div id="tab-4" class="tab-content hidden">
-        <div class="bg-gray-900 rounded-3xl p-6">
-            <div class="flex justify-between mb-3">
-                <h2 class="text-xl font-semibold">Raw JSON</h2>
-                <button onclick="clearJson()" class="text-gray-400 hover:text-white"><i class="fas fa-trash"></i></button>
+    <!-- LOANS TAB -->
+    <div id="tab-loans" class="tab-content">
+        <div class="section-header">
+            <div class="section-title">📖 Выдачи</div>
+            <div style="display:flex;gap:8px;">
+                <button class="btn btn-ghost" onclick="loadAllLoans()"><i class="fas fa-list"></i> Все</button>
+                <button class="btn btn-ghost" onclick="loadActiveLoans()"><i class="fas fa-circle"
+                                                                             style="color:var(--accent);font-size:8px;"></i>
+                    Активные
+                </button>
+                <button class="btn btn-ghost" onclick="loadOverdueLoans()" style="color:var(--accent3);"><i
+                        class="fas fa-exclamation-triangle"></i> Просроченные
+                </button>
             </div>
-            <textarea id="rawJson" class="w-full h-96 bg-gray-950 p-5 rounded-2xl font-mono text-sm" readonly></textarea>
+        </div>
+        <div class="grid-2" style="margin-bottom:20px;">
+            <div class="card">
+                <div class="card-title"><i class="fas fa-plus"></i> Новая выдача</div>
+                <form id="loanForm" onsubmit="submitLoan(event)">
+                    <input type="number" id="loanBookId" placeholder="ID книги *" required>
+                    <input type="number" id="loanReaderId" placeholder="ID читателя *" required>
+                    <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px;margin-top:-4px;">Срок
+                        возврата *</label>
+                    <input type="datetime-local" id="loanDueDate" required>
+                    <button type="submit" class="btn btn-green btn-full">
+                        <i class="fas fa-hand-holding-open"></i> Создать выдачу
+                    </button>
+                </form>
+            </div>
+            <div class="card">
+                <div class="card-title"><i class="fas fa-undo"></i> Вернуть книгу</div>
+                <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Закрыть выдачу по её ID</p>
+                <div style="display:flex;gap:8px;">
+                    <input type="number" id="returnLoanId" placeholder="ID выдачи" style="margin:0;">
+                    <button class="btn btn-blue" onclick="returnLoan()" style="white-space:nowrap;">Вернуть</button>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="section-header" style="margin-bottom:14px;">
+                <div class="card-title" style="margin:0;">Список выдач</div>
+                <span id="loansCount" style="font-size:12px;color:var(--muted);"></span>
+            </div>
+            <div id="loansList"></div>
+        </div>
+    </div>
+
+    <!-- RAW JSON TAB -->
+    <div id="tab-raw" class="tab-content">
+        <div class="section-header">
+            <div class="section-title">{ } Raw JSON</div>
+            <button class="btn btn-ghost" onclick="document.getElementById('rawJson').value=''">Очистить</button>
+        </div>
+        <div class="card">
+            <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
+                Все ответы API отображаются здесь автоматически. Используй для отладки.
+            </p>
+            <textarea id="rawJson" readonly placeholder="Здесь появятся ответы от API..."></textarea>
         </div>
     </div>
 </div>
 
 <script>
+    // =====================
+    // CONFIGURATION
+    // =====================
+    // Измени BASE_URL если у тебя другой префикс (например /api/v1)
     const BASE_URL = "http://localhost:8080/api/v1";
 
-    function switchTab(n) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-        document.getElementById(`tab-${n}`).classList.remove('hidden');
-        document.querySelectorAll('.tab-btn').forEach((el, i) => el.classList.toggle('active', i === n));
+    // =====================
+    // TOAST NOTIFICATIONS
+    // =====================
+    function toast(msg, type = 'info') {
+        const c = document.getElementById('toast-container');
+        const t = document.createElement('div');
+        const icons = {success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle'};
+        t.className = `toast ${type}`;
+        t.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i> ${msg}`;
+        c.appendChild(t);
+        setTimeout(() => t.remove(), 4000);
     }
 
-    async function apiRequest(url, options = {}) {
+    function setRaw(data) {
+        document.getElementById('rawJson').value = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+    }
+
+    // =====================
+    // AUTH
+    // =====================
+    function getToken() {
+        return localStorage.getItem('jwt');
+    }
+
+    function saveToken() {
+        const token = document.getElementById('tokenInput').value.trim();
+        if (!token) {
+            toast('Токен пустой', 'error');
+            return;
+        }
+        localStorage.setItem('jwt', token);
+        updateAuthStatus();
+        toast('Токен сохранён', 'success');
+    }
+
+    function authHeaders() {
+        const token = getToken();
+        const headers = {'Content-Type': 'application/json'};
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+        return headers;
+    }
+
+    function updateAuthStatus() {
+        const dot = document.getElementById('statusDot');
+        const txt = document.getElementById('authStatusText');
+        if (getToken()) {
+            dot.className = 'status-dot online';
+            txt.textContent = 'Авторизован';
+            txt.style.color = 'var(--accent)';
+        } else {
+            dot.className = 'status-dot offline';
+            txt.textContent = 'Не авторизован';
+            txt.style.color = 'var(--muted)';
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('jwt');
+        document.getElementById('tokenInput').value = '';
+        updateAuthStatus();
+        toast('Выход выполнен', 'info');
+    }
+
+    async function login() {
+        const username = document.getElementById('loginUsername').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        if (!username || !password) {
+            toast('Введи логин и пароль', 'error');
+            return;
+        }
+
+        const btn = document.getElementById('loginBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span>';
+
         try {
-            const res = await fetch(url, options);
-            const text = await res.text();
-            let data;
-            try { data = JSON.parse(text); } catch { data = text; }
+            const res = await fetch(`${BASE_URL}/auth/login`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, password})
+            });
+            const json = await res.json();
+            setRaw(json);
 
-            document.getElementById('rawJson').value = JSON.stringify(data, null, 2);
-
-            if (!res.ok) throw new Error(data?.message || `HTTP ${res.status}`);
-            return data;
-        } catch (err) {
-            alert("Ошибка: " + err.message);
-            console.error(err);
+            // Пробуем разные варианты поля с токеном
+            const token = json.token || json.accessToken || json.jwt || json.access_token;
+            if (res.ok && token) {
+                localStorage.setItem('jwt', token);
+                document.getElementById('tokenInput').value = token;
+                updateAuthStatus();
+                toast('Вход выполнен', 'success');
+                loadAll();
+            } else {
+                toast(json.message || json.error || `Ошибка ${res.status}`, 'error');
+            }
+        } catch (e) {
+            toast('Сервер недоступен: ' + e.message, 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Войти';
         }
     }
 
-    // ===================== АВТОРЫ =====================
-    async function loadAuthors() {
-        const data = await apiRequest(`${BASE_URL}/authors?page=0&size=100&sort=name,asc`);
-        const authors = data?.content || [];
-
-        document.getElementById('authorsList').innerHTML = authors.map(a => `
-            <div class="bg-gray-800 p-4 rounded-2xl flex justify-between items-center">
-                <strong>${a.name}</strong>
-                <span class="text-gray-500 text-sm">ID: ${a.id}</span>
-            </div>
-        `).join('') || '<p class="text-gray-400">Нет авторов</p>';
-
-        // Для формы книг
-        document.getElementById('authorsSelect').innerHTML = authors.map(a =>
-            `<option value="${a.id}">${a.name}</option>`
-        ).join('');
+    // =====================
+    // TABS
+    // =====================
+    function showTab(name) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + name).classList.add('active');
+        document.getElementById('nav-' + name).classList.add('active');
     }
 
-    document.getElementById('authorForm').addEventListener('submit', async e => {
-        e.preventDefault();
-        const author = { name: document.getElementById('authorName').value };
+    // =====================
+    // API HELPER
+    // =====================
+    async function apiRequest(method, path, body = null) {
+        const opts = {method, headers: authHeaders()};
+        if (body) opts.body = JSON.stringify(body);
+        const res = await fetch(BASE_URL + path, opts);
 
-        await apiRequest(`${BASE_URL}/authors`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(author)
-        });
-        e.target.reset();
-        loadAuthors();
-    });
+        let data;
+        const ct = res.headers.get('content-type') || '';
+        if (ct.includes('application/json')) {
+            data = await res.json();
+        } else {
+            data = await res.text();
+        }
 
-    // ===================== КНИГИ =====================
+        setRaw(data);
+        return {ok: res.ok, status: res.status, data};
+    }
+
+    // =====================
+    // BOOKS
+    // =====================
     async function loadBooks() {
-        const data = await apiRequest(`${BASE_URL}/books?page=0&size=20&sort=title,asc`);
-        const books = data?.content || [];
-
-        const html = books.map(book => `
-            <div class="bg-gray-800 p-5 rounded-2xl">
-                <div class="flex justify-between">
-                    <div>
-                        <strong class="text-lg">${book.title}</strong>
-                        <div class="text-sm text-gray-400">${book.isbn} • ${book.genre}</div>
-                    </div>
-                    <span class="text-emerald-400">${book.availableCopies || 0}/${book.totalCopies}</span>
-                </div>
-                ${book.authors?.length ? `
-                <div class="flex flex-wrap gap-2 mt-3">
-                    ${book.authors.map(a => `<span class="author-tag px-3 py-1 rounded-xl">${a.name}</span>`).join('')}
-                </div>` : ''}
-            </div>
-        `).join('');
-
-        document.getElementById('booksList').innerHTML = html || '<p class="text-gray-400">Книги отсутствуют</p>';
-    }
-
-    document.getElementById('bookForm').addEventListener('submit', async e => {
-        e.preventDefault();
-        const selectedAuthors = Array.from(document.getElementById('authorsSelect').selectedOptions)
-            .map(opt => ({ id: +opt.value }));
-
-        const book = {
-            title: document.getElementById('title').value,
-            genre: document.getElementById('genre').value,
-            isbn: document.getElementById('isbn').value,
-            description: document.getElementById('description').value,
-            totalCopies: +document.getElementById('totalCopies').value,
-            authors: selectedAuthors
-        };
-
-        await apiRequest(`${BASE_URL}/books`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(book)
-        });
-        loadBooks();
-        e.target.reset();
-    });
-
-    document.getElementById('bookDeleteForm').addEventListener('submit', async e => {
-        e.preventDefault();
-        const id = document.getElementById('deleteBookId').value;
-        if (!id) return;
-
-        if (confirm(`Удалить книгу ID = ${id}?`)) {
-            await apiRequest(`${BASE_URL}/books?id=${id}`, { method: 'DELETE' });
-            loadBooks();
-            e.target.reset();
+        document.getElementById('booksSpinner').style.display = 'inline-block';
+        try {
+            const {ok, data, status} = await apiRequest('GET', '/books');
+            if (!ok) {
+                toast(`Ошибка загрузки книг: ${status}`, 'error');
+                return;
+            }
+            const books = data.content ?? data;
+            renderBooks(Array.isArray(books) ? books : []);
+        } catch (e) {
+            toast('Сервер недоступен', 'error');
+        } finally {
+            document.getElementById('booksSpinner').style.display = 'none';
         }
-    });
+    }
 
-    // ===================== ЧИТАТЕЛИ =====================
-    document.getElementById('readerForm').addEventListener('submit', async e => {
+    function renderBooks(books) {
+        const el = document.getElementById('booksList');
+        document.getElementById('booksCount').textContent = `${books.length} шт.`;
+        if (!books.length) {
+            el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Книг нет</p>';
+            return;
+        }
+        el.innerHTML = books.map(b => `
+        <div class="list-item">
+            <div>
+                <div class="list-item-title">${esc(b.title)}</div>
+                <div class="list-item-sub mono">ISBN: ${esc(b.isbn)} • ${esc(b.genre || '—')}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <span class="badge ${(b.availableCopies ?? b.totalCopies ?? 0) > 0 ? 'badge-green' : 'badge-red'}">
+                    ${b.availableCopies ?? '?'}/${b.totalCopies ?? '?'} экз.
+                </span>
+                <span class="badge badge-gray">ID: ${b.id}</span>
+            </div>
+        </div>
+    `).join('');
+    }
+
+    async function submitBook(e) {
         e.preventDefault();
-        const reader = {
-            name: document.getElementById('readerName').value,
-            email: document.getElementById('readerEmail').value || null
+        const authorIdsRaw = document.getElementById('bookAuthorIds').value.trim();
+        const authorIds = authorIdsRaw
+            ? authorIdsRaw.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n))
+            : [];
+
+        // Отправляем два варианта сразу — бэкенд использует один из них
+        const publishYearVal = document.getElementById('publishYear').value;
+        const body = {
+            title: document.getElementById('title').value.trim(),
+            isbn: document.getElementById('isbn').value.trim(),
+            genre: document.getElementById('genre').value.trim() || null,
+            description: document.getElementById('description').value.trim() || null,
+            totalCopies: parseInt(document.getElementById('totalCopies').value) || 1,
+            // Пробуем оба варианта поля для года
+            publishYear: publishYearVal ? parseInt(publishYearVal) : null,
+            publicationYear: publishYearVal ? parseInt(publishYearVal) : null,
+            // Пробуем оба варианта для авторов
+            authorIds: authorIds,
+            authors: authorIds.map(id => ({id}))
         };
 
-        await apiRequest(`${BASE_URL}/readers`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(reader)
-        });
-        loadReaders();
-        e.target.reset();
-    });
+        const btn = document.getElementById('createBookBtn');
+        btn.disabled = true;
 
+        try {
+            const {ok, status, data} = await apiRequest('POST', '/books', body);
+            if (ok) {
+                toast('Книга создана!', 'success');
+                document.getElementById('bookForm').reset();
+                document.getElementById('totalCopies').value = '1';
+                loadBooks();
+            } else {
+                const msg = data?.message || data?.error || (typeof data === 'string' ? data : `Ошибка ${status}`);
+                toast('Ошибка: ' + msg, 'error');
+            }
+        } catch (e) {
+            toast('Сервер недоступен: ' + e.message, 'error');
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    async function deleteBook(e) {
+        e.preventDefault();
+        const id = document.getElementById('deleteBookId').value.trim();
+        if (!confirm(`Удалить книгу ID=${id}?`)) return;
+
+        const {ok, status} = await apiRequest('DELETE', `/books/${id}`);
+        if (ok) {
+            toast(`Книга ID=${id} удалена`, 'success');
+            document.getElementById('bookDeleteForm').reset();
+            loadBooks();
+        } else {
+            toast(`Ошибка удаления: ${status}`, 'error');
+        }
+    }
+
+    async function findBook() {
+        const id = document.getElementById('findBookId').value.trim();
+        if (!id) return;
+        const {ok, data, status} = await apiRequest('GET', `/books/${id}`);
+        if (ok) {
+            toast(`Книга найдена: ${data.title}`, 'success');
+        } else {
+            toast(`Книга не найдена: ${status}`, 'error');
+        }
+    }
+
+    // =====================
+    // READERS
+    // =====================
     async function loadReaders() {
-        const data = await apiRequest(`${BASE_URL}/readers`);
-        const html = (data || []).map(r => `
-            <div class="bg-gray-800 p-4 rounded-2xl flex justify-between">
-                <div><strong>${r.name}</strong><br><span class="text-gray-400">${r.email || ''}</span></div>
-                <span class="text-gray-500">ID: ${r.id}</span>
+        try {
+            const {ok, data, status} = await apiRequest('GET', '/readers');
+            if (!ok) {
+                toast(`Ошибка загрузки читателей: ${status}`, 'error');
+                return;
+            }
+            const readers = data.content ?? data;
+            renderReaders(Array.isArray(readers) ? readers : []);
+        } catch (e) {
+            toast('Сервер недоступен', 'error');
+        }
+    }
+
+    function renderReaders(readers) {
+        const el = document.getElementById('readersList');
+        document.getElementById('readersCount').textContent = `${readers.length} чел.`;
+        if (!readers.length) {
+            el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Читателей нет</p>';
+            return;
+        }
+        el.innerHTML = readers.map(r => `
+        <div class="list-item">
+            <div>
+                <div class="list-item-title">${esc(r.name || r.fullName || '—')}</div>
+                <div class="list-item-sub">${esc(r.email || '')} ${r.phone ? '• ' + esc(r.phone) : ''}</div>
             </div>
-        `).join('');
-        document.getElementById('readersList').innerHTML = html || '<p class="text-gray-400">Нет читателей</p>';
+            <span class="badge badge-gray">ID: ${r.id}</span>
+        </div>
+    `).join('');
     }
 
-    function clearJson() {
-        document.getElementById('rawJson').value = '';
+    async function submitReader(e) {
+        e.preventDefault();
+        const body = {
+            name: document.getElementById('readerName').value.trim(),
+            fullName: document.getElementById('readerName').value.trim(), // некоторые бэкенды используют fullName
+            email: document.getElementById('readerEmail').value.trim() || null,
+            phone: document.getElementById('readerPhone').value.trim() || null
+        };
+
+        const {ok, status, data} = await apiRequest('POST', '/readers', body);
+        if (ok) {
+            toast('Читатель добавлен', 'success');
+            document.getElementById('readerForm').reset();
+            loadReaders();
+        } else {
+            const msg = data?.message || data?.error || `Ошибка ${status}`;
+            toast('Ошибка: ' + msg, 'error');
+        }
     }
 
-    // Инициализация
-    window.onload = () => {
-        switchTab(0);
+    async function findReader() {
+        const id = document.getElementById('findReaderId').value.trim();
+        if (!id) return;
+        const {ok, data, status} = await apiRequest('GET', `/readers/${id}`);
+        const el = document.getElementById('readerFindResult');
+        if (ok) {
+            el.innerHTML = `
+            <div class="list-item">
+                <div>
+                    <div class="list-item-title">${esc(data.name || data.fullName || '—')}</div>
+                    <div class="list-item-sub">${esc(data.email || '')} ${data.phone ? '• ' + esc(data.phone) : ''}</div>
+                </div>
+                <span class="badge badge-green">ID: ${data.id}</span>
+            </div>`;
+            toast('Читатель найден', 'success');
+        } else {
+            el.innerHTML = '';
+            toast(`Не найден: ${status}`, 'error');
+        }
+    }
+
+    // =====================
+    // AUTHORS
+    // =====================
+    async function loadAuthors() {
+        try {
+            const {ok, data, status} = await apiRequest('GET', '/authors');
+            if (!ok) {
+                toast(`Ошибка загрузки авторов: ${status}`, 'error');
+                return;
+            }
+            const authors = data.content ?? data;
+            renderAuthors(Array.isArray(authors) ? authors : []);
+        } catch (e) {
+            toast('Сервер недоступен', 'error');
+        }
+    }
+
+    function renderAuthors(authors) {
+        const el = document.getElementById('authorsList');
+        document.getElementById('authorsCount').textContent = `${authors.length} авт.`;
+        if (!authors.length) {
+            el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Авторов нет</p>';
+            return;
+        }
+        el.innerHTML = authors.map(a => `
+        <div class="list-item">
+            <div>
+                <div class="list-item-title">${esc(a.firstName || '')} ${esc(a.lastName || '')}</div>
+                <div class="list-item-sub">${a.birthDate ? '🎂 ' + esc(a.birthDate) : ''}</div>
+            </div>
+            <span class="badge badge-gray">ID: ${a.id}</span>
+        </div>
+    `).join('');
+    }
+
+    async function submitAuthor(e) {
+        e.preventDefault();
+        const body = {
+            firstName: document.getElementById('authorFirstName').value.trim(),
+            lastName: document.getElementById('authorLastName').value.trim() || null,
+            birthDate: document.getElementById('authorBirthDate').value || null
+        };
+
+        const {ok, status, data} = await apiRequest('POST', '/authors', body);
+        if (ok) {
+            toast('Автор добавлен', 'success');
+            document.getElementById('authorForm').reset();
+            loadAuthors();
+        } else {
+            const msg = data?.message || data?.error || `Ошибка ${status}`;
+            toast('Ошибка: ' + msg, 'error');
+        }
+    }
+
+    // =====================
+    // LOANS
+    // =====================
+    async function loadAllLoans() {
+        const {ok, data, status} = await apiRequest('GET', '/loans');
+        if (ok) renderLoans(data.content ?? (Array.isArray(data) ? data : []));
+        else toast(`Ошибка: ${status}`, 'error');
+    }
+
+    async function loadActiveLoans() {
+        const {ok, data, status} = await apiRequest('GET', '/loans/active');
+        if (ok) renderLoans(data.content ?? (Array.isArray(data) ? data : []));
+        else toast(`Ошибка: ${status}`, 'error');
+    }
+
+    async function loadOverdueLoans() {
+        const {ok, data, status} = await apiRequest('GET', '/loans/overdue');
+        if (ok) renderLoans(data.content ?? (Array.isArray(data) ? data : []));
+        else toast(`Ошибка: ${status}`, 'error');
+    }
+
+    function renderLoans(loans) {
+        const el = document.getElementById('loansList');
+        document.getElementById('loansCount').textContent = `${loans.length} шт.`;
+        if (!loans.length) {
+            el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Выдач нет</p>';
+            return;
+        }
+        el.innerHTML = loans.map(l => {
+            const returned = l.status === 'RETURNED' || l.returnDate;
+            const overdue = !returned && l.dueDate && new Date(l.dueDate) < new Date();
+            const badge = returned
+                ? '<span class="badge badge-gray">Возвращена</span>'
+                : overdue
+                    ? '<span class="badge badge-red">Просрочена</span>'
+                    : '<span class="badge badge-green">Активна</span>';
+            return `
+        <div class="list-item">
+            <div>
+                <div class="list-item-title">Книга: <span class="mono">${l.bookId ?? l.book?.id ?? '—'}</span> → Читатель: <span class="mono">${l.readerId ?? l.reader?.id ?? '—'}</span></div>
+                <div class="list-item-sub">
+                    Выдано: ${fmt(l.loanDate || l.issueDate)} • Срок: ${fmt(l.dueDate)}
+                    ${l.returnDate ? '• Возвращено: ' + fmt(l.returnDate) : ''}
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                ${badge}
+                <span class="badge badge-gray">ID: ${l.id}</span>
+            </div>
+        </div>`;
+        }).join('');
+    }
+
+    async function submitLoan(e) {
+        e.preventDefault();
+        const dueDateRaw = document.getElementById('loanDueDate').value;
+        const body = {
+            bookId: Number(document.getElementById('loanBookId').value),
+            readerId: Number(document.getElementById('loanReaderId').value),
+            dueDate: dueDateRaw,        // "2024-12-31T00:00"
+            status: 'ACTIVE'
+        };
+
+        const {ok, status, data} = await apiRequest('POST', '/loans', body);
+        if (ok) {
+            toast('Выдача создана', 'success');
+            document.getElementById('loanForm').reset();
+            loadAllLoans();
+        } else {
+            const msg = data?.message || data?.error || `Ошибка ${status}`;
+            toast('Ошибка: ' + msg, 'error');
+        }
+    }
+
+    async function returnLoan() {
+        const id = document.getElementById('returnLoanId').value.trim();
+        if (!id) {
+            toast('Введи ID выдачи', 'error');
+            return;
+        }
+
+        // Пробуем стандартный PATCH /loans/{id}/return
+        let result = await apiRequest('PATCH', `/loans/${id}/return`);
+        if (!result.ok) {
+            // Fallback: PUT /loans/{id}/return
+            result = await apiRequest('PUT', `/loans/${id}/return`);
+        }
+        if (!result.ok) {
+            // Fallback: POST /loans/{id}/return
+            result = await apiRequest('POST', `/loans/${id}/return`);
+        }
+
+        if (result.ok) {
+            toast(`Выдача ID=${id} закрыта`, 'success');
+            document.getElementById('returnLoanId').value = '';
+            loadAllLoans();
+        } else {
+            toast(`Ошибка возврата: ${result.status}`, 'error');
+        }
+    }
+
+    // =====================
+    // HELPERS
+    // =====================
+    function esc(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function fmt(dt) {
+        if (!dt) return '—';
+        try {
+            return new Date(dt).toLocaleString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch {
+            return dt;
+        }
+    }
+
+    function loadAll() {
         loadBooks();
         loadAuthors();
         loadReaders();
+        loadAuthors();
+    }
+
+    // =====================
+    // INIT
+    // =====================
+    window.onload = () => {
+        updateAuthStatus();
+        const saved = getToken();
+        if (saved) document.getElementById('tokenInput').value = saved;
+        showTab('books');
+        loadBooks(); // Книги грузим всегда (может быть публичный эндпоинт)
+        // Читателей/авторов грузим только если есть токен
+        if (saved) {
+            loadReaders();
+            loadAuthors();
+        }
     };
 </script>
 </body>

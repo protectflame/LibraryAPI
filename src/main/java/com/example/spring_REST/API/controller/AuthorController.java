@@ -22,21 +22,23 @@ public class AuthorController {
 
     @GetMapping
     @Operation(summary = "Получение всех авторов")
-    public Page<AuthorDTO> authorDTOList(Pageable pageable){
+    public Page<AuthorDTO> authorDTOList(Pageable pageable) {
         return authorService.getAllAuthors(pageable);
     }
+
     @PostMapping
     @Operation(summary = "Создание автора")
-    public ResponseEntity<AuthorDTO> createAuthor(@RequestBody AuthorDTO authorDTO){
+    public ResponseEntity<AuthorDTO> createAuthor(@RequestBody AuthorDTO authorDTO) {
         AuthorDTO createAuthor = authorService.createAuthor(authorDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createAuthor);
     }
+
     @PutMapping
     @Operation(
             summary = "Обновление автора",
             description = "Передавайте валидный ID"
     )
-    public  ResponseEntity<AuthorDTO> updateAuthor(@PathVariable Long id, @Valid @RequestBody AuthorDTO dto){
+    public ResponseEntity<AuthorDTO> updateAuthor(@PathVariable Long id, @Valid @RequestBody AuthorDTO dto) {
         return ResponseEntity.ok(authorService.updateAuthor(id, dto));
     }
 }

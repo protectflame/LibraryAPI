@@ -2,6 +2,7 @@ package com.example.spring_REST.API.model.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class BookDTO implements HasId{
+public class BookDTO implements HasId {
     private Long id;
     private Long availableCopies;
     private LocalDateTime createdAt;
@@ -26,7 +27,7 @@ public class BookDTO implements HasId{
     @Size(max = 1000, message = "Описание до 1000 символов")
     private String description;
 
-    @Min(value = 1400, message = "Год не раньше 1400")
+    @PastOrPresent(message = "Дата публикации не может быть в будущем")
     private LocalDate publishYear;
 
     @Size(max = 50)

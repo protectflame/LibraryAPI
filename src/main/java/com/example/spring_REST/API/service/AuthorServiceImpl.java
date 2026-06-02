@@ -54,7 +54,6 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
 
-
     @Override
     public AuthorDTO updateAuthor(Long id, AuthorDTO dto) {
         Author author = authorRepository.findById(id)
