@@ -29,18 +29,18 @@ public class Book {
     private Long id;
 
     @NotBlank
-    @Size(min = 3,max = 255,message = "Количество символов не должно быть меньше 3 и больше 255")
+    @Size(min = 3, max = 255, message = "Количество символов не должно быть меньше 3 и больше 255")
     private String title;
 
     private String isbn;
 
     @NotBlank(message = "Описание обязательно")
-    @Size(min = 3,max = 1000,message = "Количество символов не должно быть меньше 3 и больше 1000")
+    @Size(min = 3, max = 1000, message = "Количество символов не должно быть меньше 3 и больше 1000")
     private String description;
 
     private LocalDate publishYear;
 
-    @Size(min = 3,max = 50)
+    @Size(min = 3, max = 50)
     private String genre;
 
     private Long totalCopies;
@@ -49,7 +49,7 @@ public class Book {
 
     private LocalDateTime createdAt;
 
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "book_author",
             joinColumns = @JoinColumn(name = "book_id"),

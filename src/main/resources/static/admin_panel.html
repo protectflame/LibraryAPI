@@ -6,7 +6,8 @@
     <title>LibraryAPI — Админ Панель</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap"
+          rel="stylesheet">
     <style>
         :root {
             --bg: #0a0c0f;
@@ -19,19 +20,36 @@
             --text: #e8eaf0;
             --muted: #5a6072;
         }
-        * { box-sizing: border-box; }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Syne', sans-serif;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
         }
-        code, .mono { font-family: 'JetBrains Mono', monospace; }
+
+        code, .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
 
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: var(--surface); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--surface);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
 
         /* Layout */
         .sidebar {
@@ -40,17 +58,25 @@
             background: var(--surface);
             border-right: 1px solid var(--border);
             position: fixed;
-            left: 0; top: 0; bottom: 0;
+            left: 0;
+            top: 0;
+            bottom: 0;
             display: flex;
             flex-direction: column;
             padding: 24px 0;
             z-index: 10;
         }
-        .main { margin-left: 220px; padding: 32px; }
+
+        .main {
+            margin-left: 220px;
+            padding: 32px;
+        }
 
         /* Nav */
         .nav-item {
-            display: flex; align-items: center; gap: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             padding: 10px 20px;
             cursor: pointer;
             color: var(--muted);
@@ -61,9 +87,23 @@
             border-left: 2px solid transparent;
             text-transform: uppercase;
         }
-        .nav-item:hover { color: var(--text); background: var(--surface2); }
-        .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0,229,160,0.05); }
-        .nav-item i { width: 16px; text-align: center; font-size: 13px; }
+
+        .nav-item:hover {
+            color: var(--text);
+            background: var(--surface2);
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            background: rgba(0, 229, 160, 0.05);
+        }
+
+        .nav-item i {
+            width: 16px;
+            text-align: center;
+            font-size: 13px;
+        }
 
         /* Cards */
         .card {
@@ -72,6 +112,7 @@
             border-radius: 12px;
             padding: 24px;
         }
+
         .card-title {
             font-size: 13px;
             font-weight: 700;
@@ -95,12 +136,21 @@
             transition: border-color 0.15s;
             margin-bottom: 10px;
         }
-        input:focus, select:focus, textarea:focus { border-color: var(--accent); }
-        input::placeholder, textarea::placeholder { color: var(--muted); }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: var(--muted);
+        }
 
         /* Buttons */
         .btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             padding: 10px 18px;
             border-radius: 8px;
             font-family: 'Syne', sans-serif;
@@ -112,50 +162,142 @@
             transition: all 0.15s;
             text-transform: uppercase;
         }
-        .btn-green  { background: var(--accent); color: #000; }
-        .btn-green:hover  { background: #00ffb3; }
-        .btn-blue   { background: var(--accent2); color: #fff; }
-        .btn-blue:hover   { background: #3385ff; }
-        .btn-red    { background: var(--accent3); color: #fff; }
-        .btn-red:hover    { background: #ff6680; }
-        .btn-ghost  { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-        .btn-ghost:hover  { border-color: var(--accent); color: var(--accent); }
-        .btn-full   { width: 100%; }
-        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .btn-green {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .btn-green:hover {
+            background: #00ffb3;
+        }
+
+        .btn-blue {
+            background: var(--accent2);
+            color: #fff;
+        }
+
+        .btn-blue:hover {
+            background: #3385ff;
+        }
+
+        .btn-red {
+            background: var(--accent3);
+            color: #fff;
+        }
+
+        .btn-red:hover {
+            background: #ff6680;
+        }
+
+        .btn-ghost {
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
 
         /* Toast */
         #toast-container {
-            position: fixed; top: 20px; right: 20px;
-            z-index: 9999; display: flex; flex-direction: column; gap: 8px;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
+
         .toast {
             padding: 12px 18px;
             border-radius: 8px;
             font-size: 13px;
             font-weight: 600;
-            display: flex; align-items: center; gap: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             animation: slideIn 0.2s ease;
             max-width: 320px;
         }
-        .toast.success { background: rgba(0,229,160,0.15); border: 1px solid var(--accent); color: var(--accent); }
-        .toast.error   { background: rgba(255,68,102,0.15); border: 1px solid var(--accent3); color: var(--accent3); }
-        .toast.info    { background: rgba(0,102,255,0.15); border: 1px solid var(--accent2); color: var(--accent2); }
-        @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        .toast.success {
+            background: rgba(0, 229, 160, 0.15);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .toast.error {
+            background: rgba(255, 68, 102, 0.15);
+            border: 1px solid var(--accent3);
+            color: var(--accent3);
+        }
+
+        .toast.info {
+            background: rgba(0, 102, 255, 0.15);
+            border: 1px solid var(--accent2);
+            color: var(--accent2);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
 
         /* Status badge */
         .badge {
-            display: inline-block; padding: 2px 8px;
-            border-radius: 4px; font-size: 11px; font-weight: 700;
-            letter-spacing: 0.06em; text-transform: uppercase;
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
         }
-        .badge-green { background: rgba(0,229,160,0.12); color: var(--accent); }
-        .badge-red   { background: rgba(255,68,102,0.12); color: var(--accent3); }
-        .badge-blue  { background: rgba(0,102,255,0.12); color: var(--accent2); }
-        .badge-gray  { background: var(--surface2); color: var(--muted); }
+
+        .badge-green {
+            background: rgba(0, 229, 160, 0.12);
+            color: var(--accent);
+        }
+
+        .badge-red {
+            background: rgba(255, 68, 102, 0.12);
+            color: var(--accent3);
+        }
+
+        .badge-blue {
+            background: rgba(0, 102, 255, 0.12);
+            color: var(--accent2);
+        }
+
+        .badge-gray {
+            background: var(--surface2);
+            color: var(--muted);
+        }
 
         /* Table-like items */
         .list-item {
-            display: flex; align-items: center; justify-content: space-between;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             padding: 12px 14px;
             background: var(--surface2);
             border: 1px solid var(--border);
@@ -163,30 +305,60 @@
             margin-bottom: 8px;
             transition: border-color 0.15s;
         }
-        .list-item:hover { border-color: var(--muted); }
-        .list-item-title { font-weight: 600; font-size: 14px; }
-        .list-item-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+        .list-item:hover {
+            border-color: var(--muted);
+        }
+
+        .list-item-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .list-item-sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
 
         /* Auth bar */
         .auth-bar {
             background: var(--surface);
             border-bottom: 1px solid var(--border);
             padding: 10px 32px;
-            display: flex; align-items: center; gap: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             font-size: 13px;
-            position: sticky; top: 0;
+            position: sticky;
+            top: 0;
             z-index: 5;
             margin-left: 220px;
         }
 
         /* Grid */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-        @media (max-width: 1100px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1100px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
 
         /* Raw JSON */
         #rawJson {
-            width: 100%; height: 400px;
+            width: 100%;
+            height: 400px;
             background: #0d0f12;
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -199,30 +371,66 @@
         }
 
         /* Loader */
-        .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.6s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
         /* Tabs */
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
 
         /* Auth status dot */
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-        .status-dot.online { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
-        .status-dot.offline { background: var(--muted); }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-dot.online {
+            background: var(--accent);
+            box-shadow: 0 0 6px var(--accent);
+        }
+
+        .status-dot.offline {
+            background: var(--muted);
+        }
 
         /* Collapsible return form */
         .return-btn {
-            font-size: 11px; padding: 4px 10px;
+            font-size: 11px;
+            padding: 4px 10px;
         }
 
         /* Section header */
         .section-header {
-            display: flex; align-items: center; justify-content: space-between;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             margin-bottom: 20px;
         }
+
         .section-title {
-            font-size: 22px; font-weight: 800; letter-spacing: -0.02em;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
         }
     </style>
 </head>
@@ -238,7 +446,7 @@
             <i class="fas fa-book" style="color:var(--accent);font-size:16px;"></i>
             <span style="font-size:16px;font-weight:800;letter-spacing:-0.01em;">LibraryAPI</span>
         </div>
-        <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;">localhost:8080</div>
+        <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;">localhost:63342</div>
     </div>
 
     <div style="height:1px;background:var(--border);margin-bottom:12px;"></div>
@@ -262,7 +470,9 @@
     </nav>
 
     <div style="margin-top:auto;padding:20px;border-top:1px solid var(--border);">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">Статус</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">
+            Статус
+        </div>
         <div style="display:flex;align-items:center;gap:8px;font-size:12px;">
             <span class="status-dot offline" id="statusDot"></span>
             <span id="authStatusText" style="color:var(--muted);">Не авторизован</span>
@@ -275,13 +485,16 @@
 
 <!-- Auth bar (top) -->
 <div class="auth-bar">
-    <input id="loginUsername" type="text" placeholder="Username" style="width:150px;margin:0;padding:7px 12px;font-size:13px;">
-    <input id="loginPassword" type="password" placeholder="Password" style="width:150px;margin:0;padding:7px 12px;font-size:13px;">
+    <input id="loginUsername" type="text" placeholder="Username"
+           style="width:150px;margin:0;padding:7px 12px;font-size:13px;">
+    <input id="loginPassword" type="password" placeholder="Password"
+           style="width:150px;margin:0;padding:7px 12px;font-size:13px;">
     <button class="btn btn-green" onclick="login()" id="loginBtn" style="padding:7px 14px;font-size:12px;">
         <i class="fas fa-sign-in-alt"></i> Войти
     </button>
     <div style="width:1px;height:24px;background:var(--border);"></div>
-    <input id="tokenInput" type="text" placeholder="Или вставь JWT токен вручную" style="flex:1;margin:0;padding:7px 12px;font-size:12px;font-family:'JetBrains Mono',monospace;">
+    <input id="tokenInput" type="text" placeholder="Или вставь JWT токен вручную"
+           style="flex:1;margin:0;padding:7px 12px;font-size:12px;font-family:'JetBrains Mono',monospace;">
     <button class="btn btn-blue" onclick="saveToken()" style="padding:7px 14px;font-size:12px;">Сохранить</button>
 </div>
 
@@ -292,22 +505,25 @@
     <div id="tab-books" class="tab-content active">
         <div class="section-header">
             <div class="section-title">📚 Книги</div>
-            <button class="btn btn-ghost" onclick="loadBooks()"><span class="spinner" id="booksSpinner" style="display:none;"></span> <i class="fas fa-sync-alt"></i> Обновить</button>
+            <button class="btn btn-ghost" onclick="loadBooks()"><span class="spinner" id="booksSpinner"
+                                                                      style="display:none;"></span> <i
+                    class="fas fa-sync-alt"></i> Обновить
+            </button>
         </div>
         <div class="grid-2" style="margin-bottom:20px;">
             <!-- Create book -->
             <div class="card">
                 <div class="card-title"><i class="fas fa-plus"></i> Создать книгу</div>
                 <form id="bookForm" onsubmit="submitBook(event)">
-                    <input type="text"   id="title"       placeholder="Название *" required>
-                    <input type="text"   id="isbn"        placeholder="ISBN *" required>
-                    <input type="text"   id="genre"       placeholder="Жанр">
-                    <input type="text"   id="description" placeholder="Описание">
+                    <input type="text" id="title" placeholder="Название *" required>
+                    <input type="text" id="isbn" placeholder="ISBN *" required>
+                    <input type="text" id="genre" placeholder="Жанр">
+                    <input type="text" id="description" placeholder="Описание">
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                        <input type="number" id="publishYear"  placeholder="Год издания" min="1000" max="2099">
-                        <input type="number" id="totalCopies"  placeholder="Кол-во экз." value="1" min="1">
+                        <input type="number" id="publishYear" placeholder="Год издания" min="1000" max="2099">
+                        <input type="number" id="totalCopies" placeholder="Кол-во экз." value="1" min="1">
                     </div>
-                    <input type="text"   id="bookAuthorIds" placeholder="IDs авторов через запятую: 1,2">
+                    <input type="text" id="bookAuthorIds" placeholder="IDs авторов через запятую: 1,2">
                     <button type="submit" class="btn btn-green btn-full" id="createBookBtn">
                         <i class="fas fa-plus"></i> Создать книгу
                     </button>
@@ -350,9 +566,9 @@
             <div class="card">
                 <div class="card-title"><i class="fas fa-user-plus"></i> Новый читатель</div>
                 <form id="readerForm" onsubmit="submitReader(event)">
-                    <input type="text"  id="readerName"  placeholder="ФИО *" required>
+                    <input type="text" id="readerName" placeholder="ФИО *" required>
                     <input type="email" id="readerEmail" placeholder="Email">
-                    <input type="text"  id="readerPhone" placeholder="Телефон">
+                    <input type="text" id="readerPhone" placeholder="Телефон">
                     <button type="submit" class="btn btn-blue btn-full">
                         <i class="fas fa-plus"></i> Добавить читателя
                     </button>
@@ -387,7 +603,7 @@
                 <div class="card-title"><i class="fas fa-feather"></i> Новый автор</div>
                 <form id="authorForm" onsubmit="submitAuthor(event)">
                     <input type="text" id="authorFirstName" placeholder="Имя *" required>
-                    <input type="text" id="authorLastName"  placeholder="Фамилия">
+                    <input type="text" id="authorLastName" placeholder="Фамилия">
                     <input type="date" id="authorBirthDate">
                     <button type="submit" class="btn btn-full" style="background:#7c3aed;color:#fff;">
                         <i class="fas fa-plus"></i> Добавить автора
@@ -418,17 +634,23 @@
             <div class="section-title">📖 Выдачи</div>
             <div style="display:flex;gap:8px;">
                 <button class="btn btn-ghost" onclick="loadAllLoans()"><i class="fas fa-list"></i> Все</button>
-                <button class="btn btn-ghost" onclick="loadActiveLoans()"><i class="fas fa-circle" style="color:var(--accent);font-size:8px;"></i> Активные</button>
-                <button class="btn btn-ghost" onclick="loadOverdueLoans()" style="color:var(--accent3);"><i class="fas fa-exclamation-triangle"></i> Просроченные</button>
+                <button class="btn btn-ghost" onclick="loadActiveLoans()"><i class="fas fa-circle"
+                                                                             style="color:var(--accent);font-size:8px;"></i>
+                    Активные
+                </button>
+                <button class="btn btn-ghost" onclick="loadOverdueLoans()" style="color:var(--accent3);"><i
+                        class="fas fa-exclamation-triangle"></i> Просроченные
+                </button>
             </div>
         </div>
         <div class="grid-2" style="margin-bottom:20px;">
             <div class="card">
                 <div class="card-title"><i class="fas fa-plus"></i> Новая выдача</div>
                 <form id="loanForm" onsubmit="submitLoan(event)">
-                    <input type="number" id="loanBookId"   placeholder="ID книги *" required>
+                    <input type="number" id="loanBookId" placeholder="ID книги *" required>
                     <input type="number" id="loanReaderId" placeholder="ID читателя *" required>
-                    <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px;margin-top:-4px;">Срок возврата *</label>
+                    <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px;margin-top:-4px;">Срок
+                        возврата *</label>
                     <input type="datetime-local" id="loanDueDate" required>
                     <button type="submit" class="btn btn-green btn-full">
                         <i class="fas fa-hand-holding-open"></i> Создать выдачу
@@ -481,7 +703,7 @@
     function toast(msg, type = 'info') {
         const c = document.getElementById('toast-container');
         const t = document.createElement('div');
-        const icons = { success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle' };
+        const icons = {success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle'};
         t.className = `toast ${type}`;
         t.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i> ${msg}`;
         c.appendChild(t);
@@ -495,11 +717,16 @@
     // =====================
     // AUTH
     // =====================
-    function getToken() { return localStorage.getItem('jwt'); }
+    function getToken() {
+        return localStorage.getItem('jwt');
+    }
 
     function saveToken() {
         const token = document.getElementById('tokenInput').value.trim();
-        if (!token) { toast('Токен пустой', 'error'); return; }
+        if (!token) {
+            toast('Токен пустой', 'error');
+            return;
+        }
         localStorage.setItem('jwt', token);
         updateAuthStatus();
         toast('Токен сохранён', 'success');
@@ -507,7 +734,7 @@
 
     function authHeaders() {
         const token = getToken();
-        const headers = { 'Content-Type': 'application/json' };
+        const headers = {'Content-Type': 'application/json'};
         if (token) headers['Authorization'] = `Bearer ${token}`;
         return headers;
     }
@@ -536,16 +763,20 @@
     async function login() {
         const username = document.getElementById('loginUsername').value.trim();
         const password = document.getElementById('loginPassword').value;
-        if (!username || !password) { toast('Введи логин и пароль', 'error'); return; }
+        if (!username || !password) {
+            toast('Введи логин и пароль', 'error');
+            return;
+        }
 
         const btn = document.getElementById('loginBtn');
-        btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span>';
 
         try {
             const res = await fetch(`${BASE_URL}/auth/login`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, password})
             });
             const json = await res.json();
             setRaw(json);
@@ -561,7 +792,7 @@
             } else {
                 toast(json.message || json.error || `Ошибка ${res.status}`, 'error');
             }
-        } catch(e) {
+        } catch (e) {
             toast('Сервер недоступен: ' + e.message, 'error');
         } finally {
             btn.disabled = false;
@@ -583,7 +814,7 @@
     // API HELPER
     // =====================
     async function apiRequest(method, path, body = null) {
-        const opts = { method, headers: authHeaders() };
+        const opts = {method, headers: authHeaders()};
         if (body) opts.body = JSON.stringify(body);
         const res = await fetch(BASE_URL + path, opts);
 
@@ -596,7 +827,7 @@
         }
 
         setRaw(data);
-        return { ok: res.ok, status: res.status, data };
+        return {ok: res.ok, status: res.status, data};
     }
 
     // =====================
@@ -605,18 +836,27 @@
     async function loadBooks() {
         document.getElementById('booksSpinner').style.display = 'inline-block';
         try {
-            const { ok, data, status } = await apiRequest('GET', '/books');
-            if (!ok) { toast(`Ошибка загрузки книг: ${status}`, 'error'); return; }
+            const {ok, data, status} = await apiRequest('GET', '/books');
+            if (!ok) {
+                toast(`Ошибка загрузки книг: ${status}`, 'error');
+                return;
+            }
             const books = data.content ?? data;
             renderBooks(Array.isArray(books) ? books : []);
-        } catch(e) { toast('Сервер недоступен', 'error'); }
-        finally { document.getElementById('booksSpinner').style.display = 'none'; }
+        } catch (e) {
+            toast('Сервер недоступен', 'error');
+        } finally {
+            document.getElementById('booksSpinner').style.display = 'none';
+        }
     }
 
     function renderBooks(books) {
         const el = document.getElementById('booksList');
         document.getElementById('booksCount').textContent = `${books.length} шт.`;
-        if (!books.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Книг нет</p>'; return; }
+        if (!books.length) {
+            el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Книг нет</p>';
+            return;
+        }
         el.innerHTML = books.map(b => `
         <div class="list-item">
             <div>
@@ -643,9 +883,9 @@
         // Отправляем два варианта сразу — бэкенд использует один из них
         const publishYearVal = document.getElementById('publishYear').value;
         const body = {
-            title:       document.getElementById('title').value.trim(),
-            isbn:        document.getElementById('isbn').value.trim(),
-            genre:       document.getElementById('genre').value.trim() || null,
+            title: document.getElementById('title').value.trim(),
+            isbn: document.getElementById('isbn').value.trim(),
+            genre: document.getElementById('genre').value.trim() || null,
             description: document.getElementById('description').value.trim() || null,
             totalCopies: parseInt(document.getElementById('totalCopies').value) || 1,
             // Пробуем оба варианта поля для года
@@ -653,14 +893,14 @@
             publicationYear: publishYearVal ? parseInt(publishYearVal) : null,
             // Пробуем оба варианта для авторов
             authorIds: authorIds,
-            authors: authorIds.map(id => ({ id }))
+            authors: authorIds.map(id => ({id}))
         };
 
         const btn = document.getElementById('createBookBtn');
         btn.disabled = true;
 
         try {
-            const { ok, status, data } = await apiRequest('POST', '/books', body);
+            const {ok, status, data} = await apiRequest('POST', '/books', body);
             if (ok) {
                 toast('Книга создана!', 'success');
                 document.getElementById('bookForm').reset();
@@ -670,8 +910,11 @@
                 const msg = data?.message || data?.error || (typeof data === 'string' ? data : `Ошибка ${status}`);
                 toast('Ошибка: ' + msg, 'error');
             }
-        } catch(e) { toast('Сервер недоступен: ' + e.message, 'error'); }
-        finally { btn.disabled = false; }
+        } catch (e) {
+            toast('Сервер недоступен: ' + e.message, 'error');
+        } finally {
+            btn.disabled = false;
+        }
     }
 
     async function deleteBook(e) {
@@ -679,7 +922,7 @@
         const id = document.getElementById('deleteBookId').value.trim();
         if (!confirm(`Удалить книгу ID=${id}?`)) return;
 
-        const { ok, status } = await apiRequest('DELETE', `/books/${id}`);
+        const {ok, status} = await apiRequest('DELETE', `/books/${id}`);
         if (ok) {
             toast(`Книга ID=${id} удалена`, 'success');
             document.getElementById('bookDeleteForm').reset();
@@ -692,7 +935,7 @@
     async function findBook() {
         const id = document.getElementById('findBookId').value.trim();
         if (!id) return;
-        const { ok, data, status } = await apiRequest('GET', `/books/${id}`);
+        const {ok, data, status} = await apiRequest('GET', `/books/${id}`);
         if (ok) {
             toast(`Книга найдена: ${data.title}`, 'success');
         } else {
@@ -705,17 +948,25 @@
     // =====================
     async function loadReaders() {
         try {
-            const { ok, data, status } = await apiRequest('GET', '/readers');
-            if (!ok) { toast(`Ошибка загрузки читателей: ${status}`, 'error'); return; }
+            const {ok, data, status} = await apiRequest('GET', '/readers');
+            if (!ok) {
+                toast(`Ошибка загрузки читателей: ${status}`, 'error');
+                return;
+            }
             const readers = data.content ?? data;
             renderReaders(Array.isArray(readers) ? readers : []);
-        } catch(e) { toast('Сервер недоступен', 'error'); }
+        } catch (e) {
+            toast('Сервер недоступен', 'error');
+        }
     }
 
     function renderReaders(readers) {
         const el = document.getElementById('readersList');
         document.getElementById('readersCount').textContent = `${readers.length} чел.`;
-        if (!readers.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Читателей нет</p>'; return; }
+        if (!readers.length) {
+            el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Читателей нет</p>';
+            return;
+        }
         el.innerHTML = readers.map(r => `
         <div class="list-item">
             <div>
@@ -730,13 +981,13 @@
     async function submitReader(e) {
         e.preventDefault();
         const body = {
-            name:     document.getElementById('readerName').value.trim(),
+            name: document.getElementById('readerName').value.trim(),
             fullName: document.getElementById('readerName').value.trim(), // некоторые бэкенды используют fullName
-            email:    document.getElementById('readerEmail').value.trim() || null,
-            phone:    document.getElementById('readerPhone').value.trim() || null
+            email: document.getElementById('readerEmail').value.trim() || null,
+            phone: document.getElementById('readerPhone').value.trim() || null
         };
 
-        const { ok, status, data } = await apiRequest('POST', '/readers', body);
+        const {ok, status, data} = await apiRequest('POST', '/readers', body);
         if (ok) {
             toast('Читатель добавлен', 'success');
             document.getElementById('readerForm').reset();
@@ -750,7 +1001,7 @@
     async function findReader() {
         const id = document.getElementById('findReaderId').value.trim();
         if (!id) return;
-        const { ok, data, status } = await apiRequest('GET', `/readers/${id}`);
+        const {ok, data, status} = await apiRequest('GET', `/readers/${id}`);
         const el = document.getElementById('readerFindResult');
         if (ok) {
             el.innerHTML = `
@@ -773,17 +1024,25 @@
     // =====================
     async function loadAuthors() {
         try {
-            const { ok, data, status } = await apiRequest('GET', '/authors');
-            if (!ok) { toast(`Ошибка загрузки авторов: ${status}`, 'error'); return; }
+            const {ok, data, status} = await apiRequest('GET', '/authors');
+            if (!ok) {
+                toast(`Ошибка загрузки авторов: ${status}`, 'error');
+                return;
+            }
             const authors = data.content ?? data;
             renderAuthors(Array.isArray(authors) ? authors : []);
-        } catch(e) { toast('Сервер недоступен', 'error'); }
+        } catch (e) {
+            toast('Сервер недоступен', 'error');
+        }
     }
 
     function renderAuthors(authors) {
         const el = document.getElementById('authorsList');
         document.getElementById('authorsCount').textContent = `${authors.length} авт.`;
-        if (!authors.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Авторов нет</p>'; return; }
+        if (!authors.length) {
+            el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Авторов нет</p>';
+            return;
+        }
         el.innerHTML = authors.map(a => `
         <div class="list-item">
             <div>
@@ -799,11 +1058,11 @@
         e.preventDefault();
         const body = {
             firstName: document.getElementById('authorFirstName').value.trim(),
-            lastName:  document.getElementById('authorLastName').value.trim() || null,
+            lastName: document.getElementById('authorLastName').value.trim() || null,
             birthDate: document.getElementById('authorBirthDate').value || null
         };
 
-        const { ok, status, data } = await apiRequest('POST', '/authors', body);
+        const {ok, status, data} = await apiRequest('POST', '/authors', body);
         if (ok) {
             toast('Автор добавлен', 'success');
             document.getElementById('authorForm').reset();
@@ -818,19 +1077,19 @@
     // LOANS
     // =====================
     async function loadAllLoans() {
-        const { ok, data, status } = await apiRequest('GET', '/loans');
+        const {ok, data, status} = await apiRequest('GET', '/loans');
         if (ok) renderLoans(data.content ?? (Array.isArray(data) ? data : []));
         else toast(`Ошибка: ${status}`, 'error');
     }
 
     async function loadActiveLoans() {
-        const { ok, data, status } = await apiRequest('GET', '/loans/active');
+        const {ok, data, status} = await apiRequest('GET', '/loans/active');
         if (ok) renderLoans(data.content ?? (Array.isArray(data) ? data : []));
         else toast(`Ошибка: ${status}`, 'error');
     }
 
     async function loadOverdueLoans() {
-        const { ok, data, status } = await apiRequest('GET', '/loans/overdue');
+        const {ok, data, status} = await apiRequest('GET', '/loans/overdue');
         if (ok) renderLoans(data.content ?? (Array.isArray(data) ? data : []));
         else toast(`Ошибка: ${status}`, 'error');
     }
@@ -838,7 +1097,10 @@
     function renderLoans(loans) {
         const el = document.getElementById('loansList');
         document.getElementById('loansCount').textContent = `${loans.length} шт.`;
-        if (!loans.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Выдач нет</p>'; return; }
+        if (!loans.length) {
+            el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Выдач нет</p>';
+            return;
+        }
         el.innerHTML = loans.map(l => {
             const returned = l.status === 'RETURNED' || l.returnDate;
             const overdue = !returned && l.dueDate && new Date(l.dueDate) < new Date();
@@ -868,13 +1130,13 @@
         e.preventDefault();
         const dueDateRaw = document.getElementById('loanDueDate').value;
         const body = {
-            bookId:   Number(document.getElementById('loanBookId').value),
+            bookId: Number(document.getElementById('loanBookId').value),
             readerId: Number(document.getElementById('loanReaderId').value),
-            dueDate:  dueDateRaw,        // "2024-12-31T00:00"
+            dueDate: dueDateRaw,        // "2024-12-31T00:00"
             status: 'ACTIVE'
         };
 
-        const { ok, status, data } = await apiRequest('POST', '/loans', body);
+        const {ok, status, data} = await apiRequest('POST', '/loans', body);
         if (ok) {
             toast('Выдача создана', 'success');
             document.getElementById('loanForm').reset();
@@ -887,7 +1149,10 @@
 
     async function returnLoan() {
         const id = document.getElementById('returnLoanId').value.trim();
-        if (!id) { toast('Введи ID выдачи', 'error'); return; }
+        if (!id) {
+            toast('Введи ID выдачи', 'error');
+            return;
+        }
 
         // Пробуем стандартный PATCH /loans/{id}/return
         let result = await apiRequest('PATCH', `/loans/${id}/return`);
@@ -914,13 +1179,22 @@
     // =====================
     function esc(str) {
         if (!str) return '';
-        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
     function fmt(dt) {
         if (!dt) return '—';
-        try { return new Date(dt).toLocaleString('ru-RU', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
-        catch { return dt; }
+        try {
+            return new Date(dt).toLocaleString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch {
+            return dt;
+        }
     }
 
     function loadAll() {

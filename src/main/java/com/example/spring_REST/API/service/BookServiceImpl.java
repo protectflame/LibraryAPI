@@ -1,6 +1,6 @@
 package com.example.spring_REST.API.service;
 
-import com.example.spring_REST.API.exception.BookNotFoundException;
+import com.example.spring_REST.API.exception.notFound.BookNotFoundException;
 import com.example.spring_REST.API.mapper.AuthorMapper;
 import com.example.spring_REST.API.mapper.BookMapper;
 import com.example.spring_REST.API.model.dto.AuthorDTO;
@@ -36,13 +36,9 @@ public class BookServiceImpl implements BookService {
 
         List<Author> foundAuthors = authorRepository.findAllById(authorIds);
         if (foundAuthors.size() != authorIds.size()) {
-            Set<Long> foundIds = foundAuthors.stream()
-                    .map(Author::getId)
-                    .collect(Collectors.toSet());
+            Set<Long> foundIds = foundAuthors.stream().map(Author::getId).collect(Collectors.toSet());
 
-            Set<Long> missingIds = authorIds.stream()
-                    .filter(id -> !foundIds.contains(id))
-                    .collect(Collectors.toSet());
+            Set<Long> missingIds = authorIds.stream().filter(id -> !foundIds.contains(id)).collect(Collectors.toSet());
 
             throw new EntityNotFoundException("Не найдены авторы с ID: " + missingIds);
         }
@@ -59,11 +55,7 @@ public class BookServiceImpl implements BookService {
         book.setCreatedAt(LocalDateTime.now());
 
         if (dto.getAuthors() != null) {
-            Set<Long> authorsIds = dto.getAuthors()
-                    .stream()
-                    .map(AuthorDTO::getId)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toSet());
+            Set<Long> authorsIds = dto.getAuthors().stream().map(AuthorDTO::getId).filter(Objects::nonNull).collect(Collectors.toSet());
 
             book.setAuthors(new HashSet<>(loadAndValidateAuthors(authorsIds)));
         }
@@ -75,8 +67,7 @@ public class BookServiceImpl implements BookService {
     @Transactional(readOnly = true)
     @Override
     public BookDTO getBookById(Long id) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException("Книга с ID " + id + " не найдена"));
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Книга с ID " + id + " не найдена"));
         return bookMapper.toDTO(book);
     }
 
@@ -97,22 +88,18 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public List<AuthorDTO> getAuthorsByBookId(Long bookId) {
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new BookNotFoundException("Книга не найдена"));
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException("Книга не найдена"));
 
         Set<Author> authors = book.getAuthors();
 
-        return authors.stream()
-                .map(authorMapper::toDTO)
-                .toList();
+        return authors.stream().map(authorMapper::toDTO).toList();
     }
 
 
     @Transactional
     @Override
     public BookDTO removeBook(Long id) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException("Книга с ID " + id + " не найдена"));
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Книга с ID " + id + " не найдена"));
         BookDTO dto = bookMapper.toDTO(book);
         bookRepository.delete(book);
         return dto;
@@ -121,8 +108,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDTO update(Long id, BookDTO dto) {
-        Book book = bookRepository.findById(dto.getId())
-                .orElseThrow(() -> new BookNotFoundException("Книга с ID " + dto.getId() + " не найдена"));
+        Book book = bookRepository.findById(dto.getId()).orElseThrow(() -> new BookNotFoundException("Книга с ID " + dto.getId() + " не найдена"));
 
         // 2. Обновляем поля из DTO
         book.setTitle(dto.getTitle());
@@ -133,10 +119,7 @@ public class BookServiceImpl implements BookService {
         book.setTotalCopies(dto.getTotalCopies());
 
         if (dto.getAuthors() != null) {
-            Set<Long> authorIds = dto.getAuthors().stream()
-                    .map(AuthorDTO::getId)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toSet());
+            Set<Long> authorIds = dto.getAuthors().stream().map(AuthorDTO::getId).filter(Objects::nonNull).collect(Collectors.toSet());
 
             Set<Author> newAuthors = loadAndValidateAuthors(authorIds);
             book.setAuthors(newAuthors);
@@ -149,7 +132,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDTO> findBooksByGenre(String genre) {
-        List<Book> books = bookRepository.findByGenre(genre);
+        List<Book> books = bookRepository.findAllByGenre(genre); // тут было finbyGenre, я поменял чтоб работало
         return books.stream().map(bookMapper::toDTO).toList();
     }
 }
