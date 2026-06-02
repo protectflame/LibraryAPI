@@ -10,8 +10,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface BookRepository extends JpaRepository<Book,Long> {
+public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findAllByGenre(String genre);
+
     /**
      * Поиск с фильтрами.
      * :param - это параметр запроса. Если он null, условие игнорируется (благодаря OR ... IS NULL)
