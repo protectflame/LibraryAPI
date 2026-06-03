@@ -833,31 +833,49 @@
     // =====================
     // BOOKS
     // =====================
-    async function loadBooks() {
-        document.getElementById('booksSpinner').style.display = 'inline-block';
-        try {
-            const {ok, data, status} = await apiRequest('GET', '/books');
-            if (!ok) {
-                toast(`Ошибка загрузки книг: ${status}`, 'error');
-                return;
-            }
-            const books = data.content ?? data;
-            renderBooks(Array.isArray(books) ? books : []);
-        } catch (e) {
-            toast('Сервер недоступен', 'error');
-        } finally {
-            document.getElementById('booksSpinner').style.display = 'none';
-        }
-    }
+  async function loadBooks() {
+    document.getElementById('booksSpinner').style.display = 'inline-block';
+    try {
+        // ПРАВИЛЬНЫЙ формат: page=0&size=10000
+        const {ok, data, status} = await apiRequest('GET', '/books?page=0&size=10000');
 
-    function renderBooks(books) {
-        const el = document.getElementById('booksList');
-        document.getElementById('booksCount').textContent = `${books.length} шт.`;
-        if (!books.length) {
-            el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Книг нет</p>';
+        if (!ok) {
+            toast(`Ошибка загрузки книг: ${status}`, 'error');
             return;
         }
-        el.innerHTML = books.map(b => `
+
+        console.log('Response:', data);
+        console.log('totalElements:', data.totalElements);
+        console.log('content length:', data.content?.length);
+
+        const books = data.content ?? data;
+        renderBooks(Array.isArray(books) ? books : []);
+
+    } catch (e) {
+        toast('Сервер недоступен: ' + e.message, 'error');
+        console.error(e);
+    } finally {
+        document.getElementById('booksSpinner').style.display = 'none';
+    }
+}
+
+   function renderBooks(books) {
+    console.log('renderBooks вызвана, книг:', books.length); // <-- Добавь это
+
+    const el = document.getElementById('booksList');
+    document.getElementById('booksCount').textContent = `${books.length} шт.`;
+
+    if (!books.length) {
+        console.log('Книг нет в массиве'); // <-- Добавь это
+        el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Книг нет</p>';
+        return;
+    }
+
+    console.log('Первая книга:', books[0]); // <-- Добавь это
+
+    el.innerHTML = books.map(b => {
+        console.log('Рендерю книгу:', b.title); // <-- Добавь это
+        return `
         <div class="list-item">
             <div>
                 <div class="list-item-title">${esc(b.title)}</div>
@@ -870,8 +888,8 @@
                 <span class="badge badge-gray">ID: ${b.id}</span>
             </div>
         </div>
-    `).join('');
-    }
+    `}).join('');
+}
 
     async function submitBook(e) {
         e.preventDefault();
