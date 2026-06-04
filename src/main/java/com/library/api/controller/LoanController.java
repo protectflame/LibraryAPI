@@ -2,8 +2,10 @@ package com.library.api.controller;
 
 import com.library.api.model.dto.LoanDTO;
 import com.library.api.service.LoanService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,53 +15,57 @@ import java.util.List;
 @RequestMapping("/api/v1/loans")
 @AllArgsConstructor
 @Validated
-@Tag(name="Loans", description = "Управление выдачами: возврат книг, удаление и обновление выдач, получение по ID")
+@Tag(name = "Loans", description = "Управление выдачами и возвратами книг")
 public class LoanController {
 
     private final LoanService loanService;
 
     @GetMapping
-    public List<LoanDTO> getAllLoan() {
+    @Operation(summary = "Получить все выдачи")
+    public List<LoanDTO> getAllLoans() {
         return loanService.getAll();
     }
 
     @GetMapping("/{id}")
-    public LoanDTO getLoanById(@PathVariable Long id) {
-        return loanService.getById(id);
+    @Operation(summary = "Получить выдачу по ID")
+    public ResponseEntity<LoanDTO> getLoanById(@PathVariable Long id) {
+        return ResponseEntity.ok(loanService.getById(id));
     }
 
     @PostMapping
-    public LoanDTO createdLoan(@RequestBody LoanDTO loanDTO) {
-        return loanService.create(loanDTO);
+    @Operation(summary = "Оформить выдачу книги")
+    public ResponseEntity<LoanDTO> createLoan(@RequestBody LoanDTO loanDTO) {
+        return ResponseEntity.ok(loanService.create(loanDTO));
     }
 
     @PutMapping("/{id}")
-    public LoanDTO updateLoan(@PathVariable Long id, @RequestBody LoanDTO loanDTO) {
-        return loanService.update(id, loanDTO);
+    @Operation(summary = "Обновить выдачу")
+    public ResponseEntity<LoanDTO> updateLoan(@PathVariable Long id, @RequestBody LoanDTO loanDTO) {
+        return ResponseEntity.ok(loanService.update(id, loanDTO));
     }
 
     @DeleteMapping("/{id}")
-    public void removeLoan(@PathVariable Long id) {
+    @Operation(summary = "Удалить запись о выдаче")
+    public ResponseEntity<Void> deleteLoan(@PathVariable Long id) {
         loanService.remove(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/return")
-    public LoanDTO returnLoan(@PathVariable Long id) {
-        return loanService.returnLoan(id);
+    @Operation(summary = "Вернуть книгу")
+    public ResponseEntity<LoanDTO> returnLoan(@PathVariable Long id) {
+        return ResponseEntity.ok(loanService.returnLoan(id));
     }
 
     @GetMapping("/active")
+    @Operation(summary = "Активные выдачи")
     public List<LoanDTO> getActiveLoans() {
         return loanService.getActiveLoans();
     }
 
     @GetMapping("/overdue")
+    @Operation(summary = "Просроченные выдачи")
     public List<LoanDTO> getOverdueLoans() {
         return loanService.getOverdueLoans();
-    }
-
-    @GetMapping("/reader/{readerId}")
-    public List<LoanDTO> getReaderHistory(@PathVariable Long readerId) {
-        return loanService.getReaderHistory(readerId);
     }
 }
