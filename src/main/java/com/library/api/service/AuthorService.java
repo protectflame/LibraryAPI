@@ -9,68 +9,79 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-
 /**
- * Сервис для работы с авторами библиотеки.
- * Предоставляет CRUD-операции, поиск и получение связанных книг.
+ * Сервис для управления авторами книг.
+ * <p>
+ * Предоставляет полный набор CRUD-операций, поиск и получение связанных книг.
  *
  * @see AuthorDTO
  * @see BookDTO
  */
 public interface AuthorService {
+
     /**
      * Создаёт нового автора.
      *
-     * @param dto данные для создания (имя, фамилия, дата рождения); не {@code null}
-     * @return сохранённый автор с присвоенным {@code id}
-     * @throws DataIntegrityViolationException при нарушении ограничений БД
+     * @param dto данные автора (имя, фамилия, дата рождения и т.д.)
+     * @return созданный автор с присвоенным идентификатором
+     * @throws DataIntegrityViolationException при нарушении уникальности данных
      */
     AuthorDTO create(AuthorDTO dto);
 
     /**
-     * Получает автора по его ID.
+     * Возвращает автора по его идентификатору.
      *
-     * @param id идентификатор автора; должен быть {@code > 0}
-     * @return DTO найденного автора
-     * @throws AuthorNotFoundException если автор с указанным {@code id} не найден
+     * @param id идентификатор автора (должен быть > 0)
+     * @return DTO автора
+     * @throws AuthorNotFoundException если автор с указанным ID не найден
      */
     AuthorDTO getById(Long id);
 
     /**
      * Возвращает пагинированный список всех авторов.
      *
-     * @param pageable параметры пагинации и сортировки; не {@code null}
-     * @return страница с DTO авторов (может быть пустой)
+     * @param pageable параметры пагинации и сортировки
+     * @return страница с авторами
      */
     Page<AuthorDTO> getAll(Pageable pageable);
 
-
     /**
      * Обновляет данные существующего автора.
-     * <p>
-     * Обновляются поля: {@code firstName}, {@code lastName}, {@code birthDate}.
-     * Поле {@code id} берётся из пути запроса, а не из DTO.
      *
-     * @param id  идентификатор автора для обновления
+     * @param id  идентификатор автора, которого нужно обновить
      * @param dto новые данные автора
-     * @return обновлённый автор в формате DTO
-     * @throws AuthorNotFoundException если автор с указанным {@code id} не найден
+     * @return обновлённый автор
+     * @throws AuthorNotFoundException если автор не найден
      */
     AuthorDTO update(Long id, AuthorDTO dto);
 
     /**
-     * Удаляет автора по его ID.
+     * Удаляет автора по ID.
      * <p>
-     *  Удаление невозможно если у автора есть связанные книги
-     * </p>
+     * Удаление запрещено, если у автора есть связанные книги.
+     *
      * @param id идентификатор автора
-     * @return DTO удалённого автора
+     * @return удалённый автор
      * @throws AuthorNotFoundException если автор не найден
-     * @throws IllegalStateException если у автора есть книги
+     * @throws IllegalStateException   если у автора есть связанные книги
      */
     AuthorDTO remove(Long id);
 
+    /**
+     * Поиск авторов по части имени или фамилии.
+     *
+     * @param query    поисковый запрос (имя/фамилия)
+     * @param pageable параметры пагинации и сортировки
+     * @return страница с найденными авторами
+     */
     Page<AuthorDTO> searchByName(String query, Pageable pageable);
 
-    List<BookDTO> getBooksByAuthorId(Long authorId);
+    /**
+     * Возвращает список всех книг указанного автора.
+     *
+     * @param id идентификатор автора
+     * @param pageable
+     * @return список книг автора
+     */
+    Page<BookDTO> getBooksByAuthorId(Long id, Pageable pageable);
 }
