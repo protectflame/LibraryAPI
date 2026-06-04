@@ -35,6 +35,7 @@ class ReaderServiceImplTest {
     private Reader reader;
     private ReaderDTO readerDTO;
 
+    // Инициализация тестовых данных перед каждым тестом
     @BeforeEach
     void setUp() {
         reader = new Reader();
@@ -54,6 +55,7 @@ class ReaderServiceImplTest {
         readerDTO.setStatus(LoanStatus.ACTIVE);
     }
 
+    // Проверяет, что метод возвращает список всех читателей
     @Test
     void getAll_shouldReturnAllReaders() {
         when(readerRepository.findAll()).thenReturn(List.of(reader));
@@ -67,6 +69,7 @@ class ReaderServiceImplTest {
         verify(readerMapper).toDTO(reader);
     }
 
+    // Проверяет успешное получение читателя по идентификатору
     @Test
     void getById_shouldReturnReaderIfExists() {
         when(readerRepository.findById(1L)).thenReturn(Optional.of(reader));
@@ -80,6 +83,7 @@ class ReaderServiceImplTest {
         verify(readerMapper).toDTO(reader);
     }
 
+    // Проверяет, что поиск несуществующего читателя выбрасывает исключение
     @Test
     void getById_shouldThrowExceptionIfNotFound() {
         when(readerRepository.findById(99L)).thenReturn(Optional.empty());
@@ -90,6 +94,7 @@ class ReaderServiceImplTest {
         verifyNoInteractions(readerMapper);
     }
 
+    // Проверяет успешное создание и сохранение нового читателя
     @Test
     void createReader_shouldSaveAndReturnDto() {
         Reader savedReader = new Reader();
@@ -113,6 +118,7 @@ class ReaderServiceImplTest {
         verify(readerMapper).toDTO(savedReader);
     }
 
+    // Проверяет успешное обновление данных существующего читателя
     @Test
     void updateReader_shouldUpdateExistingReader() {
         when(readerRepository.findById(1L)).thenReturn(Optional.of(reader));
@@ -128,6 +134,7 @@ class ReaderServiceImplTest {
         verify(readerMapper).toDTO(reader);
     }
 
+    // Проверяет успешное удаление существующего читателя
     @Test
     void deleteReader_shouldDeleteIfExists() {
         when(readerRepository.existsById(1L)).thenReturn(true);
@@ -138,6 +145,7 @@ class ReaderServiceImplTest {
         verify(readerRepository).deleteById(1L);
     }
 
+    // Проверяет, что удаление несуществующего читателя выбрасывает исключение
     @Test
     void deleteReader_shouldThrowExceptionIfNotFound() {
         when(readerRepository.existsById(99L)).thenReturn(false);

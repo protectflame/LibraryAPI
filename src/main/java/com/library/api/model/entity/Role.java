@@ -1,5 +1,9 @@
 package com.library.api.model.entity;
 
+// Роли пользователей в системе
 public enum Role {
-    LIBRARIAN, READER, ADMIN, USER
+    LIBRARIAN, // Библиотекарь
+    READER,    // Читатель
+    ADMIN,     // Администратор
+    USER       // Обычный пользователь
 }

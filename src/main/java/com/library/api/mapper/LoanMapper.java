@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoanMapper {
 
+    // Преобразует сущность Loan в DTO
     public LoanDTO toDTO(Loan loan) {
         return new LoanDTO(
                 loan.getId(),
@@ -21,6 +22,8 @@ public class LoanMapper {
         );
     }
 
+    // Преобразует DTO в сущность Loan, принимая связанные объекты Book и Reader
+    // Возвращает null, если переданный dto равен null
     public Loan toEntity(LoanDTO dto, Book book, Reader reader) {
         if (dto == null) return null;
 

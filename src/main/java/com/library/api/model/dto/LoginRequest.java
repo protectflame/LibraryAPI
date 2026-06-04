@@ -2,8 +2,9 @@ package com.library.api.model.dto;
 
 import lombok.Data;
 
+// DTO для передачи данных при аутентификации пользователя
 @Data
 public class LoginRequest {
-    private String username;
-    private String password;
+    private String username; // Имя пользователя
+    private String password; // Пароль
 }

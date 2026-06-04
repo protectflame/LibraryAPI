@@ -7,15 +7,16 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+// DTO для передачи данных о выдаче книги
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoanDTO implements HasId {
-    private Long id;
-    private Long bookId;
-    private Long readerId;
-    private LocalDateTime issueDate;
-    private LocalDateTime dueDate;
-    private LocalDateTime returnDate;
-    private LoanStatus status;
+    private Long id;          // Уникальный идентификатор выдачи
+    private Long bookId;      // Идентификатор книги
+    private Long readerId;    // Идентификатор читателя
+    private LocalDateTime issueDate;   // Дата выдачи
+    private LocalDateTime dueDate;     // Дата возврата по плану
+    private LocalDateTime returnDate;  // Фактическая дата возврата
+    private LoanStatus status;         // Статус выдачи
 }

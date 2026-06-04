@@ -48,6 +48,7 @@ class LoanServiceImplTest {
     private Loan loan;
     private LoanDTO loanDTO;
 
+    // Инициализация тестовых данных перед каждым тестом
     @BeforeEach
     void setUp() {
         book = new Book();
@@ -75,6 +76,7 @@ class LoanServiceImplTest {
         loanDTO.setStatus(LoanStatus.ACTIVE);
     }
 
+    // Проверяет успешное создание выдачи книги
     @Test
     void createLoan_shouldCreateLoanSuccessfully() {
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
@@ -92,6 +94,7 @@ class LoanServiceImplTest {
         verify(loanMapper).toDTO(loan);
     }
 
+    // Проверяет успешный возврат книги
     @Test
     void returnLoan_shouldReturnLoanSuccessfully() {
         loan.setReturnDate(null);
@@ -109,6 +112,7 @@ class LoanServiceImplTest {
         verify(loanRepository).save(loan);
     }
 
+    // Проверяет, что повторный возврат уже возвращённой книги выбрасывает исключение
     @Test
     void returnLoan_shouldThrowExceptionIfAlreadyReturned() {
         loan.setReturnDate(LocalDateTime.now());
@@ -122,6 +126,7 @@ class LoanServiceImplTest {
         verifyNoMoreInteractions(bookRepository, loanRepository, readerRepository, loanMapper);
     }
 
+    // Проверяет, что поиск несуществующей выдачи выбрасывает исключение
     @Test
     void getById_shouldThrowExceptionIfNotFound() {
         when(loanRepository.findById(99L)).thenReturn(Optional.empty());

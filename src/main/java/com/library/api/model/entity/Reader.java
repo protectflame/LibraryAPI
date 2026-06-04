@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+// Сущность, представляющая читателя библиотеки
 @Entity
 @Data
 @NoArgsConstructor
@@ -17,18 +18,20 @@ public class Reader {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;                                    // Уникальный идентификатор читателя
 
-    private String name;
-    private String email;
-    private String phone;
-    private LocalDate registeredAt = LocalDate.now();
+    private String name;                                // Имя читателя
+    private String email;                               // Электронная почта
+    private String phone;                               // Номер телефона
+    private LocalDate registeredAt = LocalDate.now();   // Дата регистрации
+
     @Enumerated(EnumType.STRING)
-    private LoanStatus status;
+    private LoanStatus status;                          // Статус читателя
 
     @OneToMany(mappedBy = "reader", fetch = FetchType.LAZY)
-    private List<Loan> loans = new ArrayList<>();
+    private List<Loan> loans = new ArrayList<>();       // Список выдач книг читателю
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true)
-    private User user;
+    private User user;                                  // Связанный пользователь системы
 }

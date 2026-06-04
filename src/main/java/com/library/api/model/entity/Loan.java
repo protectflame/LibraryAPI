@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+// Сущность, представляющая выдачу книги читателю
 @Entity
 @Data
 @NoArgsConstructor
@@ -16,20 +17,20 @@ public class Loan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;              // Уникальный идентификатор выдачи
 
     @ManyToOne(optional = false)
     @JoinColumn
-    private Book book;
+    private Book book;            // Выданная книга
 
     @ManyToOne(optional = false)
     @JoinColumn
-    private Reader reader;
+    private Reader reader;        // Читатель, получивший книгу
 
-    private LocalDateTime issueDate;
-    private LocalDateTime dueDate;
-    private LocalDateTime returnDate;
+    private LocalDateTime issueDate;    // Дата выдачи
+    private LocalDateTime dueDate;      // Дата возврата по плану
+    private LocalDateTime returnDate;   // Фактическая дата возврата
 
     @Enumerated(EnumType.STRING)
-    private LoanStatus status;
+    private LoanStatus status;          // Статус выдачи
 }

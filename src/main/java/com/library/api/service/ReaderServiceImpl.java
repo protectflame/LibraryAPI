@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+// Реализация сервиса для управления читателями
 @Service
 @AllArgsConstructor
 public class ReaderServiceImpl implements ReaderService {
@@ -17,6 +18,7 @@ public class ReaderServiceImpl implements ReaderService {
     private final ReaderRepository readerRepository;
     private final ReaderMapper readerMapper;
 
+    // Возвращает список всех читателей
     @Override
     public List<ReaderDTO> getAll() {
         return readerRepository.findAll()
@@ -25,6 +27,7 @@ public class ReaderServiceImpl implements ReaderService {
                 .toList();
     }
 
+    // Возвращает читателя по идентификатору, выбрасывает исключение если не найден
     @Override
     public ReaderDTO getById(Long id) {
         Reader reader = readerRepository.findById(id)
@@ -32,6 +35,7 @@ public class ReaderServiceImpl implements ReaderService {
         return readerMapper.toDTO(reader);
     }
 
+    // Создаёт нового читателя и сохраняет его в базе данных
     @Override
     public ReaderDTO create(ReaderDTO readerDTO) {
         Reader reader = readerMapper.toEntity(readerDTO);
@@ -39,6 +43,7 @@ public class ReaderServiceImpl implements ReaderService {
         return readerMapper.toDTO(savedReader);
     }
 
+    // Обновляет данные существующего читателя по идентификатору
     @Override
     public ReaderDTO update(Long id, ReaderDTO readerDTO) {
         Reader existingReader = readerRepository.findById(id)
@@ -54,6 +59,7 @@ public class ReaderServiceImpl implements ReaderService {
         return readerMapper.toDTO(updatedReader);
     }
 
+    // Удаляет читателя по идентификатору, выбрасывает исключение если не найден
     @Override
     public void remove(Long id) {
         if (!readerRepository.existsById(id)) {
