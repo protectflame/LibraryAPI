@@ -31,7 +31,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("select b.id from Book b")
     Page<Long> findBookIds(Pageable pageable);
     boolean existsByIsbn(String isbn);
-
+    Page<Book> findById(Long authorId, Pageable pageable);
 
     @Query("select distinct b from Book b left join fetch b.authors where b.id in :ids")
     List<Book> findAllByIdInWithAuthors(@Param("ids") List<Long> ids);
