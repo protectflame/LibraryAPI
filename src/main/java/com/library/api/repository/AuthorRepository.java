@@ -9,9 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface AuthorRepository extends JpaRepository<Author, Long> {
-    public Optional<Author> findByFirstName(String name);
-
+public interface  AuthorRepository extends JpaRepository<Author, Long> {
     @Query("""
             select a
             from Author a

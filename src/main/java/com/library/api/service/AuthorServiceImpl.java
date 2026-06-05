@@ -6,7 +6,9 @@ import com.library.api.mapper.BookMapper;
 import com.library.api.model.dto.AuthorDTO;
 import com.library.api.model.dto.BookDTO;
 import com.library.api.model.entity.Author;
+import com.library.api.model.entity.Book;
 import com.library.api.repository.AuthorRepository;
+import com.library.api.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,10 +22,12 @@ import java.util.List;
 public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
     private final AuthorMapper authorMapper;
     private final BookMapper bookMapper;
 
     @Override
+    @Transactional
     public AuthorDTO create(AuthorDTO dto) {
         Author author = authorMapper.toEntity(dto);
         Author savedAuthor = authorRepository.save(author);
@@ -31,6 +35,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AuthorDTO getById(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException("Автор с ID " + id + " не найден"));
@@ -47,14 +52,14 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Transactional(readOnly = true)
     public Page<AuthorDTO> searchByName(String query, Pageable pageable) {
-        Page<Author> page = authorRepository
+        Page<Author> authorPage = authorRepository
                 .findByFirstNameContainingOrLastNameContaining(query, pageable);
-
-        return page.map(authorMapper::toDTO);
+        return authorPage.map(authorMapper::toDTO);
     }
 
 
     @Override
+    @Transactional
     public AuthorDTO update(Long id, AuthorDTO dto) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException("Автор с ID " + id + " не найден"));
@@ -66,21 +71,21 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional
     public AuthorDTO remove(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException("Автор с ID " + id + " не найден"));
-        if (authorRepository.existsById(id)) {
-            throw new IllegalStateException("Нельзя удалить автора, у которого есть книги");
+        if(!bookRepository.existsByAuthorsId(id)){
+            throw new IllegalStateException("Нельзя удалить автора у которого есть книги");
         }
         authorRepository.deleteById(id);
         return authorMapper.toDTO(author);
     }
 
     @Override
-    public List<BookDTO> getBooksByAuthorId(Long authorId) {
-        Author author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new AuthorNotFoundException("Автор с ID " + authorId + " не найден"));
-
-        return author.getBooks().stream().map(bookMapper::toDTO).toList();
+    @Transactional(readOnly = true)
+    public Page<BookDTO> getBooksByAuthorId(Long id, Pageable pageable) {
+        Page<Book> booksPage = bookRepository.findByAuthorsId(id, pageable);
+        return booksPage.map(bookMapper::toDTO);
     }
 }

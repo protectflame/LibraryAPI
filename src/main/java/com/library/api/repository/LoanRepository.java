@@ -14,6 +14,9 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
     // Возвращает все выдачи по идентификатору читателя
     List<Loan> findByReaderId(Long readerId);
 
+    void deleteByBookId(Long id);
+    boolean existsByBookIdAndStatus(Long bookId, LoanStatus status);
+
     // Возвращает выдачи читателя с указанным статусом
     List<Loan> findByReaderIdAndStatus(Long reader_id, LoanStatus status);
 
