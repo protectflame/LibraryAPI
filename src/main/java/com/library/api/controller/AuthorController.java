@@ -17,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/authors")
 @AllArgsConstructor
@@ -36,10 +34,17 @@ public class AuthorController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Получить автора по ID")
-    public ResponseEntity<AuthorDTO> getAuthorById(@PathVariable @Min(1) Long id) {
-        return ResponseEntity.ok(authorService.getById(id));
+    public AuthorDTO getAuthorById(@PathVariable @Min(1) Long id) {
+        return authorService.getById(id);
     }
-
+    @GetMapping("/books/{id}")
+    public Page<BookDTO> getBooksByAuthorId (@PathVariable @Min(1) Long id, @ParameterObject Pageable pageable){
+        return authorService.getBooksByAuthorId(id,pageable);
+    }
+    @GetMapping("/search/{query}")
+    public Page<AuthorDTO> searchAuthors (@PathVariable String query,Pageable Pageable){
+        return authorService.searchByName(query,Pageable);
+    }
     @PostMapping
     @Operation(summary = "Создать нового автора")
     public ResponseEntity<AuthorDTO> createAuthor(@Valid @RequestBody AuthorDTO authorDTO) {
@@ -57,17 +62,10 @@ public class AuthorController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Удалить автора")
-    public ResponseEntity<Void> deleteAuthor(@PathVariable @Min(1) Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeAuthor(@PathVariable @Min(1) Long id) {
         authorService.remove(id);
-        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/books/{id}")
-    public Page<BookDTO> getBooksByAuthorId (@PathVariable @Min(1) Long id, @ParameterObject Pageable pageable){
-        return authorService.getBooksByAuthorId(id,pageable);
-    }
-    @GetMapping("/search/{query}")
-    public Page<AuthorDTO> searchAuthors (@PathVariable String query,Pageable Pageable){
-        return authorService.searchByName(query,Pageable);
-    }
+
 }

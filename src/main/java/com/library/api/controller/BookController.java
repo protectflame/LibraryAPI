@@ -57,14 +57,29 @@ public class BookController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Удалить книгу")
-    public ResponseEntity<Void> deleteBook(@PathVariable @Min(1) Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeBook(@PathVariable @Min(1) Long id) {
         bookService.remove(id);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/authors")
     @Operation(summary = "Получить авторов книги")
     public List<AuthorDTO> getAuthorsByBookId(@PathVariable @Min(1) Long id) {
         return bookService.getAuthorsById(id);
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "Получать пагинированный список книг соответствущий фильтрам", description = "Фильтрация по: \n" +
+            " Заголовку(title) \n" +
+            " Жанру(genre) \n" +
+            " Имени автора(authorName) \n" +
+            " Доступности(available) \n" )
+    public Page<BookDTO> searchBooks (
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String genre,
+            @RequestParam(required = false) String authorName,
+            @RequestParam(required = false) Boolean available,
+            @ParameterObject Pageable pageable){
+        return bookService.searchBooks(title,genre,authorName,available, pageable);
     }
 }
