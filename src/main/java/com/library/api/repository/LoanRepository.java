@@ -11,6 +11,9 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
 
     List<Loan> findByReaderId(Long readerId);
 
+    void deleteByBookId(Long id);
+    boolean existsByBookIdAndStatus(Long bookId, LoanStatus status);
+
     List<Loan> findByReaderIdAndStatus(Long reader_id, LoanStatus status);
 
     List<Loan> findByBookIdAndStatus(Long book_id, LoanStatus status);

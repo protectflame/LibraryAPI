@@ -1,5 +1,7 @@
 package com.library.api.service;
 
+import com.library.api.exception.business.NotRemoveBookWhereLoanActive;
+import com.library.api.exception.business.NotUniqueISBNCode;
 import com.library.api.exception.notFound.BookNotFoundException;
 import com.library.api.mapper.AuthorMapper;
 import com.library.api.mapper.BookMapper;
@@ -7,9 +9,10 @@ import com.library.api.model.dto.AuthorDTO;
 import com.library.api.model.dto.BookDTO;
 import com.library.api.model.entity.Author;
 import com.library.api.model.entity.Book;
+import com.library.api.model.entity.LoanStatus;
 import com.library.api.repository.AuthorRepository;
 import com.library.api.repository.BookRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.library.api.repository.LoanRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +30,7 @@ public class  BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
+    private final LoanRepository loanRepository;
 
     @Transactional(readOnly = true)
     protected Set<Author> loadAndValidateAuthors(Set<Long> authorIds) {
@@ -50,10 +54,13 @@ public class  BookServiceImpl implements BookService {
     @Override
     public BookDTO create(BookDTO dto) {
         Book book = bookMapper.toEntity(dto);
+
         book.setId(null);
         book.setAvailableCopies(dto.getTotalCopies());
         book.setCreatedAt(LocalDateTime.now());
-
+        if(bookRepository.existsByIsbn(book.getIsbn())){
+            throw new NotUniqueISBNCode("ISBN код не уникален");
+        }
         if (dto.getAuthors() != null) {
             Set<Long> authorsIds = dto.getAuthors().stream().map(AuthorDTO::getId).filter(Objects::nonNull).collect(Collectors.toSet());
 
@@ -76,11 +83,12 @@ public class  BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public Page<BookDTO> getAll(Pageable pageable) {
-        Page<Book> booksPage = bookRepository.findAll(pageable);
+        Page<Book> booksPage = bookRepository.findAllWithAuthors(pageable);
         return booksPage.map(bookMapper::toDTO);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<BookDTO> searchBooks(String title, String genre, String authorName, Boolean available, Pageable pageable) {
         Page<Book> booksPage = bookRepository.findWithFilters(title, genre, authorName, available, pageable);
         return booksPage.map(bookMapper::toDTO);
@@ -97,22 +105,30 @@ public class  BookServiceImpl implements BookService {
     }
 
 
-    @Transactional
     @Override
+    @Transactional
     public BookDTO remove(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Книга с ID " + id + " не найдена"));
         BookDTO dto = bookMapper.toDTO(book);
+        if (loanRepository.existsByBookIdAndStatus(id, LoanStatus.ACTIVE)) {
+            throw new NotRemoveBookWhereLoanActive("Невозможно удалить книгу: у нее есть активные (невозвращенные) выдачи.");
+        }
+        loanRepository.deleteByBookId(id);
+
         bookRepository.delete(book);
         return dto;
     }
 
 
     @Override
+    @Transactional
     public BookDTO update(Long id, BookDTO dto) {
-        Book book = bookRepository.findById(dto.getId()).orElseThrow(() -> new BookNotFoundException("Книга с ID " + dto.getId() + " не найдена"));
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Книга с ID " + dto.getId() + " не найдена"));
 
         book.setTitle(dto.getTitle());
-        book.setIsbn(dto.getIsbn());
+        if(bookRepository.existsByIsbn(dto.getIsbn())){
+            throw new NotUniqueISBNCode("ISBN код не уникален");
+        }
         book.setDescription(dto.getDescription());
         book.setGenre(dto.getGenre());
         book.setPublishYear(dto.getPublishYear());
@@ -129,9 +145,4 @@ public class  BookServiceImpl implements BookService {
         return bookMapper.toDTO(updatedBook);
     }
 
-    @Override
-    public List<BookDTO> findBooksByGenre(String genre) {
-        List<Book> books = bookRepository.findAllByGenre(genre);
-        return books.stream().map(bookMapper::toDTO).toList();
-    }
 }

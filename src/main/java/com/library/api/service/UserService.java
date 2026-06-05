@@ -25,6 +25,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+
     public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new BadCredentialsException("Неверный username или password"));
