@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Реализация сервиса для управления выдачами книг
 @Service
 @AllArgsConstructor
 public class LoanServiceImpl implements LoanService {
@@ -39,6 +40,7 @@ public class LoanServiceImpl implements LoanService {
                 .toList();
     }
 
+    // Возвращает выдачу по идентификатору, выбрасывает исключение если не найдена
     @Override
     @Transactional(readOnly = true)
     public LoanDTO getById(Long id) {
@@ -47,6 +49,7 @@ public class LoanServiceImpl implements LoanService {
         return loanMapper.toDTO(loan);
     }
 
+    // Создаёт новую выдачу: проверяет наличие книги, уменьшает количество доступных экземпляров
     @Override
     @Transactional
     public LoanDTO create(LoanDTO loanDTO) {
@@ -56,10 +59,12 @@ public class LoanServiceImpl implements LoanService {
         Reader reader = readerRepository.findById(loanDTO.getReaderId())
                 .orElseThrow(() -> new ReaderNotFoundException("Reader not found"));
 
+        // Проверяем доступность книги
         if (book.getAvailableCopies() <= 0) {
             throw new BookNotAvailableException("Book is not available");
         }
 
+        // Уменьшаем количество доступных экземпляров
         book.setAvailableCopies(book.getAvailableCopies() - 1);
         bookRepository.save(book);
 
@@ -70,6 +75,7 @@ public class LoanServiceImpl implements LoanService {
         return loanMapper.toDTO(loanRepository.save(loan));
     }
 
+    // Обновляет данные выдачи по идентификатору
     @Override
     @Transactional
     public LoanDTO update(Long id, LoanDTO loanDTO) {
@@ -92,6 +98,7 @@ public class LoanServiceImpl implements LoanService {
         return loanMapper.toDTO(loanRepository.save(loan));
     }
 
+    // Удаляет выдачу по идентификатору
     @Override
     @Transactional
     public void remove(Long id) {
@@ -100,12 +107,14 @@ public class LoanServiceImpl implements LoanService {
         loanRepository.delete(loan);
     }
 
+    // Оформляет возврат книги: устанавливает дату возврата и увеличивает количество доступных экземпляров
     @Override
     @Transactional
     public LoanDTO returnLoan(Long id) {
         Loan loan = loanRepository.findById(id)
                 .orElseThrow(() -> new LoanNotFoundException("Loan not found"));
 
+        // Проверяем, не была ли книга уже возвращена
         if (loan.getStatus() == LoanStatus.RETURNED || loan.getReturnDate() != null) {
             throw new LoanAlreadyReturnedException("Loan already returned");
         }
@@ -113,6 +122,7 @@ public class LoanServiceImpl implements LoanService {
         loan.setReturnDate(LocalDateTime.now());
         loan.setStatus(LoanStatus.RETURNED);
 
+        // Увеличиваем количество доступных экземпляров книги
         Book book = loan.getBook();
         book.setAvailableCopies(book.getAvailableCopies() + 1);
         bookRepository.save(book);
@@ -120,6 +130,7 @@ public class LoanServiceImpl implements LoanService {
         return loanMapper.toDTO(loanRepository.save(loan));
     }
 
+    // Возвращает список всех активных выдач
     @Override
     @Transactional(readOnly = true)
     public List<LoanDTO> getActiveLoans() {
@@ -130,6 +141,7 @@ public class LoanServiceImpl implements LoanService {
                 .toList();
     }
 
+    // Возвращает список активных выдач с истёкшим сроком возврата
     @Override
     @Transactional(readOnly = true)
     public List<LoanDTO> getOverdueLoans() {
@@ -139,6 +151,7 @@ public class LoanServiceImpl implements LoanService {
                 .toList();
     }
 
+    // Возвращает историю всех выдач указанного читателя
     @Override
     @Transactional(readOnly = true)
     public List<LoanDTO> getReaderHistory(Long readerId) {

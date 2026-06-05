@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+// Реализация сервиса для управления читателями
 @Service
 @AllArgsConstructor
 public class ReaderServiceImpl implements ReaderService {
@@ -18,6 +19,7 @@ public class ReaderServiceImpl implements ReaderService {
     private final ReaderRepository readerRepository;
     private final ReaderMapper readerMapper;
 
+    // Возвращает список всех читателей
     @Override
     @Transactional(readOnly = true)
     public List<ReaderDTO> getAll() {
@@ -27,6 +29,7 @@ public class ReaderServiceImpl implements ReaderService {
                 .toList();
     }
 
+    // Возвращает читателя по идентификатору, выбрасывает исключение если не найден
     @Override
     @Transactional(readOnly = true)
     public ReaderDTO getById(Long id) {
@@ -35,6 +38,7 @@ public class ReaderServiceImpl implements ReaderService {
         return readerMapper.toDTO(reader);
     }
 
+    // Создаёт нового читателя и сохраняет его в базе данных
     @Override
     @Transactional
     public ReaderDTO create(ReaderDTO readerDTO) {
@@ -43,6 +47,7 @@ public class ReaderServiceImpl implements ReaderService {
         return readerMapper.toDTO(savedReader);
     }
 
+    // Обновляет данные существующего читателя по идентификатору
     @Override
     @Transactional
     public ReaderDTO update(Long id, ReaderDTO readerDTO) {
@@ -59,6 +64,7 @@ public class ReaderServiceImpl implements ReaderService {
         return readerMapper.toDTO(updatedReader);
     }
 
+    // Удаляет читателя по идентификатору, выбрасывает исключение если не найден
     @Override
     @Transactional
     public void remove(Long id) {

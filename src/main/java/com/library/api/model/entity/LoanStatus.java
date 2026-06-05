@@ -1,5 +1,8 @@
 package com.library.api.model.entity;
 
+// Статус выдачи книги
 public enum LoanStatus {
-    ACTIVE, RETURNED, OVERDUE
+    ACTIVE,   // Книга на руках у читателя
+    RETURNED, // Книга возвращена
+    OVERDUE   // Срок возврата истёк
 }

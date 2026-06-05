@@ -16,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+// Фильтр для аутентификации запросов по JWT-токену
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -23,27 +24,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
+    // Перехватывает каждый входящий запрос и проверяет JWT-токен
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
+        // Извлекаем заголовок Authorization
         final String authHeader = request.getHeader("Authorization");
 
+        // Если заголовок отсутствует или не содержит Bearer-токен — пропускаем запрос
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
+        // Извлекаем токен из заголовка (убираем префикс "Bearer ")
         final String jwt = authHeader.substring(7);
 
         try {
+            // Извлекаем имя пользователя из токена
             final String username = jwtService.extractUsername(jwt);
 
+            // Если пользователь не аутентифицирован — проверяем токен
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
+                // Если токен валиден — устанавливаем аутентификацию в контекст безопасности
                 if (jwtService.isTokenValid(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(
@@ -54,6 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception ignored) {
+            // Невалидный токен — запрос продолжается без аутентификации
         }
 
         filterChain.doFilter(request, response);

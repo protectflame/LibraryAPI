@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReaderMapper {
 
+    // Преобразует сущность Reader в DTO
+    // Возвращает null, если переданный reader равен null
     public ReaderDTO toDTO(Reader reader) {
         if (reader == null) return null;
 
@@ -20,6 +22,8 @@ public class ReaderMapper {
         );
     }
 
+    // Преобразует DTO в сущность Reader
+    // Возвращает null, если переданный dto равен null
     public Reader toEntity(ReaderDTO dto) {
         if (dto == null) return null;
 

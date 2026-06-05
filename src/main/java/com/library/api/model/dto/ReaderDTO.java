@@ -7,16 +7,15 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+// DTO для передачи данных о читателе
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReaderDTO implements HasId {
-    private Long id;
-    private String name;
-    private String email;
-    private String phone;
-    private LocalDate registeredAt;
-    private LoanStatus status;
-
-
+    private Long id;                  // Уникальный идентификатор читателя
+    private String name;              // Имя читателя
+    private String email;             // Электронная почта
+    private String phone;             // Номер телефона
+    private LocalDate registeredAt;   // Дата регистрации
+    private LoanStatus status;        // Статус читателя
 }
