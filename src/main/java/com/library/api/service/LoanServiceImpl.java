@@ -1,8 +1,9 @@
 package com.library.api.service;
 
-import com.library.api.exception.notFound.BookNotAvailableException;
+import com.library.api.exception.business.BookNotAvailableException;
 import com.library.api.exception.business.LoanAlreadyReturnedException;
-import com.library.api.exception.business.LoanNotFoundException;
+import com.library.api.exception.notFound.LoanNotFoundException;
+import com.library.api.exception.notFound.BookNotFoundException;
 import com.library.api.exception.notFound.ReaderNotFoundException;
 import com.library.api.mapper.LoanMapper;
 import com.library.api.model.dto.LoanDTO;
@@ -13,13 +14,16 @@ import com.library.api.model.entity.Reader;
 import com.library.api.repository.BookRepository;
 import com.library.api.repository.LoanRepository;
 import com.library.api.repository.ReaderRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 // Реализация сервиса для управления выдачами книг
 @Service
+@AllArgsConstructor
 public class LoanServiceImpl implements LoanService {
 
     private final LoanRepository loanRepository;
@@ -27,18 +31,8 @@ public class LoanServiceImpl implements LoanService {
     private final ReaderRepository readerRepository;
     private final LoanMapper loanMapper;
 
-    public LoanServiceImpl(LoanRepository loanRepository,
-                           BookRepository bookRepository,
-                           ReaderRepository readerRepository,
-                           LoanMapper loanMapper) {
-        this.loanRepository = loanRepository;
-        this.bookRepository = bookRepository;
-        this.readerRepository = readerRepository;
-        this.loanMapper = loanMapper;
-    }
-
-    // Возвращает список всех выдач
     @Override
+    @Transactional(readOnly = true)
     public List<LoanDTO> getAll() {
         return loanRepository.findAll()
                 .stream()
@@ -48,6 +42,7 @@ public class LoanServiceImpl implements LoanService {
 
     // Возвращает выдачу по идентификатору, выбрасывает исключение если не найдена
     @Override
+    @Transactional(readOnly = true)
     public LoanDTO getById(Long id) {
         Loan loan = loanRepository.findById(id)
                 .orElseThrow(() -> new LoanNotFoundException("Loan not found"));
@@ -56,9 +51,10 @@ public class LoanServiceImpl implements LoanService {
 
     // Создаёт новую выдачу: проверяет наличие книги, уменьшает количество доступных экземпляров
     @Override
+    @Transactional
     public LoanDTO create(LoanDTO loanDTO) {
         Book book = bookRepository.findById(loanDTO.getBookId())
-                .orElseThrow(() -> new RuntimeException("Book not found"));
+                .orElseThrow(() -> new BookNotFoundException("Book not found"));
 
         Reader reader = readerRepository.findById(loanDTO.getReaderId())
                 .orElseThrow(() -> new ReaderNotFoundException("Reader not found"));
@@ -81,6 +77,7 @@ public class LoanServiceImpl implements LoanService {
 
     // Обновляет данные выдачи по идентификатору
     @Override
+    @Transactional
     public LoanDTO update(Long id, LoanDTO loanDTO) {
         Loan loan = loanRepository.findById(id)
                 .orElseThrow(() -> new LoanNotFoundException("Loan not found"));
@@ -103,6 +100,7 @@ public class LoanServiceImpl implements LoanService {
 
     // Удаляет выдачу по идентификатору
     @Override
+    @Transactional
     public void remove(Long id) {
         Loan loan = loanRepository.findById(id)
                 .orElseThrow(() -> new LoanNotFoundException("Loan not found"));
@@ -111,6 +109,7 @@ public class LoanServiceImpl implements LoanService {
 
     // Оформляет возврат книги: устанавливает дату возврата и увеличивает количество доступных экземпляров
     @Override
+    @Transactional
     public LoanDTO returnLoan(Long id) {
         Loan loan = loanRepository.findById(id)
                 .orElseThrow(() -> new LoanNotFoundException("Loan not found"));
@@ -133,8 +132,10 @@ public class LoanServiceImpl implements LoanService {
 
     // Возвращает список всех активных выдач
     @Override
+    @Transactional(readOnly = true)
     public List<LoanDTO> getActiveLoans() {
         return loanRepository.findAll().stream()
+                .filter(loan -> loan.getDueDate() != null && loan.getDueDate().isAfter(LocalDateTime.now()))
                 .filter(loan -> loan.getStatus() == LoanStatus.ACTIVE)
                 .map(loanMapper::toDTO)
                 .toList();
@@ -142,9 +143,9 @@ public class LoanServiceImpl implements LoanService {
 
     // Возвращает список активных выдач с истёкшим сроком возврата
     @Override
+    @Transactional(readOnly = true)
     public List<LoanDTO> getOverdueLoans() {
         return loanRepository.findAll().stream()
-                .filter(loan -> loan.getStatus() == LoanStatus.ACTIVE)
                 .filter(loan -> loan.getDueDate() != null && loan.getDueDate().isBefore(LocalDateTime.now()))
                 .map(loanMapper::toDTO)
                 .toList();
@@ -152,6 +153,7 @@ public class LoanServiceImpl implements LoanService {
 
     // Возвращает историю всех выдач указанного читателя
     @Override
+    @Transactional(readOnly = true)
     public List<LoanDTO> getReaderHistory(Long readerId) {
         return loanRepository.findAll().stream()
                 .filter(loan -> loan.getReader() != null && loan.getReader().getId().equals(readerId))

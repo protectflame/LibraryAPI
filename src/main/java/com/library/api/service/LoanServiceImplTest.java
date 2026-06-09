@@ -1,7 +1,7 @@
 package com.library.api.service;
 
 import com.library.api.exception.business.LoanAlreadyReturnedException;
-import com.library.api.exception.business.LoanNotFoundException;
+import com.library.api.exception.notFound.LoanNotFoundException;
 import com.library.api.mapper.LoanMapper;
 import com.library.api.model.dto.LoanDTO;
 import com.library.api.model.entity.Book;

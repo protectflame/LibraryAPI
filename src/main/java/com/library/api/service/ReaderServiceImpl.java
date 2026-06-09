@@ -7,6 +7,7 @@ import com.library.api.model.entity.Reader;
 import com.library.api.repository.ReaderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class ReaderServiceImpl implements ReaderService {
 
     // Возвращает список всех читателей
     @Override
+    @Transactional(readOnly = true)
     public List<ReaderDTO> getAll() {
         return readerRepository.findAll()
                 .stream()
@@ -29,6 +31,7 @@ public class ReaderServiceImpl implements ReaderService {
 
     // Возвращает читателя по идентификатору, выбрасывает исключение если не найден
     @Override
+    @Transactional(readOnly = true)
     public ReaderDTO getById(Long id) {
         Reader reader = readerRepository.findById(id)
                 .orElseThrow(() -> new ReaderNotFoundException("Reader not found"));
@@ -37,6 +40,7 @@ public class ReaderServiceImpl implements ReaderService {
 
     // Создаёт нового читателя и сохраняет его в базе данных
     @Override
+    @Transactional
     public ReaderDTO create(ReaderDTO readerDTO) {
         Reader reader = readerMapper.toEntity(readerDTO);
         Reader savedReader = readerRepository.save(reader);
@@ -45,6 +49,7 @@ public class ReaderServiceImpl implements ReaderService {
 
     // Обновляет данные существующего читателя по идентификатору
     @Override
+    @Transactional
     public ReaderDTO update(Long id, ReaderDTO readerDTO) {
         Reader existingReader = readerRepository.findById(id)
                 .orElseThrow(() -> new ReaderNotFoundException("Reader not found"));
@@ -61,6 +66,7 @@ public class ReaderServiceImpl implements ReaderService {
 
     // Удаляет читателя по идентификатору, выбрасывает исключение если не найден
     @Override
+    @Transactional
     public void remove(Long id) {
         if (!readerRepository.existsById(id)) {
             throw new ReaderNotFoundException("Reader not found");
