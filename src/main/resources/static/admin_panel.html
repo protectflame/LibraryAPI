@@ -3,440 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LibraryAPI — Админ Панель</title>
+    <title>LibraryAPI — Admin Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap"
-          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0a0c0f;
-            --surface: #111318;
-            --surface2: #1a1d24;
-            --border: #252830;
-            --accent: #00e5a0;
-            --accent2: #0066ff;
-            --accent3: #ff4466;
-            --text: #e8eaf0;
-            --muted: #5a6072;
+            --bg: #0a0c0f; --surface: #111318; --surface2: #1a1d24; --border: #252830;
+            --accent: #00e5a0; --accent2: #0066ff; --accent3: #ff4466; --accent4: #7c3aed;
+            --text: #e8eaf0; --muted: #5a6072;
         }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Syne', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-        }
-
-        code, .mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--surface);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 4px;
-        }
-
-        /* Layout */
-        .sidebar {
-            width: 220px;
-            min-height: 100vh;
-            background: var(--surface);
-            border-right: 1px solid var(--border);
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            display: flex;
-            flex-direction: column;
-            padding: 24px 0;
-            z-index: 10;
-        }
-
-        .main {
-            margin-left: 220px;
-            padding: 32px;
-        }
-
-        /* Nav */
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 20px;
-            cursor: pointer;
-            color: var(--muted);
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            transition: all 0.15s;
-            border-left: 2px solid transparent;
-            text-transform: uppercase;
-        }
-
-        .nav-item:hover {
-            color: var(--text);
-            background: var(--surface2);
-        }
-
-        .nav-item.active {
-            color: var(--accent);
-            border-left-color: var(--accent);
-            background: rgba(0, 229, 160, 0.05);
-        }
-
-        .nav-item i {
-            width: 16px;
-            text-align: center;
-            font-size: 13px;
-        }
-
-        /* Cards */
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-        }
-
-        .card-title {
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-bottom: 18px;
-        }
-
-        /* Form elements */
-        input, select, textarea {
-            width: 100%;
-            padding: 10px 14px;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-family: 'Syne', sans-serif;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.15s;
-            margin-bottom: 10px;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--accent);
-        }
-
-        input::placeholder, textarea::placeholder {
-            color: var(--muted);
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-family: 'Syne', sans-serif;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            cursor: pointer;
-            border: none;
-            transition: all 0.15s;
-            text-transform: uppercase;
-        }
-
-        .btn-green {
-            background: var(--accent);
-            color: #000;
-        }
-
-        .btn-green:hover {
-            background: #00ffb3;
-        }
-
-        .btn-blue {
-            background: var(--accent2);
-            color: #fff;
-        }
-
-        .btn-blue:hover {
-            background: #3385ff;
-        }
-
-        .btn-red {
-            background: var(--accent3);
-            color: #fff;
-        }
-
-        .btn-red:hover {
-            background: #ff6680;
-        }
-
-        .btn-ghost {
-            background: var(--surface2);
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-
-        .btn-ghost:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .btn-full {
-            width: 100%;
-        }
-
-        .btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        /* Toast */
-        #toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .toast {
-            padding: 12px 18px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: slideIn 0.2s ease;
-            max-width: 320px;
-        }
-
-        .toast.success {
-            background: rgba(0, 229, 160, 0.15);
-            border: 1px solid var(--accent);
-            color: var(--accent);
-        }
-
-        .toast.error {
-            background: rgba(255, 68, 102, 0.15);
-            border: 1px solid var(--accent3);
-            color: var(--accent3);
-        }
-
-        .toast.info {
-            background: rgba(0, 102, 255, 0.15);
-            border: 1px solid var(--accent2);
-            color: var(--accent2);
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        /* Status badge */
-        .badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-        }
-
-        .badge-green {
-            background: rgba(0, 229, 160, 0.12);
-            color: var(--accent);
-        }
-
-        .badge-red {
-            background: rgba(255, 68, 102, 0.12);
-            color: var(--accent3);
-        }
-
-        .badge-blue {
-            background: rgba(0, 102, 255, 0.12);
-            color: var(--accent2);
-        }
-
-        .badge-gray {
-            background: var(--surface2);
-            color: var(--muted);
-        }
-
-        /* Table-like items */
-        .list-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 14px;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            margin-bottom: 8px;
-            transition: border-color 0.15s;
-        }
-
-        .list-item:hover {
-            border-color: var(--muted);
-        }
-
-        .list-item-title {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .list-item-sub {
-            font-size: 12px;
-            color: var(--muted);
-            margin-top: 2px;
-        }
-
-        /* Auth bar */
-        .auth-bar {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            padding: 10px 32px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 13px;
-            position: sticky;
-            top: 0;
-            z-index: 5;
-            margin-left: 220px;
-        }
-
-        /* Grid */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 1100px) {
-            .grid-2, .grid-3 {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Raw JSON */
-        #rawJson {
-            width: 100%;
-            height: 400px;
-            background: #0d0f12;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: #a8d8a8;
-            resize: vertical;
-            margin-bottom: 0;
-        }
-
-        /* Loader */
-        .spinner {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Tabs */
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Auth status dot */
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .status-dot.online {
-            background: var(--accent);
-            box-shadow: 0 0 6px var(--accent);
-        }
-
-        .status-dot.offline {
-            background: var(--muted);
-        }
-
-        /* Collapsible return form */
-        .return-btn {
-            font-size: 11px;
-            padding: 4px 10px;
-        }
-
-        /* Section header */
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+        code, .mono { font-family: 'JetBrains Mono', monospace; }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: var(--surface); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .sidebar { width: 220px; min-height: 100vh; background: var(--surface); border-right: 1px solid var(--border); position: fixed; left: 0; top: 0; bottom: 0; display: flex; flex-direction: column; padding: 24px 0; z-index: 10; }
+        .main { margin-left: 220px; padding: 32px; }
+        .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; cursor: pointer; color: var(--muted); font-size: 14px; font-weight: 600; letter-spacing: 0.02em; transition: all 0.15s; border-left: 2px solid transparent; text-transform: uppercase; }
+        .nav-item:hover { color: var(--text); background: var(--surface2); }
+        .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0, 229, 160, 0.05); }
+        .nav-item i { width: 16px; text-align: center; font-size: 13px; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+        .card-title { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; }
+        input, select, textarea { width: 100%; padding: 10px 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px; outline: none; transition: border-color 0.15s; margin-bottom: 10px; }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+        input::placeholder, textarea::placeholder { color: var(--muted); }
+        label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; cursor: pointer; border: none; transition: all 0.15s; text-transform: uppercase; }
+        .btn-green { background: var(--accent); color: #000; }
+        .btn-green:hover { background: #00ffb3; }
+        .btn-blue { background: var(--accent2); color: #fff; }
+        .btn-blue:hover { background: #3385ff; }
+        .btn-red { background: var(--accent3); color: #fff; }
+        .btn-red:hover { background: #ff6680; }
+        .btn-purple { background: var(--accent4); color: #fff; }
+        .btn-purple:hover { background: #9055ff; }
+        .btn-ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+        .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-full { width: 100%; }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-sm { padding: 6px 12px; font-size: 11px; }
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+        .toast { padding: 12px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; animation: slideIn 0.2s ease; max-width: 360px; }
+        .toast.success { background: rgba(0, 229, 160, 0.15); border: 1px solid var(--accent); color: var(--accent); }
+        .toast.error { background: rgba(255, 68, 102, 0.15); border: 1px solid var(--accent3); color: var(--accent3); }
+        .toast.info { background: rgba(0, 102, 255, 0.15); border: 1px solid var(--accent2); color: var(--accent2); }
+        @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+        .badge-green { background: rgba(0, 229, 160, 0.12); color: var(--accent); }
+        .badge-red { background: rgba(255, 68, 102, 0.12); color: var(--accent3); }
+        .badge-blue { background: rgba(0, 102, 255, 0.12); color: var(--accent2); }
+        .badge-gray { background: var(--surface2); color: var(--muted); }
+        .badge-purple { background: rgba(124, 58, 237, 0.12); color: var(--accent4); }
+        .list-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; transition: border-color 0.15s; }
+        .list-item:hover { border-color: var(--muted); }
+        .list-item-title { font-weight: 600; font-size: 14px; }
+        .list-item-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+        .auth-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 32px; display: flex; align-items: center; gap: 12px; font-size: 13px; position: sticky; top: 0; z-index: 5; margin-left: 220px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 1100px) { .grid-2 { grid-template-columns: 1fr; } }
+        #rawJson { width: 100%; height: 400px; background: #0d0f12; border: 1px solid var(--border); border-radius: 8px; padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #a8d8a8; resize: vertical; margin-bottom: 0; }
+        .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.6s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .status-dot.online { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+        .status-dot.offline { background: var(--muted); }
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .section-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; }
+        .modal-title { font-size: 16px; font-weight: 800; margin-bottom: 16px; }
+        .pagination { display: flex; align-items: center; gap: 8px; margin-top: 16px; justify-content: center; flex-wrap: wrap; }
+        .pagination button { padding: 6px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+        .pagination button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+        .pagination button:disabled { opacity: 0.3; cursor: not-allowed; }
+        .pagination button.active { background: var(--accent); color: #000; border-color: var(--accent); }
+        .pagination span { font-size: 12px; color: var(--muted); }
+        .author-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; background: rgba(124, 58, 237, 0.12); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 4px; font-size: 11px; color: var(--accent4); font-weight: 600; margin-right: 4px; }
+        .detail-panel { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-top: 12px; }
+        .detail-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label { color: var(--muted); font-weight: 600; }
+        .detail-value { color: var(--text); }
     </style>
 </head>
 <body>
 
-<!-- Toast container -->
 <div id="toast-container"></div>
 
 <!-- Sidebar -->
@@ -446,33 +103,18 @@
             <i class="fas fa-book" style="color:var(--accent);font-size:16px;"></i>
             <span style="font-size:16px;font-weight:800;letter-spacing:-0.01em;">LibraryAPI</span>
         </div>
-        <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;">localhost:63342</div>
+        <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;">v2.1 — Admin Panel</div>
     </div>
-
     <div style="height:1px;background:var(--border);margin-bottom:12px;"></div>
-
     <nav>
-        <div class="nav-item active" onclick="showTab('books')" id="nav-books">
-            <i class="fas fa-book"></i> Книги
-        </div>
-        <div class="nav-item" onclick="showTab('readers')" id="nav-readers">
-            <i class="fas fa-users"></i> Читатели
-        </div>
-        <div class="nav-item" onclick="showTab('authors')" id="nav-authors">
-            <i class="fas fa-feather"></i> Авторы
-        </div>
-        <div class="nav-item" onclick="showTab('loans')" id="nav-loans">
-            <i class="fas fa-hand-holding-open"></i> Выдачи
-        </div>
-        <div class="nav-item" onclick="showTab('raw')" id="nav-raw">
-            <i class="fas fa-code"></i> Raw JSON
-        </div>
+        <div class="nav-item active" onclick="showTab('books')" id="nav-books"><i class="fas fa-book"></i> Книги</div>
+        <div class="nav-item" onclick="showTab('readers')" id="nav-readers"><i class="fas fa-users"></i> Читатели</div>
+        <div class="nav-item" onclick="showTab('authors')" id="nav-authors"><i class="fas fa-feather"></i> Авторы</div>
+        <div class="nav-item" onclick="showTab('loans')" id="nav-loans"><i class="fas fa-hand-holding"></i> Выдачи</div>
+        <div class="nav-item" onclick="showTab('raw')" id="nav-raw"><i class="fas fa-code"></i> Raw JSON</div>
     </nav>
-
     <div style="margin-top:auto;padding:20px;border-top:1px solid var(--border);">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">
-            Статус
-        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">Статус</div>
         <div style="display:flex;align-items:center;gap:8px;font-size:12px;">
             <span class="status-dot offline" id="statusDot"></span>
             <span id="authStatusText" style="color:var(--muted);">Не авторизован</span>
@@ -483,18 +125,15 @@
     </div>
 </div>
 
-<!-- Auth bar (top) -->
+<!-- Auth bar -->
 <div class="auth-bar">
-    <input id="loginUsername" type="text" placeholder="Username"
-           style="width:150px;margin:0;padding:7px 12px;font-size:13px;">
-    <input id="loginPassword" type="password" placeholder="Password"
-           style="width:150px;margin:0;padding:7px 12px;font-size:13px;">
+    <input id="loginUsername" type="text" placeholder="Username" style="width:150px;margin:0;padding:7px 12px;font-size:13px;">
+    <input id="loginPassword" type="password" placeholder="Password" style="width:150px;margin:0;padding:7px 12px;font-size:13px;">
     <button class="btn btn-green" onclick="login()" id="loginBtn" style="padding:7px 14px;font-size:12px;">
         <i class="fas fa-sign-in-alt"></i> Войти
     </button>
     <div style="width:1px;height:24px;background:var(--border);"></div>
-    <input id="tokenInput" type="text" placeholder="Или вставь JWT токен вручную"
-           style="flex:1;margin:0;padding:7px 12px;font-size:12px;font-family:'JetBrains Mono',monospace;">
+    <input id="tokenInput" type="text" placeholder="Или вставь JWT токен вручную" style="flex:1;margin:0;padding:7px 12px;font-size:12px;font-family:'JetBrains Mono',monospace;">
     <button class="btn btn-blue" onclick="saveToken()" style="padding:7px 14px;font-size:12px;">Сохранить</button>
 </div>
 
@@ -504,55 +143,91 @@
     <!-- BOOKS TAB -->
     <div id="tab-books" class="tab-content active">
         <div class="section-header">
-            <div class="section-title">📚 Книги</div>
-            <button class="btn btn-ghost" onclick="loadBooks()"><span class="spinner" id="booksSpinner"
-                                                                      style="display:none;"></span> <i
-                    class="fas fa-sync-alt"></i> Обновить
-            </button>
+            <div class="section-title">📚 Книги <span class="spinner" id="booksSpinner" style="display:none;vertical-align:middle;"></span></div>
+            <div style="display:flex;gap:8px;">
+                <button class="btn btn-ghost" onclick="toggleSearchPanel()"><i class="fas fa-filter"></i> Фильтры</button>
+                <button class="btn btn-ghost" onclick="resetSearchAndLoad()"><i class="fas fa-sync-alt"></i> Сбросить</button>
+            </div>
         </div>
+
+        <!-- Search Panel -->
+        <div class="card" id="searchPanel" style="display:none; margin-bottom:20px; border-color: var(--accent2);">
+            <div class="card-title" style="color: var(--accent2);"><i class="fas fa-search"></i> Фильтры поиска</div>
+            <form id="searchForm" onsubmit="handleSearch(event)">
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+                    <div>
+                        <label>Название (часть)</label>
+                        <input type="text" id="searchTitle" placeholder="Война и...">
+                    </div>
+                    <div>
+                        <label>Жанр (точный)</label>
+                        <input type="text" id="searchGenre" placeholder="Роман">
+                    </div>
+                    <div>
+                        <label>Имя автора</label>
+                        <input type="text" id="searchAuthorName" placeholder="Толстой">
+                    </div>
+                    <div>
+                        <label>Доступность</label>
+                        <select id="searchAvailable">
+                            <option value="">Любая</option>
+                            <option value="true">Только доступные</option>
+                            <option value="false">Только недоступные</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:16px;">
+                    <button type="submit" class="btn btn-blue" style="flex:1;"><i class="fas fa-search"></i> Применить</button>
+                    <button type="button" class="btn btn-ghost" onclick="resetSearchAndLoad()" style="flex:1;"><i class="fas fa-times"></i> Очистить</button>
+                </div>
+            </form>
+        </div>
+
         <div class="grid-2" style="margin-bottom:20px;">
-            <!-- Create book -->
             <div class="card">
                 <div class="card-title"><i class="fas fa-plus"></i> Создать книгу</div>
                 <form id="bookForm" onsubmit="submitBook(event)">
-                    <input type="text" id="title" placeholder="Название *" required>
-                    <input type="text" id="isbn" placeholder="ISBN *" required>
-                    <input type="text" id="genre" placeholder="Жанр">
-                    <input type="text" id="description" placeholder="Описание">
+                    <label>Название *</label>
+                    <input type="text" id="bookTitle" placeholder="Минимум 3 символа" required minlength="3" maxlength="255">
+                    <label>ISBN * (20 символов)</label>
+                    <input type="text" id="bookIsbn" placeholder="Ровно 20 символов" required minlength="20" maxlength="20">
+                    <label>Описание *</label>
+                    <textarea id="bookDescription" placeholder="Минимум 3 символа" required minlength="3" maxlength="1000" rows="3"></textarea>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                        <input type="number" id="publishYear" placeholder="Год издания" min="1000" max="2099">
-                        <input type="number" id="totalCopies" placeholder="Кол-во экз." value="1" min="1">
+                        <div><label>Жанр</label><input type="text" id="bookGenre" placeholder="Макс. 50 символов" maxlength="50"></div>
+                        <div><label>Год публикации</label><input type="date" id="bookPublishYear"></div>
                     </div>
-                    <input type="text" id="bookAuthorIds" placeholder="IDs авторов через запятую: 1,2">
-                    <button type="submit" class="btn btn-green btn-full" id="createBookBtn">
-                        <i class="fas fa-plus"></i> Создать книгу
-                    </button>
+                    <label>Кол-во экземпляров *</label>
+                    <input type="number" id="bookTotalCopies" placeholder="Минимум 1" value="1" min="1">
+                    <label>ID авторов (через запятую)</label>
+                    <input type="text" id="bookAuthorIds" placeholder="Например: 1,2,3">
+                    <button type="submit" class="btn btn-green btn-full" id="createBookBtn"><i class="fas fa-plus"></i> Создать книгу</button>
                 </form>
             </div>
-            <!-- Delete book -->
+
             <div class="card">
-                <div class="card-title"><i class="fas fa-trash"></i> Удалить книгу</div>
-                <form id="bookDeleteForm" onsubmit="deleteBook(event)">
-                    <input type="number" id="deleteBookId" placeholder="ID книги *" required>
-                    <button type="submit" class="btn btn-red btn-full">
-                        <i class="fas fa-trash"></i> Удалить
-                    </button>
-                </form>
-                <div style="height:1px;background:var(--border);margin:16px 0;"></div>
-                <div class="card-title"><i class="fas fa-search"></i> Найти по ID</div>
+                <div class="card-title"><i class="fas fa-search"></i> Найти книгу по ID</div>
                 <div style="display:flex;gap:8px;">
                     <input type="number" id="findBookId" placeholder="ID книги" style="margin:0;">
                     <button class="btn btn-ghost" onclick="findBook()" style="white-space:nowrap;">Найти</button>
                 </div>
+                <div id="bookFindResult" style="margin-top:12px;"></div>
+                <div style="height:1px;background:var(--border);margin:20px 0;"></div>
+                <div class="card-title"><i class="fas fa-trash"></i> Удалить книгу</div>
+                <form id="bookDeleteForm" onsubmit="deleteBook(event)">
+                    <input type="number" id="deleteBookId" placeholder="ID книги *" required min="1">
+                    <button type="submit" class="btn btn-red btn-full"><i class="fas fa-trash"></i> Удалить</button>
+                </form>
             </div>
         </div>
-        <!-- Books list -->
+
         <div class="card">
             <div class="section-header" style="margin-bottom:14px;">
-                <div class="card-title" style="margin:0;">Все книги</div>
+                <div class="card-title" style="margin:0;">Список книг</div>
                 <span id="booksCount" style="font-size:12px;color:var(--muted);"></span>
             </div>
             <div id="booksList"></div>
+            <div class="pagination" id="booksPagination"></div>
         </div>
     </div>
 
@@ -566,21 +241,27 @@
             <div class="card">
                 <div class="card-title"><i class="fas fa-user-plus"></i> Новый читатель</div>
                 <form id="readerForm" onsubmit="submitReader(event)">
-                    <input type="text" id="readerName" placeholder="ФИО *" required>
-                    <input type="email" id="readerEmail" placeholder="Email">
-                    <input type="text" id="readerPhone" placeholder="Телефон">
-                    <button type="submit" class="btn btn-blue btn-full">
-                        <i class="fas fa-plus"></i> Добавить читателя
-                    </button>
+                    <label>Имя *</label>
+                    <input type="text" id="readerName" placeholder="ФИО читателя" required>
+                    <label>Email</label>
+                    <input type="email" id="readerEmail" placeholder="email@example.com">
+                    <label>Телефон</label>
+                    <input type="text" id="readerPhone" placeholder="+7 (999) 123-45-67">
+                    <button type="submit" class="btn btn-blue btn-full"><i class="fas fa-plus"></i> Добавить читателя</button>
                 </form>
             </div>
             <div class="card">
-                <div class="card-title"><i class="fas fa-search"></i> Найти читателя</div>
+                <div class="card-title"><i class="fas fa-search"></i> Найти / Удалить читателя</div>
                 <div style="display:flex;gap:8px;margin-bottom:10px;">
-                    <input type="number" id="findReaderId" placeholder="ID читателя" style="margin:0;">
+                    <input type="number" id="findReaderId" placeholder="ID читателя" style="margin:0;" min="1">
                     <button class="btn btn-ghost" onclick="findReader()" style="white-space:nowrap;">Найти</button>
                 </div>
                 <div id="readerFindResult"></div>
+                <div style="height:1px;background:var(--border);margin:20px 0;"></div>
+                <form onsubmit="deleteReader(event)">
+                    <input type="number" id="deleteReaderId" placeholder="ID читателя для удаления *" required min="1">
+                    <button type="submit" class="btn btn-red btn-full"><i class="fas fa-trash"></i> Удалить</button>
+                </form>
             </div>
         </div>
         <div class="card">
@@ -595,28 +276,34 @@
     <!-- AUTHORS TAB -->
     <div id="tab-authors" class="tab-content">
         <div class="section-header">
-            <div class="section-title">✍️ Авторы</div>
-            <button class="btn btn-ghost" onclick="loadAuthors()"><i class="fas fa-sync-alt"></i> Обновить</button>
+            <div class="section-title">✍️ Авторы <span class="spinner" id="authorsSpinner" style="display:none;vertical-align:middle;"></span></div>
+            <button class="btn btn-ghost" onclick="loadAuthors(0)"><i class="fas fa-sync-alt"></i> Обновить</button>
         </div>
         <div class="grid-2" style="margin-bottom:20px;">
             <div class="card">
                 <div class="card-title"><i class="fas fa-feather"></i> Новый автор</div>
                 <form id="authorForm" onsubmit="submitAuthor(event)">
-                    <input type="text" id="authorFirstName" placeholder="Имя *" required>
-                    <input type="text" id="authorLastName" placeholder="Фамилия">
+                    <label>Имя *</label>
+                    <input type="text" id="authorFirstName" placeholder="2-50 символов" required minlength="2" maxlength="50">
+                    <label>Фамилия</label>
+                    <input type="text" id="authorLastName" placeholder="Макс. 50 символов" maxlength="50">
+                    <label>Дата рождения</label>
                     <input type="date" id="authorBirthDate">
-                    <button type="submit" class="btn btn-full" style="background:#7c3aed;color:#fff;">
-                        <i class="fas fa-plus"></i> Добавить автора
-                    </button>
+                    <button type="submit" class="btn btn-purple btn-full"><i class="fas fa-plus"></i> Добавить автора</button>
                 </form>
             </div>
             <div class="card">
-                <div class="card-title"><i class="fas fa-info-circle"></i> Подсказка</div>
-                <p style="font-size:13px;color:var(--muted);line-height:1.6;">
-                    Сначала создай автора, запомни его <strong style="color:var(--text);">ID</strong>,
-                    затем при создании книги введи этот ID в поле «IDs авторов».
-                </p>
-                <div style="margin-top:14px;" id="authorsList-mini"></div>
+                <div class="card-title"><i class="fas fa-search"></i> Поиск / Удаление</div>
+                <div style="display:flex;gap:8px;margin-bottom:10px;">
+                    <input type="text" id="authorSearchQuery" placeholder="Имя или фамилия" style="margin:0;">
+                    <button class="btn btn-ghost" onclick="searchAuthors()" style="white-space:nowrap;">Искать</button>
+                </div>
+                <div id="authorSearchResult"></div>
+                <div style="height:1px;background:var(--border);margin:20px 0;"></div>
+                <form onsubmit="deleteAuthor(event)">
+                    <input type="number" id="deleteAuthorId" placeholder="ID автора *" required min="1">
+                    <button type="submit" class="btn btn-red btn-full"><i class="fas fa-trash"></i> Удалить</button>
+                </form>
             </div>
         </div>
         <div class="card">
@@ -625,6 +312,7 @@
                 <span id="authorsCount" style="font-size:12px;color:var(--muted);"></span>
             </div>
             <div id="authorsList"></div>
+            <div class="pagination" id="authorsPagination"></div>
         </div>
     </div>
 
@@ -634,36 +322,33 @@
             <div class="section-title">📖 Выдачи</div>
             <div style="display:flex;gap:8px;">
                 <button class="btn btn-ghost" onclick="loadAllLoans()"><i class="fas fa-list"></i> Все</button>
-                <button class="btn btn-ghost" onclick="loadActiveLoans()"><i class="fas fa-circle"
-                                                                             style="color:var(--accent);font-size:8px;"></i>
-                    Активные
-                </button>
-                <button class="btn btn-ghost" onclick="loadOverdueLoans()" style="color:var(--accent3);"><i
-                        class="fas fa-exclamation-triangle"></i> Просроченные
-                </button>
+                <button class="btn btn-ghost" onclick="loadActiveLoans()"><i class="fas fa-circle" style="color:var(--accent);font-size:8px;"></i> Активные</button>
+                <button class="btn btn-ghost" onclick="loadOverdueLoans()" style="color:var(--accent3);"><i class="fas fa-exclamation-triangle"></i> Просроченные</button>
             </div>
         </div>
         <div class="grid-2" style="margin-bottom:20px;">
             <div class="card">
                 <div class="card-title"><i class="fas fa-plus"></i> Новая выдача</div>
                 <form id="loanForm" onsubmit="submitLoan(event)">
-                    <input type="number" id="loanBookId" placeholder="ID книги *" required>
-                    <input type="number" id="loanReaderId" placeholder="ID читателя *" required>
-                    <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px;margin-top:-4px;">Срок
-                        возврата *</label>
+                    <label>ID книги *</label>
+                    <input type="number" id="loanBookId" placeholder="ID книги" required min="1">
+                    <label>ID читателя *</label>
+                    <input type="number" id="loanReaderId" placeholder="ID читателя" required min="1">
+                    <label>Срок возврата *</label>
                     <input type="datetime-local" id="loanDueDate" required>
-                    <button type="submit" class="btn btn-green btn-full">
-                        <i class="fas fa-hand-holding-open"></i> Создать выдачу
-                    </button>
+                    <button type="submit" class="btn btn-green btn-full"><i class="fas fa-hand-holding"></i> Создать выдачу</button>
                 </form>
             </div>
             <div class="card">
-                <div class="card-title"><i class="fas fa-undo"></i> Вернуть книгу</div>
-                <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Закрыть выдачу по её ID</p>
-                <div style="display:flex;gap:8px;">
-                    <input type="number" id="returnLoanId" placeholder="ID выдачи" style="margin:0;">
+                <div class="card-title"><i class="fas fa-undo"></i> Вернуть / Удалить</div>
+                <div style="display:flex;gap:8px;margin-bottom:12px;">
+                    <input type="number" id="returnLoanId" placeholder="ID выдачи" style="margin:0;" min="1">
                     <button class="btn btn-blue" onclick="returnLoan()" style="white-space:nowrap;">Вернуть</button>
                 </div>
+                <form onsubmit="deleteLoan(event)">
+                    <input type="number" id="deleteLoanId" placeholder="ID выдачи для удаления *" required min="1">
+                    <button type="submit" class="btn btn-red btn-full"><i class="fas fa-trash"></i> Удалить</button>
+                </form>
             </div>
         </div>
         <div class="card">
@@ -682,10 +367,20 @@
             <button class="btn btn-ghost" onclick="document.getElementById('rawJson').value=''">Очистить</button>
         </div>
         <div class="card">
-            <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">
-                Все ответы API отображаются здесь автоматически. Используй для отладки.
-            </p>
+            <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Все ответы API отображаются здесь автоматически.</p>
             <textarea id="rawJson" readonly placeholder="Здесь появятся ответы от API..."></textarea>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="editModal">
+    <div class="modal">
+        <div class="modal-title" id="editModalTitle">Редактирование</div>
+        <div id="editModalContent"></div>
+        <div style="display:flex;gap:8px;margin-top:16px;">
+            <button class="btn btn-green" onclick="saveEdit()" style="flex:1;">Сохранить</button>
+            <button class="btn btn-ghost" onclick="closeEditModal()" style="flex:1;">Отмена</button>
         </div>
     </div>
 </div>
@@ -694,16 +389,26 @@
     // =====================
     // CONFIGURATION
     // =====================
-    // Измени BASE_URL если у тебя другой префикс (например /api/v1)
     const BASE_URL = "http://localhost:8080/api/v1";
+    const PAGE_SIZE = 20;
 
     // =====================
-    // TOAST NOTIFICATIONS
+    // STATE (все переменные объявлены в начале!)
+    // =====================
+    let booksPage = 0;
+    let booksTotalPages = 0;
+    let authorsPage = 0;
+    let authorsTotalPages = 0;
+    let isSearchMode = false;
+    let editContext = null;
+
+    // =====================
+    // TOAST
     // =====================
     function toast(msg, type = 'info') {
         const c = document.getElementById('toast-container');
         const t = document.createElement('div');
-        const icons = {success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle'};
+        const icons = { success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle' };
         t.className = `toast ${type}`;
         t.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i> ${msg}`;
         c.appendChild(t);
@@ -717,16 +422,11 @@
     // =====================
     // AUTH
     // =====================
-    function getToken() {
-        return localStorage.getItem('jwt');
-    }
+    function getToken() { return localStorage.getItem('jwt'); }
 
     function saveToken() {
         const token = document.getElementById('tokenInput').value.trim();
-        if (!token) {
-            toast('Токен пустой', 'error');
-            return;
-        }
+        if (!token) { toast('Токен пустой', 'error'); return; }
         localStorage.setItem('jwt', token);
         updateAuthStatus();
         toast('Токен сохранён', 'success');
@@ -734,7 +434,7 @@
 
     function authHeaders() {
         const token = getToken();
-        const headers = {'Content-Type': 'application/json'};
+        const headers = { 'Content-Type': 'application/json' };
         if (token) headers['Authorization'] = `Bearer ${token}`;
         return headers;
     }
@@ -763,10 +463,7 @@
     async function login() {
         const username = document.getElementById('loginUsername').value.trim();
         const password = document.getElementById('loginPassword').value;
-        if (!username || !password) {
-            toast('Введи логин и пароль', 'error');
-            return;
-        }
+        if (!username || !password) { toast('Введи логин и пароль', 'error'); return; }
 
         const btn = document.getElementById('loginBtn');
         btn.disabled = true;
@@ -775,17 +472,15 @@
         try {
             const res = await fetch(`${BASE_URL}/auth/login`, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({username, password})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
             });
             const json = await res.json();
             setRaw(json);
 
-            // Пробуем разные варианты поля с токеном
-            const token = json.token || json.accessToken || json.jwt || json.access_token;
-            if (res.ok && token) {
-                localStorage.setItem('jwt', token);
-                document.getElementById('tokenInput').value = token;
+            if (res.ok && json.token) {
+                localStorage.setItem('jwt', json.token);
+                document.getElementById('tokenInput').value = json.token;
                 updateAuthStatus();
                 toast('Вход выполнен', 'success');
                 loadAll();
@@ -814,82 +509,124 @@
     // API HELPER
     // =====================
     async function apiRequest(method, path, body = null) {
-        const opts = {method, headers: authHeaders()};
+        const opts = { method, headers: authHeaders() };
         if (body) opts.body = JSON.stringify(body);
         const res = await fetch(BASE_URL + path, opts);
 
         let data;
         const ct = res.headers.get('content-type') || '';
         if (ct.includes('application/json')) {
-            data = await res.json();
+            try { data = await res.json(); } catch { data = null; }
         } else {
             data = await res.text();
         }
 
         setRaw(data);
-        return {ok: res.ok, status: res.status, data};
+        return { ok: res.ok, status: res.status, data };
     }
 
     // =====================
     // BOOKS
     // =====================
-  async function loadBooks() {
-    document.getElementById('booksSpinner').style.display = 'inline-block';
-    try {
-        // ПРАВИЛЬНЫЙ формат: page=0&size=10000
-        const {ok, data, status} = await apiRequest('GET', '/books?page=0&size=10000');
-
-        if (!ok) {
-            toast(`Ошибка загрузки книг: ${status}`, 'error');
+    async function loadBooks(page = 0) {
+        if (isSearchMode) {
+            await executeSearch(page);
             return;
         }
 
-        console.log('Response:', data);
-        console.log('totalElements:', data.totalElements);
-        console.log('content length:', data.content?.length);
+        const spinner = document.getElementById('booksSpinner');
+        if (spinner) spinner.style.display = 'inline-block';
+        booksPage = page;
 
-        const books = data.content ?? data;
-        renderBooks(Array.isArray(books) ? books : []);
+        try {
+            const { ok, data, status } = await apiRequest('GET', `/books?page=${page}&size=${PAGE_SIZE}`);
 
-    } catch (e) {
-        toast('Сервер недоступен: ' + e.message, 'error');
-        console.error(e);
-    } finally {
-        document.getElementById('booksSpinner').style.display = 'none';
+            if (!ok) {
+                toast(`Ошибка загрузки книг: ${status}`, 'error');
+                return;
+            }
+
+            const content = data?.content || [];
+            const totalPages = data?.totalPages || 0;
+            const totalElements = data?.totalElements || content.length;
+
+            renderBooks(content);
+            document.getElementById('booksCount').textContent = `${totalElements} шт. (стр. ${page + 1}/${totalPages || 1})`;
+            renderPagination('booksPagination', page, totalPages, loadBooks);
+
+        } catch (e) {
+            console.error("Ошибка в loadBooks:", e);
+            toast('Сервер недоступен: ' + e.message, 'error');
+        } finally {
+            const spinner = document.getElementById('booksSpinner');
+            if (spinner) spinner.style.display = 'none';
+        }
     }
-}
 
-   function renderBooks(books) {
-    console.log('renderBooks вызвана, книг:', books.length); // <-- Добавь это
+    function renderBooks(books) {
+        const el = document.getElementById('booksList');
+        if (!books.length) {
+            el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Книг нет</p>';
+            return;
+        }
 
-    const el = document.getElementById('booksList');
-    document.getElementById('booksCount').textContent = `${books.length} шт.`;
+        el.innerHTML = books.map(b => {
+            const authors = (b.authors || []).map(a =>
+                `<span class="author-chip">${esc(a.firstName || '')} ${esc(a.lastName || '')}</span>`
+            ).join(' ');
 
-    if (!books.length) {
-        console.log('Книг нет в массиве'); // <-- Добавь это
-        el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Книг нет</p>';
-        return;
+            const available = b.availableCopies ?? 0;
+            const total = b.totalCopies ?? 0;
+            const badgeClass = available > 0 ? 'badge-green' : 'badge-red';
+
+            return `
+            <div class="list-item">
+                <div style="flex:1;">
+                    <div class="list-item-title">${esc(b.title)}</div>
+                    <div class="list-item-sub mono">ISBN: ${esc(b.isbn)} • ${esc(b.genre || '—')} • ${b.publishYear ? esc(b.publishYear) : '—'}</div>
+                    <div style="margin-top:6px;">${authors || '<span style="font-size:11px;color:var(--muted);">Нет авторов</span>'}</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="badge ${badgeClass}">${available}/${total} экз.</span>
+                    <span class="badge badge-gray">ID: ${b.id}</span>
+                    <button class="btn btn-ghost btn-sm" onclick="editBook(${b.id})" title="Редактировать"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-ghost btn-sm" onclick="viewBookDetails(${b.id})" title="Подробности"><i class="fas fa-eye"></i></button>
+                </div>
+            </div>`;
+        }).join('');
     }
 
-    console.log('Первая книга:', books[0]); // <-- Добавь это
+    async function viewBookDetails(id) {
+        const { ok, data, status } = await apiRequest('GET', `/books/${id}`);
+        if (!ok) { toast(`Книга не найдена: ${status}`, 'error'); return; }
 
-    el.innerHTML = books.map(b => {
-        console.log('Рендерю книгу:', b.title); // <-- Добавь это
-        return `
-        <div class="list-item">
-            <div>
-                <div class="list-item-title">${esc(b.title)}</div>
-                <div class="list-item-sub mono">ISBN: ${esc(b.isbn)} • ${esc(b.genre || '—')}</div>
+        const authors = (data.authors || []).map(a =>
+            `<span class="author-chip">${esc(a.firstName || '')} ${esc(a.lastName || '')} (ID:${a.id})</span>`
+        ).join(' ') || '<span style="color:var(--muted);">Нет авторов</span>';
+
+        const el = document.getElementById('bookFindResult');
+        el.innerHTML = `
+        <div class="detail-panel">
+            <div class="detail-row"><span class="detail-label">ID</span><span class="detail-value">${data.id}</span></div>
+            <div class="detail-row"><span class="detail-label">Название</span><span class="detail-value">${esc(data.title)}</span></div>
+            <div class="detail-row"><span class="detail-label">ISBN</span><span class="detail-value mono">${esc(data.isbn)}</span></div>
+            <div class="detail-row"><span class="detail-label">Жанр</span><span class="detail-value">${esc(data.genre || '—')}</span></div>
+            <div class="detail-row"><span class="detail-label">Год</span><span class="detail-value">${data.publishYear || '—'}</span></div>
+            <div class="detail-row"><span class="detail-label">Экземпляры</span><span class="detail-value">${data.availableCopies ?? '?'}/${data.totalCopies ?? '?'}</span></div>
+            <div class="detail-row"><span class="detail-label">Создана</span><span class="detail-value">${fmt(data.createdAt)}</span></div>
+            <div style="margin-top:10px;">
+                <div class="detail-label" style="margin-bottom:6px;">Авторы</div>
+                <div>${authors}</div>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;">
-                <span class="badge ${(b.availableCopies ?? b.totalCopies ?? 0) > 0 ? 'badge-green' : 'badge-red'}">
-                    ${b.availableCopies ?? '?'}/${b.totalCopies ?? '?'} экз.
-                </span>
-                <span class="badge badge-gray">ID: ${b.id}</span>
-            </div>
-        </div>
-    `}).join('');
-}
+        </div>`;
+        toast(`Книга "${data.title}" найдена`, 'success');
+    }
+
+    async function findBook() {
+        const id = document.getElementById('findBookId').value.trim();
+        if (!id) return;
+        await viewBookDetails(id);
+    }
 
     async function submitBook(e) {
         e.preventDefault();
@@ -898,35 +635,29 @@
             ? authorIdsRaw.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n))
             : [];
 
-        // Отправляем два варианта сразу — бэкенд использует один из них
-        const publishYearVal = document.getElementById('publishYear').value;
+        const publishYearVal = document.getElementById('bookPublishYear').value;
         const body = {
-            title: document.getElementById('title').value.trim(),
-            isbn: document.getElementById('isbn').value.trim(),
-            genre: document.getElementById('genre').value.trim() || null,
-            description: document.getElementById('description').value.trim() || null,
-            totalCopies: parseInt(document.getElementById('totalCopies').value) || 1,
-            // Пробуем оба варианта поля для года
-            publishYear: publishYearVal ? parseInt(publishYearVal) : null,
-            publicationYear: publishYearVal ? parseInt(publishYearVal) : null,
-            // Пробуем оба варианта для авторов
-            authorIds: authorIds,
-            authors: authorIds.map(id => ({id}))
+            title: document.getElementById('bookTitle').value.trim(),
+            isbn: document.getElementById('bookIsbn').value.trim(),
+            description: document.getElementById('bookDescription').value.trim(),
+            genre: document.getElementById('bookGenre').value.trim() || null,
+            publishYear: publishYearVal || null,
+            totalCopies: parseInt(document.getElementById('bookTotalCopies').value) || 1,
+            authors: authorIds.map(id => ({ id }))
         };
 
         const btn = document.getElementById('createBookBtn');
         btn.disabled = true;
 
         try {
-            const {ok, status, data} = await apiRequest('POST', '/books', body);
+            const { ok, status, data } = await apiRequest('POST', '/books', body);
             if (ok) {
                 toast('Книга создана!', 'success');
                 document.getElementById('bookForm').reset();
-                document.getElementById('totalCopies').value = '1';
-                loadBooks();
+                document.getElementById('bookTotalCopies').value = '1';
+                loadBooks(0);
             } else {
-                const msg = data?.message || data?.error || (typeof data === 'string' ? data : `Ошибка ${status}`);
-                toast('Ошибка: ' + msg, 'error');
+                toast('Ошибка: ' + extractErrorMessage(data, status), 'error');
             }
         } catch (e) {
             toast('Сервер недоступен: ' + e.message, 'error');
@@ -935,29 +666,95 @@
         }
     }
 
-    async function deleteBook(e) {
-        e.preventDefault();
-        const id = document.getElementById('deleteBookId').value.trim();
-        if (!confirm(`Удалить книгу ID=${id}?`)) return;
+async function deleteBook(e) {
+    e.preventDefault();
+    const id = document.getElementById('deleteBookId').value.trim();
+    if (!confirm(`Удалить книгу ID=${id}?`)) return;
 
-        const {ok, status} = await apiRequest('DELETE', `/books/${id}`);
-        if (ok) {
-            toast(`Книга ID=${id} удалена`, 'success');
-            document.getElementById('bookDeleteForm').reset();
-            loadBooks();
-        } else {
-            toast(`Ошибка удаления: ${status}`, 'error');
-        }
+    // ✅ Добавил data в деструктуризацию
+    const { ok, status, data } = await apiRequest('DELETE', `/books/${id}`);
+
+    if (ok) {
+        toast(`Книга ID=${id} удалена`, 'success');
+        document.getElementById('bookDeleteForm').reset();
+        loadBooks(booksPage);
+    } else {
+        // ✅ Извлекаем понятное сообщение от бэкенда
+        const errorMsg = typeof data === 'object'
+            ? (data.message || data.error || data.detail || `Ошибка сервера (${status})`)
+            : (data || `Ошибка сервера (${status})`);
+
+        toast(errorMsg, 'error');
+    }
+}
+
+    // =====================
+    // SEARCH
+    // =====================
+    function toggleSearchPanel() {
+        const panel = document.getElementById('searchPanel');
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
     }
 
-    async function findBook() {
-        const id = document.getElementById('findBookId').value.trim();
-        if (!id) return;
-        const {ok, data, status} = await apiRequest('GET', `/books/${id}`);
-        if (ok) {
-            toast(`Книга найдена: ${data.title}`, 'success');
-        } else {
-            toast(`Книга не найдена: ${status}`, 'error');
+    function resetSearchAndLoad() {
+        document.getElementById('searchForm').reset();
+        isSearchMode = false;
+        loadBooks(0);
+        toast('Фильтры сброшены', 'info');
+    }
+
+    async function handleSearch(e) {
+        e.preventDefault();
+        isSearchMode = true;
+        await executeSearch(0);
+    }
+
+    async function executeSearch(page) {
+        const spinner = document.getElementById('booksSpinner');
+        if (spinner) spinner.style.display = 'inline-block';
+
+        const params = new URLSearchParams();
+        params.append('page', page);
+        params.append('size', PAGE_SIZE);
+
+        // ✅ ПРАВИЛЬНЫЕ ID полей — соответствуют HTML
+        const title = document.getElementById('searchTitle').value.trim();
+        const genre = document.getElementById('searchGenre').value.trim();
+        const authorName = document.getElementById('searchAuthorName').value.trim();
+        const availableRaw = document.getElementById('searchAvailable').value;
+
+        if (title) params.append('title', title);
+        if (genre) params.append('genre', genre);
+        if (authorName) params.append('authorName', authorName);
+        if (availableRaw !== '') params.append('available', availableRaw);
+
+        try {
+            const { ok, data, status } = await apiRequest('GET', `/books/search?${params.toString()}`);
+
+            if (!ok) {
+                toast(`Ошибка поиска: ${status}`, 'error');
+                return;
+            }
+
+            const books = data?.content || [];
+            const totalPages = data?.totalPages || 0;
+            const totalElements = data?.totalElements || books.length;
+
+            renderBooks(books);
+            document.getElementById('booksCount').textContent = `Найдено: ${totalElements} шт. (стр. ${page + 1}/${totalPages || 1})`;
+            renderPagination('booksPagination', page, totalPages, executeSearch);
+
+            if (totalElements === 0) {
+                toast('Ничего не найдено', 'info');
+            } else {
+                toast(`Найдено книг: ${totalElements}`, 'success');
+            }
+
+        } catch (e) {
+            toast('Сервер недоступен: ' + e.message, 'error');
+        } finally {
+            const spinner = document.getElementById('booksSpinner');
+            if (spinner) spinner.style.display = 'none';
         }
     }
 
@@ -966,13 +763,11 @@
     // =====================
     async function loadReaders() {
         try {
-            const {ok, data, status} = await apiRequest('GET', '/readers');
-            if (!ok) {
-                toast(`Ошибка загрузки читателей: ${status}`, 'error');
-                return;
-            }
-            const readers = data.content ?? data;
-            renderReaders(Array.isArray(readers) ? readers : []);
+            const { ok, data, status } = await apiRequest('GET', '/readers');
+            if (!ok) { toast(`Ошибка загрузки: ${status}`, 'error'); return; }
+            const readers = Array.isArray(data) ? data : [];
+            renderReaders(readers);
+            document.getElementById('readersCount').textContent = `${readers.length} чел.`;
         } catch (e) {
             toast('Сервер недоступен', 'error');
         }
@@ -980,55 +775,55 @@
 
     function renderReaders(readers) {
         const el = document.getElementById('readersList');
-        document.getElementById('readersCount').textContent = `${readers.length} чел.`;
-        if (!readers.length) {
-            el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Читателей нет</p>';
-            return;
-        }
-        el.innerHTML = readers.map(r => `
-        <div class="list-item">
-            <div>
-                <div class="list-item-title">${esc(r.name || r.fullName || '—')}</div>
-                <div class="list-item-sub">${esc(r.email || '')} ${r.phone ? '• ' + esc(r.phone) : ''}</div>
-            </div>
-            <span class="badge badge-gray">ID: ${r.id}</span>
-        </div>
-    `).join('');
+        if (!readers.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Читателей нет</p>'; return; }
+        el.innerHTML = readers.map(r => {
+            const statusBadge = r.status ? `<span class="badge badge-blue">${r.status}</span>` : '';
+            return `
+            <div class="list-item">
+                <div>
+                    <div class="list-item-title">${esc(r.name || '—')}</div>
+                    <div class="list-item-sub">${esc(r.email || '')} ${r.phone ? '• ' + esc(r.phone) : ''} ${r.registeredAt ? '• Рег: ' + esc(r.registeredAt) : ''}</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    ${statusBadge}
+                    <span class="badge badge-gray">ID: ${r.id}</span>
+                    <button class="btn btn-ghost btn-sm" onclick="editReader(${r.id})"><i class="fas fa-edit"></i></button>
+                </div>
+            </div>`;
+        }).join('');
     }
 
     async function submitReader(e) {
         e.preventDefault();
         const body = {
             name: document.getElementById('readerName').value.trim(),
-            fullName: document.getElementById('readerName').value.trim(), // некоторые бэкенды используют fullName
             email: document.getElementById('readerEmail').value.trim() || null,
             phone: document.getElementById('readerPhone').value.trim() || null
         };
-
-        const {ok, status, data} = await apiRequest('POST', '/readers', body);
+        const { ok, status, data } = await apiRequest('POST', '/readers', body);
         if (ok) {
             toast('Читатель добавлен', 'success');
             document.getElementById('readerForm').reset();
             loadReaders();
         } else {
-            const msg = data?.message || data?.error || `Ошибка ${status}`;
-            toast('Ошибка: ' + msg, 'error');
+            toast('Ошибка: ' + extractErrorMessage(data, status), 'error');
         }
     }
 
     async function findReader() {
         const id = document.getElementById('findReaderId').value.trim();
         if (!id) return;
-        const {ok, data, status} = await apiRequest('GET', `/readers/${id}`);
+        const { ok, data, status } = await apiRequest('GET', `/readers/${id}`);
         const el = document.getElementById('readerFindResult');
         if (ok) {
             el.innerHTML = `
-            <div class="list-item">
-                <div>
-                    <div class="list-item-title">${esc(data.name || data.fullName || '—')}</div>
-                    <div class="list-item-sub">${esc(data.email || '')} ${data.phone ? '• ' + esc(data.phone) : ''}</div>
-                </div>
-                <span class="badge badge-green">ID: ${data.id}</span>
+            <div class="detail-panel">
+                <div class="detail-row"><span class="detail-label">ID</span><span class="detail-value">${data.id}</span></div>
+                <div class="detail-row"><span class="detail-label">Имя</span><span class="detail-value">${esc(data.name || '—')}</span></div>
+                <div class="detail-row"><span class="detail-label">Email</span><span class="detail-value">${esc(data.email || '—')}</span></div>
+                <div class="detail-row"><span class="detail-label">Телефон</span><span class="detail-value">${esc(data.phone || '—')}</span></div>
+                <div class="detail-row"><span class="detail-label">Регистрация</span><span class="detail-value">${data.registeredAt || '—'}</span></div>
+                <div class="detail-row"><span class="detail-label">Статус</span><span class="detail-value">${data.status || '—'}</span></div>
             </div>`;
             toast('Читатель найден', 'success');
         } else {
@@ -1037,39 +832,64 @@
         }
     }
 
+    async function deleteReader(e) {
+        e.preventDefault();
+        const id = document.getElementById('deleteReaderId').value.trim();
+        if (!confirm(`Удалить читателя ID=${id}?`)) return;
+        const { ok, status } = await apiRequest('DELETE', `/readers/${id}`);
+        if (ok) {
+            toast(`Читатель ID=${id} удалён`, 'success');
+            e.target.reset();
+            loadReaders();
+        } else {
+            toast(`Ошибка удаления: ${status}`, 'error');
+        }
+    }
+
     // =====================
     // AUTHORS
     // =====================
-    async function loadAuthors() {
+    async function loadAuthors(page = 0) {
+        const spinner = document.getElementById('authorsSpinner');
+        if (spinner) spinner.style.display = 'inline-block';
+        authorsPage = page;
+
         try {
-            const {ok, data, status} = await apiRequest('GET', '/authors');
-            if (!ok) {
-                toast(`Ошибка загрузки авторов: ${status}`, 'error');
-                return;
-            }
-            const authors = data.content ?? data;
-            renderAuthors(Array.isArray(authors) ? authors : []);
+            const { ok, data, status } = await apiRequest('GET', `/authors?page=${page}&size=${PAGE_SIZE}`);
+            if (!ok) { toast(`Ошибка загрузки авторов: ${status}`, 'error'); return; }
+
+            const authors = data?.content || [];
+            const totalPages = data?.totalPages || 0;
+            const totalElements = data?.totalElements || authors.length;
+
+            renderAuthors(authors);
+            document.getElementById('authorsCount').textContent = `${totalElements} авт. (стр. ${page + 1}/${totalPages || 1})`;
+            renderPagination('authorsPagination', page, totalPages, loadAuthors);
+
         } catch (e) {
             toast('Сервер недоступен', 'error');
+        } finally {
+            const spinner = document.getElementById('authorsSpinner');
+            if (spinner) spinner.style.display = 'none';
         }
     }
 
     function renderAuthors(authors) {
         const el = document.getElementById('authorsList');
-        document.getElementById('authorsCount').textContent = `${authors.length} авт.`;
-        if (!authors.length) {
-            el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Авторов нет</p>';
-            return;
-        }
+        if (!authors.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Авторов нет</p>'; return; }
         el.innerHTML = authors.map(a => `
-        <div class="list-item">
-            <div>
-                <div class="list-item-title">${esc(a.firstName || '')} ${esc(a.lastName || '')}</div>
-                <div class="list-item-sub">${a.birthDate ? '🎂 ' + esc(a.birthDate) : ''}</div>
+            <div class="list-item">
+                <div>
+                    <div class="list-item-title">${esc(a.firstName || '')} ${esc(a.lastName || '')}</div>
+                    <div class="list-item-sub">${a.birthDate ? '🎂 ' + esc(a.birthDate) : 'Дата рождения не указана'}</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="badge badge-gray">ID: ${a.id}</span>
+                    <button class="btn btn-ghost btn-sm" onclick="editAuthor(${a.id})"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-ghost btn-sm" onclick="viewAuthorBooks(${a.id})"><i class="fas fa-book"></i></button>
+                </div>
             </div>
-            <span class="badge badge-gray">ID: ${a.id}</span>
-        </div>
-    `).join('');
+        `).join('');
     }
 
     async function submitAuthor(e) {
@@ -1079,15 +899,68 @@
             lastName: document.getElementById('authorLastName').value.trim() || null,
             birthDate: document.getElementById('authorBirthDate').value || null
         };
-
-        const {ok, status, data} = await apiRequest('POST', '/authors', body);
+        const { ok, status, data } = await apiRequest('POST', '/authors', body);
         if (ok) {
             toast('Автор добавлен', 'success');
             document.getElementById('authorForm').reset();
-            loadAuthors();
+            loadAuthors(0);
         } else {
-            const msg = data?.message || data?.error || `Ошибка ${status}`;
-            toast('Ошибка: ' + msg, 'error');
+            toast('Ошибка: ' + extractErrorMessage(data, status), 'error');
+        }
+    }
+
+    async function searchAuthors() {
+        const query = document.getElementById('authorSearchQuery').value.trim();
+        if (!query) { toast('Введи поисковый запрос', 'error'); return; }
+
+        const { ok, data, status } = await apiRequest('GET', `/authors/search/${encodeURIComponent(query)}?page=0&size=20`);
+        const el = document.getElementById('authorSearchResult');
+
+        if (ok) {
+            const authors = data?.content || [];
+            if (!authors.length) {
+                el.innerHTML = '<p style="color:var(--muted);font-size:12px;">Ничего не найдено</p>';
+                return;
+            }
+            el.innerHTML = authors.map(a => `
+                <div class="list-item" style="margin-bottom:4px;">
+                    <div>
+                        <div class="list-item-title" style="font-size:13px;">${esc(a.firstName)} ${esc(a.lastName || '')}</div>
+                        <div class="list-item-sub">ID: ${a.id}</div>
+                    </div>
+                </div>
+            `).join('');
+            toast(`Найдено: ${authors.length}`, 'success');
+        } else {
+            el.innerHTML = '';
+            toast(`Ошибка поиска: ${status}`, 'error');
+        }
+    }
+
+    async function viewAuthorBooks(authorId) {
+        const { ok, data, status } = await apiRequest('GET', `/authors/books/${authorId}?page=0&size=20`);
+        if (!ok) { toast(`Ошибка: ${status}`, 'error'); return; }
+
+        const books = data?.content || [];
+        if (!books.length) { toast('У автора нет книг', 'info'); return; }
+
+        const bookList = books.map(b => `<div class="list-item" style="margin-bottom:4px;"><div><div class="list-item-title" style="font-size:13px;">${esc(b.title)}</div><div class="list-item-sub">ID: ${b.id}</div></div></div>`).join('');
+
+        document.getElementById('authorSearchResult').innerHTML = `<div style="margin-top:10px;"><div class="card-title"><i class="fas fa-book"></i> Книги автора (${books.length})</div>${bookList}</div>`;
+        toast(`Книг автора: ${books.length}`, 'info');
+    }
+
+    async function deleteAuthor(e) {
+        e.preventDefault();
+        const id = document.getElementById('deleteAuthorId').value.trim();
+        if (!confirm(`Удалить автора ID=${id}?`)) return;
+        const { ok, status } = await apiRequest('DELETE', `/authors/${id}`);
+        if (ok) {
+            toast(`Автор ID=${id} удалён`, 'success');
+            e.target.reset();
+            loadAuthors(authorsPage);
+        } else {
+            toast(`Ошибка удаления: ${status}`, 'error');
         }
     }
 
@@ -1095,101 +968,245 @@
     // LOANS
     // =====================
     async function loadAllLoans() {
-        const {ok, data, status} = await apiRequest('GET', '/loans');
-        if (ok) renderLoans(data.content ?? (Array.isArray(data) ? data : []));
-        else toast(`Ошибка: ${status}`, 'error');
+        const { ok, data, status } = await apiRequest('GET', '/loans');
+        if (ok) {
+            const loans = Array.isArray(data) ? data : [];
+            renderLoans(loans);
+            document.getElementById('loansCount').textContent = `${loans.length} шт.`;
+        } else {
+            toast(`Ошибка: ${status}`, 'error');
+        }
     }
 
     async function loadActiveLoans() {
-        const {ok, data, status} = await apiRequest('GET', '/loans/active');
-        if (ok) renderLoans(data.content ?? (Array.isArray(data) ? data : []));
-        else toast(`Ошибка: ${status}`, 'error');
+        const { ok, data, status } = await apiRequest('GET', '/loans/active');
+        if (ok) {
+            const loans = Array.isArray(data) ? data : [];
+            renderLoans(loans);
+            document.getElementById('loansCount').textContent = `${loans.length} активных`;
+        } else {
+            toast(`Ошибка: ${status}`, 'error');
+        }
     }
 
     async function loadOverdueLoans() {
-        const {ok, data, status} = await apiRequest('GET', '/loans/overdue');
-        if (ok) renderLoans(data.content ?? (Array.isArray(data) ? data : []));
-        else toast(`Ошибка: ${status}`, 'error');
+        const { ok, data, status } = await apiRequest('GET', '/loans/overdue');
+        if (ok) {
+            const loans = Array.isArray(data) ? data : [];
+            renderLoans(loans);
+            document.getElementById('loansCount').textContent = `${loans.length} просроченных`;
+        } else {
+            toast(`Ошибка: ${status}`, 'error');
+        }
     }
 
     function renderLoans(loans) {
         const el = document.getElementById('loansList');
-        document.getElementById('loansCount').textContent = `${loans.length} шт.`;
-        if (!loans.length) {
-            el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Выдач нет</p>';
-            return;
-        }
+        if (!loans.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;">Выдач нет</p>'; return; }
         el.innerHTML = loans.map(l => {
-            const returned = l.status === 'RETURNED' || l.returnDate;
-            const overdue = !returned && l.dueDate && new Date(l.dueDate) < new Date();
-            const badge = returned
-                ? '<span class="badge badge-gray">Возвращена</span>'
-                : overdue
-                    ? '<span class="badge badge-red">Просрочена</span>'
-                    : '<span class="badge badge-green">Активна</span>';
+            const now = new Date();
+            const dueDate = l.dueDate ? new Date(l.dueDate) : null;
+            const isReturned = l.status === 'RETURNED' || l.returnDate;
+            const isOverdue = !isReturned && dueDate && dueDate < now;
+
+            let badgeClass, statusText;
+            if (isReturned) { badgeClass = 'badge-gray'; statusText = 'RETURNED'; }
+            else if (isOverdue) { badgeClass = 'badge-red'; statusText = 'OVERDUE'; }
+            else { badgeClass = 'badge-green'; statusText = 'ACTIVE'; }
+
             return `
-        <div class="list-item">
-            <div>
-                <div class="list-item-title">Книга: <span class="mono">${l.bookId ?? l.book?.id ?? '—'}</span> → Читатель: <span class="mono">${l.readerId ?? l.reader?.id ?? '—'}</span></div>
-                <div class="list-item-sub">
-                    Выдано: ${fmt(l.loanDate || l.issueDate)} • Срок: ${fmt(l.dueDate)}
-                    ${l.returnDate ? '• Возвращено: ' + fmt(l.returnDate) : ''}
+            <div class="list-item">
+                <div>
+                    <div class="list-item-title">Книга: <span class="mono">${l.bookId ?? '—'}</span> → Читатель: <span class="mono">${l.readerId ?? '—'}</span></div>
+                    <div class="list-item-sub">Выдано: ${fmt(l.issueDate)} • Срок: ${fmt(l.dueDate)}${l.returnDate ? ' • Возвращено: ' + fmt(l.returnDate) : ''}</div>
                 </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;">
-                ${badge}
-                <span class="badge badge-gray">ID: ${l.id}</span>
-            </div>
-        </div>`;
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span class="badge ${badgeClass}">${statusText}</span>
+                    <span class="badge badge-gray">ID: ${l.id}</span>
+                </div>
+            </div>`;
         }).join('');
     }
 
     async function submitLoan(e) {
         e.preventDefault();
-        const dueDateRaw = document.getElementById('loanDueDate').value;
         const body = {
             bookId: Number(document.getElementById('loanBookId').value),
             readerId: Number(document.getElementById('loanReaderId').value),
-            dueDate: dueDateRaw,        // "2024-12-31T00:00"
-            status: 'ACTIVE'
+            dueDate: document.getElementById('loanDueDate').value
         };
-
-        const {ok, status, data} = await apiRequest('POST', '/loans', body);
+        const { ok, status, data } = await apiRequest('POST', '/loans', body);
         if (ok) {
             toast('Выдача создана', 'success');
             document.getElementById('loanForm').reset();
             loadAllLoans();
         } else {
-            const msg = data?.message || data?.error || `Ошибка ${status}`;
-            toast('Ошибка: ' + msg, 'error');
+            toast('Ошибка: ' + extractErrorMessage(data, status), 'error');
         }
     }
 
     async function returnLoan() {
         const id = document.getElementById('returnLoanId').value.trim();
-        if (!id) {
-            toast('Введи ID выдачи', 'error');
-            return;
-        }
-
-        // Пробуем стандартный PATCH /loans/{id}/return
-        let result = await apiRequest('PATCH', `/loans/${id}/return`);
-        if (!result.ok) {
-            // Fallback: PUT /loans/{id}/return
-            result = await apiRequest('PUT', `/loans/${id}/return`);
-        }
-        if (!result.ok) {
-            // Fallback: POST /loans/{id}/return
-            result = await apiRequest('POST', `/loans/${id}/return`);
-        }
-
-        if (result.ok) {
+        if (!id) { toast('Введи ID выдачи', 'error'); return; }
+        const { ok, status, data } = await apiRequest('POST', `/loans/${id}/return`);
+        if (ok) {
             toast(`Выдача ID=${id} закрыта`, 'success');
             document.getElementById('returnLoanId').value = '';
             loadAllLoans();
         } else {
-            toast(`Ошибка возврата: ${result.status}`, 'error');
+            toast(`Ошибка возврата: ${extractErrorMessage(data, status)}`, 'error');
         }
+    }
+
+    async function deleteLoan(e) {
+        e.preventDefault();
+        const id = document.getElementById('deleteLoanId').value.trim();
+        if (!confirm(`Удалить выдачу ID=${id}?`)) return;
+        const { ok, status } = await apiRequest('DELETE', `/loans/${id}`);
+        if (ok) {
+            toast(`Выдача ID=${id} удалена`, 'success');
+            e.target.reset();
+            loadAllLoans();
+        } else {
+            toast(`Ошибка удаления: ${status}`, 'error');
+        }
+    }
+
+    // =====================
+    // EDIT MODAL
+    // =====================
+    function openEditModal(title, content) {
+        document.getElementById('editModalTitle').textContent = title;
+        document.getElementById('editModalContent').innerHTML = content;
+        document.getElementById('editModal').classList.add('active');
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').classList.remove('active');
+        editContext = null;
+    }
+
+    async function editBook(id) {
+        const { ok, data } = await apiRequest('GET', `/books/${id}`);
+        if (!ok) { toast('Книга не найдена', 'error'); return; }
+        editContext = { type: 'book', id };
+        const authorIds = (data.authors || []).map(a => a.id).join(',');
+        openEditModal(`Редактировать книгу #${id}`, `
+            <label>Название</label><input type="text" id="editTitle" value="${esc(data.title || '')}" required minlength="3">
+            <label>ISBN (20 символов)</label><input type="text" id="editIsbn" value="${esc(data.isbn || '')}" required minlength="20" maxlength="20">
+            <label>Описание</label><textarea id="editDescription" required minlength="3">${esc(data.description || '')}</textarea>
+            <label>Жанр</label><input type="text" id="editGenre" value="${esc(data.genre || '')}" maxlength="50">
+            <label>Год публикации</label><input type="date" id="editPublishYear" value="${data.publishYear || ''}">
+            <label>Кол-во экземпляров</label><input type="number" id="editTotalCopies" value="${data.totalCopies || 1}" min="1">
+            <label>ID авторов (через запятую)</label><input type="text" id="editAuthorIds" value="${authorIds}">
+        `);
+    }
+
+    async function editReader(id) {
+        const { ok, data } = await apiRequest('GET', `/readers/${id}`);
+        if (!ok) { toast('Читатель не найден', 'error'); return; }
+        editContext = { type: 'reader', id };
+        openEditModal(`Редактировать читателя #${id}`, `
+            <label>Имя</label><input type="text" id="editReaderName" value="${esc(data.name || '')}" required>
+            <label>Email</label><input type="email" id="editReaderEmail" value="${esc(data.email || '')}">
+            <label>Телефон</label><input type="text" id="editReaderPhone" value="${esc(data.phone || '')}">
+        `);
+    }
+
+    async function editAuthor(id) {
+        const { ok, data } = await apiRequest('GET', `/authors/${id}`);
+        if (!ok) { toast('Автор не найден', 'error'); return; }
+        editContext = { type: 'author', id };
+        openEditModal(`Редактировать автора #${id}`, `
+            <label>Имя</label><input type="text" id="editAuthorFirstName" value="${esc(data.firstName || '')}" required minlength="2" maxlength="50">
+            <label>Фамилия</label><input type="text" id="editAuthorLastName" value="${esc(data.lastName || '')}" maxlength="50">
+            <label>Дата рождения</label><input type="date" id="editAuthorBirthDate" value="${data.birthDate || ''}">
+        `);
+    }
+
+    async function saveEdit() {
+        if (!editContext) return;
+        let body, path;
+
+        if (editContext.type === 'book') {
+            const authorIdsRaw = document.getElementById('editAuthorIds').value.trim();
+            const authorIds = authorIdsRaw ? authorIdsRaw.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n)) : [];
+            body = {
+                id: editContext.id,
+                title: document.getElementById('editTitle').value.trim(),
+                isbn: document.getElementById('editIsbn').value.trim(),
+                description: document.getElementById('editDescription').value.trim(),
+                genre: document.getElementById('editGenre').value.trim() || null,
+                publishYear: document.getElementById('editPublishYear').value || null,
+                totalCopies: parseInt(document.getElementById('editTotalCopies').value) || 1,
+                authors: authorIds.map(id => ({ id }))
+            };
+            path = `/books/${editContext.id}`;
+        } else if (editContext.type === 'reader') {
+            body = {
+                id: editContext.id,
+                name: document.getElementById('editReaderName').value.trim(),
+                email: document.getElementById('editReaderEmail').value.trim() || null,
+                phone: document.getElementById('editReaderPhone').value.trim() || null
+            };
+            path = `/readers/${editContext.id}`;
+        } else if (editContext.type === 'author') {
+            body = {
+                id: editContext.id,
+                firstName: document.getElementById('editAuthorFirstName').value.trim(),
+                lastName: document.getElementById('editAuthorLastName').value.trim() || null,
+                birthDate: document.getElementById('editAuthorBirthDate').value || null
+            };
+            path = `/authors/${editContext.id}`;
+        }
+
+        const { ok, status, data } = await apiRequest('PUT', path, body);
+        if (ok) {
+            toast('Изменения сохранены', 'success');
+            closeEditModal();
+            if (editContext.type === 'book') loadBooks(booksPage);
+            else if (editContext.type === 'reader') loadReaders();
+            else if (editContext.type === 'author') loadAuthors(authorsPage);
+        } else {
+            toast('Ошибка сохранения: ' + extractErrorMessage(data, status), 'error');
+        }
+    }
+
+    // =====================
+    // PAGINATION (правильная версия с data-атрибутами)
+    // =====================
+    function renderPagination(containerId, currentPage, totalPages, loadFn) {
+        const el = document.getElementById(containerId);
+        if (totalPages <= 1) { el.innerHTML = ''; return; }
+
+        // Сохраняем функцию в глобальном регистре
+        const fnKey = `__pagFn_${containerId}`;
+        window[fnKey] = loadFn;
+
+        let html = '';
+        html += `<button ${currentPage === 0 ? 'disabled' : ''} data-page="${currentPage - 1}"><i class="fas fa-chevron-left"></i></button>`;
+
+        const maxVisible = 5;
+        let start = Math.max(0, currentPage - Math.floor(maxVisible / 2));
+        let end = Math.min(totalPages, start + maxVisible);
+        if (end - start < maxVisible) start = Math.max(0, end - maxVisible);
+
+        for (let i = start; i < end; i++) {
+            html += `<button class="${i === currentPage ? 'active' : ''}" data-page="${i}">${i + 1}</button>`;
+        }
+
+        html += `<button ${currentPage >= totalPages - 1 ? 'disabled' : ''} data-page="${currentPage + 1}"><i class="fas fa-chevron-right"></i></button>`;
+        html += `<span>Стр. ${currentPage + 1} из ${totalPages}</span>`;
+
+        el.innerHTML = html;
+
+        // Навешиваем обработчики
+        el.querySelectorAll('button[data-page]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const p = parseInt(btn.dataset.page);
+                if (!isNaN(p)) window[fnKey](p);
+            });
+        });
     }
 
     // =====================
@@ -1197,29 +1214,30 @@
     // =====================
     function esc(str) {
         if (!str) return '';
-        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
     function fmt(dt) {
         if (!dt) return '—';
         try {
-            return new Date(dt).toLocaleString('ru-RU', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        } catch {
-            return dt;
-        }
+            return new Date(dt).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        } catch { return dt; }
+    }
+
+    function extractErrorMessage(data, status) {
+        if (!data) return `Ошибка ${status}`;
+        if (typeof data === 'string') return data;
+        if (data.message) return data.message;
+        if (data.error) return data.error;
+        if (data.errors) return Object.values(data.errors).flat().join(', ');
+        return `Ошибка ${status}`;
     }
 
     function loadAll() {
-        loadBooks();
-        loadAuthors();
+        loadBooks(0);
         loadReaders();
-        loadAuthors();
+        loadAuthors(0);
+        loadAllLoans();
     }
 
     // =====================
@@ -1230,11 +1248,11 @@
         const saved = getToken();
         if (saved) document.getElementById('tokenInput').value = saved;
         showTab('books');
-        loadBooks(); // Книги грузим всегда (может быть публичный эндпоинт)
-        // Читателей/авторов грузим только если есть токен
+        loadBooks(0);
         if (saved) {
             loadReaders();
-            loadAuthors();
+            loadAuthors(0);
+            loadAllLoans();
         }
     };
 </script>

@@ -20,15 +20,6 @@ import java.util.List;
 public interface AuthorService {
 
     /**
-     * Создаёт нового автора.
-     *
-     * @param dto данные автора (имя, фамилия, дата рождения и т.д.)
-     * @return созданный автор с присвоенным идентификатором
-     * @throws DataIntegrityViolationException при нарушении уникальности данных
-     */
-    AuthorDTO create(AuthorDTO dto);
-
-    /**
      * Возвращает автора по его идентификатору.
      *
      * @param id идентификатор автора (должен быть > 0)
@@ -44,6 +35,34 @@ public interface AuthorService {
      * @return страница с авторами
      */
     Page<AuthorDTO> getAll(Pageable pageable);
+
+
+    /**
+     * Возвращает список всех книг указанного автора.
+     *
+     * @param id идентификатор автора
+     * @param pageable
+     * @return список книг автора
+     */
+    Page<BookDTO> getBooksByAuthorId(Long id, Pageable pageable);
+    /**
+     * Поиск авторов по части имени или фамилии.
+     *
+     * @param query    поисковый запрос (имя/фамилия)
+     * @param pageable параметры пагинации и сортировки
+     * @return страница с найденными авторами
+     */
+    Page<AuthorDTO> searchByName(String query, Pageable pageable);
+
+    /**
+     * Создаёт нового автора.
+     *
+     * @param dto данные автора (имя, фамилия, дата рождения и т.д.)
+     * @return созданный автор с присвоенным идентификатором
+     * @throws DataIntegrityViolationException при нарушении уникальности данных
+     */
+    AuthorDTO create(AuthorDTO dto);
+
 
     /**
      * Обновляет данные существующего автора.
@@ -67,21 +86,5 @@ public interface AuthorService {
      */
     AuthorDTO remove(Long id);
 
-    /**
-     * Поиск авторов по части имени или фамилии.
-     *
-     * @param query    поисковый запрос (имя/фамилия)
-     * @param pageable параметры пагинации и сортировки
-     * @return страница с найденными авторами
-     */
-    Page<AuthorDTO> searchByName(String query, Pageable pageable);
 
-    /**
-     * Возвращает список всех книг указанного автора.
-     *
-     * @param id идентификатор автора
-     * @param pageable
-     * @return список книг автора
-     */
-    Page<BookDTO> getBooksByAuthorId(Long id, Pageable pageable);
 }

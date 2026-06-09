@@ -27,6 +27,7 @@ public class AuthorServiceImpl implements AuthorService {
     private final BookMapper bookMapper;
 
     @Override
+    @Transactional
     public AuthorDTO create(AuthorDTO dto) {
         Author author = authorMapper.toEntity(dto);
         Author savedAuthor = authorRepository.save(author);
@@ -34,6 +35,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AuthorDTO getById(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException("Автор с ID " + id + " не найден"));
@@ -57,6 +59,7 @@ public class AuthorServiceImpl implements AuthorService {
 
 
     @Override
+    @Transactional
     public AuthorDTO update(Long id, AuthorDTO dto) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException("Автор с ID " + id + " не найден"));
@@ -68,22 +71,21 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional
     public AuthorDTO remove(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException("Автор с ID " + id + " не найден"));
-        if (authorRepository.existsById(id)) {
-            throw new IllegalStateException("Нельзя удалить автора, у которого есть книги");
+        if(!bookRepository.existsByAuthorsId(id)){
+            throw new IllegalStateException("Нельзя удалить автора у которого есть книги");
         }
         authorRepository.deleteById(id);
         return authorMapper.toDTO(author);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<BookDTO> getBooksByAuthorId(Long id, Pageable pageable) {
-        if(!authorRepository.existsById(id)){
-            throw new AuthorNotFoundException("Автор с ID " + id + " не найден");
-        }
-        Page<Book> booksPage = bookRepository.findById(id, pageable);
+        Page<Book> booksPage = bookRepository.findByAuthorsId(id, pageable);
         return booksPage.map(bookMapper::toDTO);
     }
 }
