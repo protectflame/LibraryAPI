@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class CreationLoggingAspect {
 
     @AfterReturning(
-            pointcut = "execution(* com.library.api.service..*.create*(..))",
+            pointcut = "execution(* com.library..api.service..*.create*(..))",
             returning = "result"
     )
     public void logCreated(Object result) {
